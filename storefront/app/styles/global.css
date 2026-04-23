@@ -1,0 +1,85 @@
+/* app/styles/global.css — base resets + typography defaults */
+@import "./tokens.css";
+
+/* Modern CSS reset (minimal, keep things predictable) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bsk-bg-base);
+  color: var(--bsk-fg-primary);
+  font-family: var(--bsk-font-sans);
+  font-size: var(--bsk-text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--bsk-font-serif);
+  font-weight: var(--bsk-weight-semibold);
+  line-height: 1.15;
+  letter-spacing: var(--bsk-tracking-tight);
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--bsk-accent-gold);
+  outline-offset: 2px;
+}
+
+/* Screen-reader-only utility */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
