@@ -101,12 +101,13 @@ In Shopify admin → Settings → Custom data → Metaobjects → Add definition
 
 Name the definition `Saga` (handle auto-fills to `saga`). Check **Storefronts can access this metaobject** under Access.
 
-Shopify adds a system `Name` field automatically — it's the display field and drives the handle. Do NOT re-create it. Add only these **4 custom fields** via "Add field".
+Shopify does NOT auto-create a display name — only the `handle` is built-in. Add a `Nom` field manually and mark it as the **display name** of the definition (drives auto-handle generation).
 
-**Naming convention for the whole project:** display labels in French, keys in French `snake_case` (no accents — GraphQL identifiers are alphanumeric + underscore only), namespaces stay `univers` / `tome`.
+**Naming convention for the whole project:** display labels in French (with accents), keys in French `snake_case` (no accents — GraphQL identifiers are alphanumeric + underscore only), namespace `custom`, values (enums/strings) in French with accents allowed.
 
 | Label (affiché dans l'admin) | Name / key | Type | Required | Notes |
 |---|---|---|---|---|
+| Nom | `nom` | single_line_text | ✅ | Mark as **display name** |
 | Synopsis | `synopsis` | rich_text |  |  |
 | Ordre des tomes | `ordre_des_tomes` | list.product_reference |  | Liste ordonnée de produits |
 | Univers parent | `univers_parent` | collection_reference | ✅ | Pointe vers la collection Univers |
@@ -225,11 +226,10 @@ Product 2: same as Tome 1 but title `L'Eau et du Sang — Tome 2`, handle `l-eau
 
 Shopify admin → Content → Metaobjects → Saga → Add entry.
 
-- `name`: `L'Eau et du Sang`
-- `handle`: `l-eau-et-du-sang`
+- `nom`: `L'Eau et du Sang` (handle auto-generated to `l-eau-et-du-sang`)
 - `synopsis`: from spec §2.5
-- `tome_order`: add Tome 1, then Tome 2 (order matters)
-- `parent_universe`: `Au Nom des Dieux`
+- `ordre_des_tomes`: add Tome 1, then Tome 2 (order matters)
+- `univers_parent`: `Au Nom des Dieux`
 
 Then go back to collection `Au Nom des Dieux` and set `custom.sagas` = [L'Eau et du Sang].
 

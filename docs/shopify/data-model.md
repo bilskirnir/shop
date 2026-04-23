@@ -21,14 +21,15 @@ Source de vérité du schéma metaobject + metafields configuré dans l'admin Sh
 
 ## Metaobject : `Saga`
 
-Le champ `Name` est fourni automatiquement par Shopify (drives le handle).
+Shopify ne fournit pas de champ Name automatique — seul le `handle` est présent par défaut. Le champ `Nom` a été ajouté manuellement et marqué comme **display name** de la définition, ce qui permet l'auto-génération du handle.
 
-| Label | Key | Type | Required |
-|---|---|---|---|
-| Synopsis | `synopsis` | Rich text | — |
-| Ordre des tomes | `ordre_des_tomes` | List of products | — |
-| Univers parent | `univers_parent` | Collection | ✅ |
-| Illustration hero de la saga | `illustration_hero_saga` | File (image) | — |
+| Label | Key | Type | Required | Note |
+|---|---|---|---|---|
+| Nom | `nom` | Single line text | ✅ | Marqué **display name** — drive l'auto-handle |
+| Synopsis | `synopsis` | Rich text | — | |
+| Ordre des tomes | `ordre_des_tomes` | List of products | — | |
+| Univers parent | `univers_parent` | Collection | ✅ | |
+| Illustration hero de la saga | `illustration_hero_saga` | File (image) | — | |
 
 ---
 

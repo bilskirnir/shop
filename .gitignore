@@ -33,5 +33,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Claude Code local state
+.claude/settings.local.json
+
 # Brainstorming mockups (ephemeral working files, spec is the source of truth)
 .superpowers/
