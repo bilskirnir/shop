@@ -1,231 +1,133 @@
-import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
-import {
-  type CartViewPayload,
-  useAnalytics,
-  useOptimisticCart,
-} from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
-import {useAside} from '~/components/Aside';
+import {useState} from 'react';
+import {Link} from 'react-router';
+import {MegaMenu, type UniverseItem} from './MegaMenu';
+import {PRIMARY_NAV} from '~/data/nav';
 
-interface HeaderProps {
-  header: HeaderQuery;
-  cart: Promise<CartApiQueryFragment | null>;
-  isLoggedIn: Promise<boolean>;
-  publicStoreDomain: string;
-}
-
-type Viewport = 'desktop' | 'mobile';
-
-export function Header({
-  header,
-  isLoggedIn,
-  cart,
-  publicStoreDomain,
-}: HeaderProps) {
-  const {shop, menu} = header;
-  return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-    </header>
-  );
-}
-
-export function HeaderMenu({
-  menu,
-  primaryDomainUrl,
-  viewport,
-  publicStoreDomain,
-}: {
-  menu: HeaderProps['header']['menu'];
-  primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
-  viewport: Viewport;
-  publicStoreDomain: HeaderProps['publicStoreDomain'];
-}) {
-  const className = `header-menu-${viewport}`;
-  const {close} = useAside();
-
-  return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
-        </NavLink>
-      )}
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
-    </nav>
-  );
-}
-
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
-  return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
-    </nav>
-  );
-}
-
-function HeaderMenuMobileToggle() {
-  const {open} = useAside();
-  return (
-    <button
-      className="header-menu-mobile-toggle reset"
-      onClick={() => open('mobile')}
-    >
-      <h3>☰</h3>
-    </button>
-  );
-}
-
-function SearchToggle() {
-  const {open} = useAside();
-  return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
-    </button>
-  );
-}
-
-function CartBadge({count}: {count: number}) {
-  const {open} = useAside();
-  const {publish, shop, cart, prevCart} = useAnalytics();
-
-  return (
-    <a
-      href="/cart"
-      onClick={(e) => {
-        e.preventDefault();
-        open('cart');
-        publish('cart_viewed', {
-          cart,
-          prevCart,
-          shop,
-          url: window.location.href || '',
-        } as CartViewPayload);
-      }}
-    >
-      Cart <span aria-label={`(items: ${count})`}>{count}</span>
-    </a>
-  );
-}
-
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
-  return (
-    <Suspense fallback={<CartBadge count={0} />}>
-      <Await resolve={cart}>
-        <CartBanner />
-      </Await>
-    </Suspense>
-  );
-}
-
-function CartBanner() {
-  const originalCart = useAsyncValue() as CartApiQueryFragment | null;
-  const cart = useOptimisticCart(originalCart);
-  return <CartBadge count={cart?.totalQuantity ?? 0} />;
-}
-
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
+type HeaderProps = {
+  universes: UniverseItem[];
+  cartCount: number;
 };
 
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
-  };
+export function Header({universes, cartCount}: HeaderProps) {
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+
+  return (
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        background: 'var(--bsk-bg-base)',
+        borderBottom: '1px solid var(--bsk-border-subtle)',
+      }}
+      onMouseLeave={() => setMegaMenuOpen(false)}
+    >
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          alignItems: 'center',
+          gap: 'var(--bsk-space-6)',
+          padding: 'var(--bsk-space-4) var(--bsk-space-6)',
+          maxWidth: 'var(--bsk-width-full)',
+          margin: '0 auto',
+        }}
+      >
+        <nav aria-label="Navigation principale">
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              gap: 'var(--bsk-space-6)',
+              fontFamily: 'var(--bsk-font-sans)',
+              fontSize: 'var(--bsk-text-sm)',
+              letterSpacing: 'var(--bsk-tracking-wide)',
+              textTransform: 'uppercase',
+            }}
+          >
+            {PRIMARY_NAV.map((item) =>
+              item.hasMegaMenu ? (
+                <li key={item.label}>
+                  <button
+                    type="button"
+                    aria-expanded={megaMenuOpen}
+                    aria-haspopup="true"
+                    onClick={() => setMegaMenuOpen(true)}
+                    onMouseEnter={() => setMegaMenuOpen(true)}
+                    onFocus={() => setMegaMenuOpen(true)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
+                      color: 'var(--bsk-fg-secondary)',
+                      fontFamily: 'inherit',
+                      fontSize: 'inherit',
+                      letterSpacing: 'inherit',
+                      textTransform: 'inherit',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ) : (
+                <li key={item.label}>
+                  <Link
+                    to={item.href}
+                    style={{color: 'var(--bsk-fg-secondary)'}}
+                    onMouseEnter={() => setMegaMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ),
+            )}
+          </ul>
+        </nav>
+
+        <Link
+          to="/"
+          style={{
+            fontFamily: 'var(--bsk-font-serif)',
+            fontSize: 'var(--bsk-text-lg)',
+            letterSpacing: 'var(--bsk-tracking-widest)',
+            color: 'var(--bsk-accent-gold)',
+            textTransform: 'uppercase',
+            fontWeight: 'var(--bsk-weight-semibold)',
+          }}
+        >
+          Bilskirnir
+        </Link>
+
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--bsk-space-5)',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            fontFamily: 'var(--bsk-font-sans)',
+            fontSize: 'var(--bsk-text-sm)',
+          }}
+        >
+          <Link to="/search" aria-label="Rechercher" style={{color: 'var(--bsk-fg-secondary)'}}>
+            🔍
+          </Link>
+          <Link to="/account" style={{color: 'var(--bsk-fg-secondary)'}}>
+            Compte
+          </Link>
+          <Link
+            to="/cart"
+            aria-label={`Panier (${cartCount} article${cartCount > 1 ? 's' : ''})`}
+            style={{color: 'var(--bsk-accent-gold)', fontWeight: 'var(--bsk-weight-medium)'}}
+          >
+            Panier ({cartCount})
+          </Link>
+        </div>
+      </div>
+
+      {megaMenuOpen ? <MegaMenu universes={universes} /> : null}
+    </header>
+  );
 }
