@@ -14,7 +14,7 @@ import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import '@fontsource-variable/cormorant-garamond/index.css';
-import '@fontsource-variable/cormorant-garamond/italic.css';
+import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 import '@fontsource-variable/inter/index.css';
 import globalStyles from '~/styles/global.css?url';
 import {PageLayout} from './components/PageLayout';
