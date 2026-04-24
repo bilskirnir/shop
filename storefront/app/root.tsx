@@ -1,5 +1,6 @@
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
+  Await,
   Outlet,
   useRouteError,
   isRouteErrorResponse,
@@ -10,6 +11,7 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from 'react-router';
+import {Suspense} from 'react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY, MEGA_MENU_QUERY} from '~/lib/fragments';
@@ -17,7 +19,9 @@ import '@fontsource-variable/cormorant-garamond/index.css';
 import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 import '@fontsource-variable/inter/index.css';
 import globalStyles from '~/styles/global.css?url';
-import {PageLayout} from './components/PageLayout';
+import {Header} from '~/components/Header';
+import {Footer} from '~/components/Footer';
+import type {UniverseItem} from '~/components/MegaMenu';
 
 export type RootLoader = typeof loader;
 
@@ -166,6 +170,20 @@ export function Layout({children}: {children?: React.ReactNode}) {
   );
 }
 
+function mapUniverses(nodes: unknown[]): UniverseItem[] {
+  return (nodes as Array<{
+    id: string;
+    handle: string;
+    title: string;
+    estUneOeuvreIndependante: {value: string} | null;
+  }>).map((c) => ({
+    id: c.id,
+    handle: c.handle,
+    title: c.title,
+    isStandalone: c.estUneOeuvreIndependante?.value === 'true',
+  }));
+}
+
 export default function App() {
   const data = useRouteLoaderData<RootLoader>('root');
 
@@ -173,15 +191,32 @@ export default function App() {
     return <Outlet />;
   }
 
+  const universes = mapUniverses(
+    (data.megaMenu as {collections: {nodes: unknown[]}}).collections.nodes,
+  );
+
   return (
     <Analytics.Provider
       cart={data.cart}
       shop={data.shop}
       consent={data.consent}
     >
-      <PageLayout {...data}>
+      <Suspense
+        fallback={<Header universes={universes} cartCount={0} />}
+      >
+        <Await resolve={data.cart}>
+          {(cart) => (
+            <Header
+              universes={universes}
+              cartCount={cart?.totalQuantity ?? 0}
+            />
+          )}
+        </Await>
+      </Suspense>
+      <main>
         <Outlet />
-      </PageLayout>
+      </main>
+      <Footer />
     </Analytics.Provider>
   );
 }
