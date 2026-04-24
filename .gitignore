@@ -36,5 +36,9 @@ yarn-error.log*
 # Claude Code local state
 .claude/settings.local.json
 
+# graphify internal temp + per-file cache (the graph.json + report are what matter)
+graphify-out/.graphify_chunk_*.json
+graphify-out/cache/
+
 # Brainstorming mockups (ephemeral working files, spec is the source of truth)
 .superpowers/
