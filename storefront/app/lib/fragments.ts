@@ -240,3 +240,26 @@ export const FOOTER_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 ` as const;
+
+export const UNIVERSE_CARD_FRAGMENT = `#graphql
+  fragment UniverseCard on Collection {
+    id
+    handle
+    title
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") {
+      value
+    }
+  }
+` as const;
+
+export const MEGA_MENU_QUERY = `#graphql
+  query MegaMenu($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 20, sortKey: TITLE) {
+      nodes {
+        ...UniverseCard
+      }
+    }
+  }
+  ${UNIVERSE_CARD_FRAGMENT}
+` as const;
