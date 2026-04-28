@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 
 export interface DedicaceState {
   activated: boolean;
@@ -13,9 +13,15 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
   const [activated, setActivated] = useState(false);
   const [name, setName] = useState('');
 
-  useEffect(() => {
-    onChange({activated, name});
-  }, [activated, name, onChange]);
+  const updateActivated = (next: boolean) => {
+    setActivated(next);
+    onChange({activated: next, name});
+  };
+
+  const updateName = (next: string) => {
+    setName(next);
+    onChange({activated, name: next});
+  };
 
   return (
     <div
@@ -40,7 +46,7 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
         <input
           type="checkbox"
           checked={activated}
-          onChange={(e) => setActivated(e.target.checked)}
+          onChange={(e) => updateActivated(e.target.checked)}
         />
         <span>Dédicacer ce livre</span>
         <span
@@ -58,7 +64,7 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => updateName(e.target.value)}
           placeholder="À qui dédicacer ?"
           style={{
             display: 'block',

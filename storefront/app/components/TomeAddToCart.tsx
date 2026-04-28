@@ -114,6 +114,7 @@ export function TomeAddToCart({
           <button
             type="submit"
             disabled={!available || fetcher.state !== 'idle'}
+            aria-label={ctaLabel}
             style={{
               width: '100%',
               padding: 'var(--bsk-space-4)',
