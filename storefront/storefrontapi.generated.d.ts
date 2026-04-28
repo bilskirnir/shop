@@ -538,6 +538,114 @@ export type UniverseDetailFragment = Pick<
   };
 };
 
+export type HomeQueryVariables = StorefrontAPI.Exact<{
+  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
+  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
+}>;
+
+export type HomeQuery = {
+  collections: {
+    nodes: Array<
+      Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title'> & {
+        products: {
+          nodes: Array<
+            Pick<StorefrontAPI.Product, 'id' | 'handle' | 'title'> & {
+              featuredImage?: StorefrontAPI.Maybe<
+                Pick<
+                  StorefrontAPI.Image,
+                  'url' | 'altText' | 'width' | 'height'
+                >
+              >;
+              priceRange: {
+                minVariantPrice: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'amount' | 'currencyCode'
+                >;
+              };
+              univers?: StorefrontAPI.Maybe<{
+                reference?: StorefrontAPI.Maybe<
+                  Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title'>
+                >;
+              }>;
+              saga?: StorefrontAPI.Maybe<{
+                reference?: StorefrontAPI.Maybe<
+                  Pick<StorefrontAPI.Metaobject, 'id' | 'handle'> & {
+                    fields: Array<
+                      Pick<StorefrontAPI.MetaobjectField, 'key' | 'value'>
+                    >;
+                  }
+                >;
+              }>;
+              numeroTome?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+              statutParution?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+              dateParution?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+              teaserCourt?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+              estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+            }
+          >;
+        };
+        estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+      }
+    >;
+  };
+  products: {
+    nodes: Array<
+      Pick<StorefrontAPI.Product, 'id' | 'handle' | 'title'> & {
+        featuredImage?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+        >;
+        priceRange: {
+          minVariantPrice: Pick<
+            StorefrontAPI.MoneyV2,
+            'amount' | 'currencyCode'
+          >;
+        };
+        univers?: StorefrontAPI.Maybe<{
+          reference?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title'>
+          >;
+        }>;
+        saga?: StorefrontAPI.Maybe<{
+          reference?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Metaobject, 'id' | 'handle'> & {
+              fields: Array<
+                Pick<StorefrontAPI.MetaobjectField, 'key' | 'value'>
+              >;
+            }
+          >;
+        }>;
+        numeroTome?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        statutParution?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        dateParution?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        teaserCourt?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+      }
+    >;
+  };
+};
+
 export type ArticleQueryVariables = StorefrontAPI.Exact<{
   articleHandle: StorefrontAPI.Scalars['String']['input'];
   blogHandle: StorefrontAPI.Scalars['String']['input'];
@@ -1373,6 +1481,10 @@ interface GeneratedQueryTypes {
   '#graphql\n  query MegaMenu($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 20, sortKey: TITLE) {\n      nodes {\n        ...UniverseCard\n      }\n    }\n  }\n  #graphql\n  fragment UniverseCard on Collection {\n    id\n    handle\n    title\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") {\n      value\n    }\n  }\n\n': {
     return: MegaMenuQuery;
     variables: MegaMenuQueryVariables;
+  };
+  '#graphql\n  query Home($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 20, sortKey: TITLE) {\n      nodes {\n        ...UniverseCard\n        products(first: 6, sortKey: BEST_SELLING) {\n          nodes { ...TileProduct }\n        }\n      }\n    }\n    products(first: 50) {\n      nodes { ...TileProduct }\n    }\n  }\n  #graphql\n  fragment UniverseCard on Collection {\n    id\n    handle\n    title\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") {\n      value\n    }\n  }\n\n  #graphql\n  fragment TileProduct on Product {\n    id\n    handle\n    title\n    featuredImage { url altText width height }\n    priceRange { minVariantPrice { amount currencyCode } }\n    ...TomeMetafields\n  }\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n': {
+    return: HomeQuery;
+    variables: HomeQueryVariables;
   };
   '#graphql\n  query Article(\n    $articleHandle: String!\n    $blogHandle: String!\n    $country: CountryCode\n    $language: LanguageCode\n  ) @inContext(language: $language, country: $country) {\n    blog(handle: $blogHandle) {\n      handle\n      articleByHandle(handle: $articleHandle) {\n        handle\n        title\n        contentHtml\n        publishedAt\n        author: authorV2 {\n          name\n        }\n        image {\n          id\n          altText\n          url\n          width\n          height\n        }\n        seo {\n          description\n          title\n        }\n      }\n    }\n  }\n': {
     return: ArticleQuery;
