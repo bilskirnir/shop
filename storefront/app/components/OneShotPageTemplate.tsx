@@ -124,7 +124,7 @@ export function OneShotPageTemplate({
       </Container>
 
       <Container width="reading">
-        <div
+        <section
           style={{
             padding: '0 0 var(--bsk-space-12)',
             fontFamily: 'var(--bsk-font-serif)',
@@ -135,7 +135,7 @@ export function OneShotPageTemplate({
           }}
         >
           {description}
-        </div>
+        </section>
       </Container>
 
       {relatedSlot && <Container width="content">{relatedSlot}</Container>}
