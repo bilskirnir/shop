@@ -1,8 +1,10 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/_index';
+import type {HomeQuery} from 'storefrontapi.generated';
 import {Container} from '~/components/Container';
 import {WorkTile, type WorkTileProps} from '~/components/WorkTile';
 import {Ornament} from '~/components/Ornament';
+import {ReleaseStatusBadge} from '~/components/ReleaseStatusBadge';
 import {
   TILE_PRODUCT_FRAGMENT,
   UNIVERSE_CARD_FRAGMENT,
@@ -43,24 +45,11 @@ export async function loader({context}: Route.LoaderArgs) {
   return data;
 }
 
-type ProductLite = {
-  id: string;
-  handle: string;
-  title: string;
-  featuredImage: {url: string; altText: string | null; width: number; height: number} | null;
-  estUneOeuvreIndependante?: {value: string} | null;
-  statutParution?: {value: string} | null;
-  dateParution?: {value: string} | null;
-};
+type CollectionNode = HomeQuery['collections']['nodes'][number];
+type ProductNode = HomeQuery['products']['nodes'][number];
 
 function buildTilesFromUniverses(
-  collections: Array<{
-    id: string;
-    handle: string;
-    title: string;
-    estUneOeuvreIndependante?: {value: string} | null;
-    products: {nodes: ProductLite[]};
-  }>,
+  collections: CollectionNode[],
 ): WorkTileProps[] {
   return collections
     .filter((c) => !parseBool(c.estUneOeuvreIndependante?.value))
@@ -73,8 +62,8 @@ function buildTilesFromUniverses(
         .map((i) => ({
           url: i.url,
           altText: i.altText ?? c.title,
-          width: i.width,
-          height: i.height,
+          width: i.width ?? 0,
+          height: i.height ?? 0,
         }));
       if (covers.length === 0) return null;
       const href = `/collections/${c.handle}`;
@@ -97,25 +86,27 @@ function buildTilesFromUniverses(
     .filter((x): x is WorkTileProps => x !== null);
 }
 
-function buildStandaloneTiles(products: ProductLite[]): WorkTileProps[] {
+function buildStandaloneTiles(products: ProductNode[]): WorkTileProps[] {
   return products
     .filter((p) => parseBool(p.estUneOeuvreIndependante?.value))
-    .filter((p) => p.featuredImage)
+    .filter((p): p is ProductNode & {featuredImage: NonNullable<ProductNode['featuredImage']>} =>
+      Boolean(p.featuredImage),
+    )
     .map<WorkTileProps>((p) => ({
       kind: 'standalone',
       href: `/products/${p.handle}`,
       title: p.title,
       cover: {
-        url: p.featuredImage!.url,
-        altText: p.featuredImage!.altText ?? p.title,
-        width: p.featuredImage!.width,
-        height: p.featuredImage!.height,
+        url: p.featuredImage.url,
+        altText: p.featuredImage.altText ?? p.title,
+        width: p.featuredImage.width ?? 0,
+        height: p.featuredImage.height ?? 0,
       },
       pillLabel: 'ROMAN',
     }));
 }
 
-function selectUpcoming(products: ProductLite[]): ProductLite[] {
+function selectUpcoming(products: ProductNode[]): ProductNode[] {
   return products
     .filter((p) => {
       const s = parseStatutParution(p.statutParution?.value);
@@ -126,8 +117,8 @@ function selectUpcoming(products: ProductLite[]): ProductLite[] {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  const collections = data.collections.nodes as Parameters<typeof buildTilesFromUniverses>[0];
-  const allProducts = data.products.nodes as ProductLite[];
+  const collections = data.collections.nodes;
+  const allProducts = data.products.nodes;
 
   const universeTiles = buildTilesFromUniverses(collections);
   const standaloneTiles = buildStandaloneTiles(allProducts);
@@ -221,8 +212,8 @@ export default function Home() {
                       borderRadius: '4px',
                     }}
                   >
-                    <a
-                      href={`/products/${p.handle}`}
+                    <Link
+                      to={`/products/${p.handle}`}
                       style={{
                         textDecoration: 'none',
                         color: 'var(--bsk-fg-primary)',
@@ -230,25 +221,13 @@ export default function Home() {
                       }}
                     >
                       {p.title}
-                    </a>
-                    <p
-                      style={{
-                        fontFamily: 'var(--bsk-font-sans)',
-                        fontSize: 'var(--bsk-text-xs)',
-                        letterSpacing: 'var(--bsk-tracking-widest)',
-                        textTransform: 'uppercase',
-                        color:
-                          status === 'précommande'
-                            ? 'var(--bsk-accent-gold)'
-                            : 'var(--bsk-fg-secondary)',
-                        marginTop: 'var(--bsk-space-2)',
-                      }}
-                    >
-                      {status === 'précommande' ? 'PRÉCO' : 'À PARAÎTRE'}
-                      {p.dateParution?.value
-                        ? ` · ${new Date(p.dateParution.value).toLocaleDateString('fr-FR')}`
-                        : ''}
-                    </p>
+                    </Link>
+                    <div style={{marginTop: 'var(--bsk-space-2)'}}>
+                      <ReleaseStatusBadge
+                        status={status}
+                        releaseDate={p.dateParution?.value ?? null}
+                      />
+                    </div>
                   </li>
                 );
               })}
