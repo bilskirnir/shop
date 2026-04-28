@@ -37,7 +37,7 @@ Communauté existante autour de Gautier : **~140 000 abonnés TikTok**, **~20 00
 - Comptes clients
 - Bundles sagas complètes
 - Précommandes et notifications « me prévenir à la sortie »
-- Service de dédicace à l'achat (par livre, +5 €, nom du dédicataire)
+- Service de dédicace à l'achat (par livre, gratuit, nom du dédicataire)
 - Expédition mondiale (Gautier envoie lui-même)
 - TVA livres 5,5 % · goodies 20 % (EI au réel)
 
@@ -214,10 +214,10 @@ Gautier change le statut dans l'admin Shopify, le front s'adapte automatiquement
 
 ### 5.4 Dédicaces
 
-Service payant à l'achat, **+5,00 €** par livre, configurable via :
+Service **gratuit** à l'achat, configurable via :
 
 - **Checkbox « Dédicacer ce livre »** sur la fiche produit (déploie un champ texte « À qui dédicacer ? »)
-- **Implémentation Shopify** : une line item property `{dedicace_activee, dedicace_nom}` + surcoût appliqué via **Shopify Functions (cart transform)** ou via un produit « service de dédicace » invisible ajouté en ligne cachée
+- **Implémentation Shopify** : une line item property `{dedicace_activee, dedicace_nom}` posée sur la ligne. Pas de surcoût, donc pas besoin de Shopify Functions.
 - Gautier voit dans sa commande le livre + la propriété « Dédicace : À Marie » → il sait quoi signer
 
 ### 5.5 Précommandes et notifications
@@ -321,7 +321,7 @@ Service payant à l'achat, **+5,00 €** par livre, configurable via :
 
 ### 7.6 UX dédicace (rappel)
 
-Sur toutes les fiches produit livre : checkbox discrète « Dédicacer ce livre (+5,00 €) » qui déplie un champ texte « À qui dédicacer ? ». Prix du CTA s'ajuste en temps réel.
+Sur toutes les fiches produit livre : checkbox discrète « Dédicacer ce livre » qui déplie un champ texte « À qui dédicacer ? ». Service gratuit, pas d'impact sur le prix du CTA.
 
 ---
 
