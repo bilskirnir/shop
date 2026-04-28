@@ -150,9 +150,12 @@ export default function CollectionRoute() {
                     gap: 'var(--bsk-space-6)',
                   }}
                 >
-                  {standaloneProducts.map(toTomeCardProps).map((t) => (
-                    <TomeCard key={t.handle} {...t} />
-                  ))}
+                  {standaloneProducts
+                    .map(toTomeCardProps)
+                    .sort((a, b) => (a.tomeNumber ?? 0) - (b.tomeNumber ?? 0))
+                    .map((t) => (
+                      <TomeCard key={t.handle} {...t} />
+                    ))}
                 </div>
               </section>
             )}
