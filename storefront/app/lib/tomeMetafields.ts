@@ -22,7 +22,9 @@ export function parseBool(raw: string | null | undefined): boolean {
 
 /** Get a field value from a Metaobject's `fields` array */
 export function metaobjectField(
-  fields: Array<{key: string; value: string | null}> | undefined,
+  fields:
+    | ReadonlyArray<{key: string; value?: string | null | undefined}>
+    | undefined,
   key: string,
 ): string | null {
   return fields?.find((f) => f.key === key)?.value ?? null;
