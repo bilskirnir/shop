@@ -22,6 +22,8 @@ import globalStyles from '~/styles/global.css?url';
 import {Header} from '~/components/Header';
 import {Footer} from '~/components/Footer';
 import type {UniverseItem} from '~/components/MegaMenu';
+import {Aside} from '~/components/Aside';
+import {CartMain} from '~/components/CartMain';
 
 export type RootLoader = typeof loader;
 
@@ -201,22 +203,35 @@ export default function App() {
       shop={data.shop}
       consent={data.consent}
     >
-      <Suspense
-        fallback={<Header universes={universes} cartCount={0} />}
-      >
-        <Await resolve={data.cart}>
-          {(cart) => (
-            <Header
-              universes={universes}
-              cartCount={cart?.totalQuantity ?? 0}
-            />
-          )}
-        </Await>
-      </Suspense>
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
+      <Aside.Provider>
+        <Suspense
+          fallback={<Header universes={universes} cartCount={0} />}
+        >
+          <Await resolve={data.cart}>
+            {(cart) => (
+              <Header
+                universes={universes}
+                cartCount={cart?.totalQuantity ?? 0}
+              />
+            )}
+          </Await>
+        </Suspense>
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
+        <Suspense fallback={null}>
+          <Await resolve={data.cart}>
+            {(cart) =>
+              cart ? (
+                <Aside type="cart" heading="Panier">
+                  <CartMain layout="aside" cart={cart} />
+                </Aside>
+              ) : null
+            }
+          </Await>
+        </Suspense>
+      </Aside.Provider>
     </Analytics.Provider>
   );
 }

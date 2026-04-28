@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Link} from 'react-router';
 import {MegaMenu, type UniverseItem} from './MegaMenu';
+import {useAside} from './Aside';
 import {PRIMARY_NAV} from '~/data/nav';
 
 type HeaderProps = {
@@ -10,6 +11,7 @@ type HeaderProps = {
 
 export function Header({universes, cartCount}: HeaderProps) {
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const {open} = useAside();
 
   return (
     <header
@@ -117,13 +119,25 @@ export function Header({universes, cartCount}: HeaderProps) {
           <Link to="/account" style={{color: 'var(--bsk-fg-secondary)'}}>
             Compte
           </Link>
-          <Link
-            to="/cart"
+          <button
+            type="button"
+            onClick={() => open('cart')}
             aria-label={`Panier (${cartCount} article${cartCount > 1 ? 's' : ''})`}
-            style={{color: 'var(--bsk-accent-gold)', fontWeight: 'var(--bsk-weight-medium)'}}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--bsk-accent-gold)',
+              fontWeight: 'var(--bsk-weight-medium)',
+              fontFamily: 'inherit',
+              fontSize: 'inherit',
+              letterSpacing: 'inherit',
+              textTransform: 'inherit',
+              cursor: 'pointer',
+              padding: 0,
+            }}
           >
             Panier ({cartCount})
-          </Link>
+          </button>
         </div>
       </div>
 
