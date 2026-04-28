@@ -18,7 +18,6 @@ const baseProps = {
     width: 400,
     height: 600,
   },
-  status: 'publié' as const,
   universe: {handle: 'au-nom-des-dieux', title: 'Au Nom des Dieux'},
   purchaseSlot: <div data-testid="purchase">CTA</div>,
 };

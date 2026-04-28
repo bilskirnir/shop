@@ -3,7 +3,6 @@ import type {ReactNode} from 'react';
 import {Container} from './Container';
 import {Ornament} from './Ornament';
 import type {CoverImage} from './WorkTile';
-import type {ReleaseStatus} from './ReleaseStatusBadge';
 
 export interface BreadcrumbItem {
   label: string;
@@ -16,7 +15,6 @@ export interface TomePageTemplateProps {
   teaserShort?: string | null;
   description: string;
   cover: CoverImage;
-  status: ReleaseStatus;
   universe: {handle: string; title: string};
   purchaseSlot: ReactNode;
   relatedSlot?: ReactNode;
