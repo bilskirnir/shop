@@ -263,3 +263,70 @@ export const MEGA_MENU_QUERY = `#graphql
   }
   ${UNIVERSE_CARD_FRAGMENT}
 ` as const;
+
+export const TOME_METAFIELDS_FRAGMENT = `#graphql
+  fragment TomeMetafields on Product {
+    univers: metafield(namespace: "custom", key: "univers") {
+      reference {
+        ... on Collection {
+          id handle title
+        }
+      }
+    }
+    saga: metafield(namespace: "custom", key: "saga") {
+      reference {
+        ... on Metaobject {
+          id handle
+          fields { key value }
+        }
+      }
+    }
+    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
+    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }
+    dateParution: metafield(namespace: "custom", key: "date_parution") { value }
+    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
+  }
+` as const;
+
+export const TILE_PRODUCT_FRAGMENT = `#graphql
+  fragment TileProduct on Product {
+    id
+    handle
+    title
+    featuredImage { url altText width height }
+    priceRange { minVariantPrice { amount currencyCode } }
+    ...TomeMetafields
+  }
+  ${TOME_METAFIELDS_FRAGMENT}
+` as const;
+
+export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
+  fragment UniverseDetail on Collection {
+    id
+    handle
+    title
+    illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {
+      reference {
+        ... on MediaImage { image { url altText width height } }
+      }
+    }
+    lore: metafield(namespace: "custom", key: "lore") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    sagas: metafield(namespace: "custom", key: "sagas") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            id handle
+            fields { key value reference { ... on MediaImage { image { url altText width height } } } }
+          }
+        }
+      }
+    }
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
+    products(first: 50) {
+      nodes { ...TileProduct }
+    }
+  }
+  ${TILE_PRODUCT_FRAGMENT}
+` as const;
