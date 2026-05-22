@@ -212,6 +212,8 @@ export const HEADER_QUERY = `#graphql
         }
       }
     }
+    seuilLivraisonOfferte: metafield(namespace: "cart", key: "seuil_livraison_offerte") { value }
+    paliersCadeaux: metafield(namespace: "cart", key: "paliers_cadeaux") { value }
   }
   query Header(
     $country: CountryCode

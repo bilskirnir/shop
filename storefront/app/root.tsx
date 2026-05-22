@@ -25,6 +25,8 @@ import type {UniverseItem} from '~/components/MegaMenu';
 import {Aside} from '~/components/Aside';
 import {CartMain} from '~/components/CartMain';
 import {isImmersiveRoute} from '~/lib/immersiveRoute';
+import {parseRewardsConfig, DEFAULT_REWARDS, type RewardsConfig} from '~/lib/rewards';
+import './styles/cart.css';
 
 export type RootLoader = typeof loader;
 
@@ -121,7 +123,17 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
     }),
   ]);
 
-  return {header, megaMenu};
+  const shop = header?.shop as
+    | {
+        seuilLivraisonOfferte?: {value?: string | null} | null;
+        paliersCadeaux?: {value?: string | null} | null;
+      }
+    | undefined;
+  const rewards: RewardsConfig = shop
+    ? parseRewardsConfig(shop.seuilLivraisonOfferte?.value, shop.paliersCadeaux?.value)
+    : DEFAULT_REWARDS;
+
+  return {header, megaMenu, rewards};
 }
 
 /**
@@ -240,7 +252,7 @@ export default function App() {
           <Await resolve={data.cart}>
             {(cart) =>
               cart ? (
-                <Aside type="cart" heading="Panier">
+                <Aside type="cart" heading="Votre panier">
                   <CartMain layout="aside" cart={cart} />
                 </Aside>
               ) : null
