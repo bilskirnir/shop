@@ -1,0 +1,81 @@
+/* app/styles/maison.css — page La maison */
+
+.maison-hero {
+  position: relative;
+  text-align: center;
+  padding: 64px 26px 40px;
+  overflow: hidden;
+}
+.maison-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(70% 50% at 50% 18%, var(--bsk-uni-soft), transparent 60%), var(--bsk-bg-base);
+}
+.maison-rise {
+  position: relative;
+  z-index: 2;
+}
+.maison-rise > * {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: maison-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.maison-rise > *:nth-child(2) { animation-delay: 0.12s; }
+.maison-rise > *:nth-child(3) { animation-delay: 0.24s; }
+
+.maison-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.maison-pillar {
+  border: 1px solid var(--bsk-border-subtle);
+  border-radius: 16px;
+  padding: 20px 16px;
+  background: var(--bsk-bg-raised);
+  text-align: center;
+}
+.maison-pillar svg {
+  width: 30px;
+  height: 30px;
+  color: var(--bsk-accent-gold);
+  margin-bottom: 12px;
+}
+.maison-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  border: 2px solid var(--bsk-accent-gold);
+  background: linear-gradient(160deg, #2a2b33, #16171c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--bsk-font-display);
+  font-weight: 700;
+  font-size: 34px;
+  color: var(--bsk-accent-gold);
+}
+.maison-soc {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--bsk-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bsk-fg-primary);
+  transition: 0.3s;
+}
+.maison-soc:hover {
+  border-color: var(--bsk-accent-gold);
+  color: var(--bsk-accent-gold);
+}
+.maison-soc svg { width: 19px; height: 19px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .maison-rise > * { opacity: 1; transform: none; animation: none; }
+}
+
+@keyframes maison-rise { to { opacity: 1; transform: none; } }
