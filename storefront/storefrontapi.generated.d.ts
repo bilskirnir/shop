@@ -1091,6 +1091,11 @@ export type ProductFragment = Pick<
   featuredImage?: StorefrontAPI.Maybe<
     Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
   >;
+  images: {
+    nodes: Array<
+      Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+    >;
+  };
   options: Array<
     Pick<StorefrontAPI.ProductOption, 'name'> & {
       optionValues: Array<Pick<StorefrontAPI.ProductOptionValue, 'name'>>;
@@ -1124,6 +1129,43 @@ export type ProductFragment = Pick<
       >;
     }
   >;
+  couleurTheme?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  ambiance?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  format?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  nombrePages?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  isbn?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  relatedUniverse?: StorefrontAPI.Maybe<{
+    reference?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Collection, 'handle' | 'title'> & {
+        couleurTheme?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+        products: {
+          nodes: Array<
+            Pick<StorefrontAPI.Product, 'id' | 'handle' | 'title'> & {
+              featuredImage?: StorefrontAPI.Maybe<
+                Pick<
+                  StorefrontAPI.Image,
+                  'url' | 'altText' | 'width' | 'height'
+                >
+              >;
+              priceRange: {
+                minVariantPrice: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'amount' | 'currencyCode'
+                >;
+              };
+              statutParution?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+            }
+          >;
+        };
+      }
+    >;
+  }>;
   seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
   univers?: StorefrontAPI.Maybe<{
     reference?: StorefrontAPI.Maybe<
@@ -1170,6 +1212,11 @@ export type ProductQuery = {
       featuredImage?: StorefrontAPI.Maybe<
         Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
       >;
+      images: {
+        nodes: Array<
+          Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+        >;
+      };
       options: Array<
         Pick<StorefrontAPI.ProductOption, 'name'> & {
           optionValues: Array<Pick<StorefrontAPI.ProductOptionValue, 'name'>>;
@@ -1215,6 +1262,45 @@ export type ProductQuery = {
           >;
         }
       >;
+      couleurTheme?: StorefrontAPI.Maybe<
+        Pick<StorefrontAPI.Metafield, 'value'>
+      >;
+      genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      ambiance?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      format?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      nombrePages?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      isbn?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      relatedUniverse?: StorefrontAPI.Maybe<{
+        reference?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Collection, 'handle' | 'title'> & {
+            couleurTheme?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Metafield, 'value'>
+            >;
+            genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+            products: {
+              nodes: Array<
+                Pick<StorefrontAPI.Product, 'id' | 'handle' | 'title'> & {
+                  featuredImage?: StorefrontAPI.Maybe<
+                    Pick<
+                      StorefrontAPI.Image,
+                      'url' | 'altText' | 'width' | 'height'
+                    >
+                  >;
+                  priceRange: {
+                    minVariantPrice: Pick<
+                      StorefrontAPI.MoneyV2,
+                      'amount' | 'currencyCode'
+                    >;
+                  };
+                  statutParution?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Metafield, 'value'>
+                  >;
+                }
+              >;
+            };
+          }
+        >;
+      }>;
       seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
       univers?: StorefrontAPI.Maybe<{
         reference?: StorefrontAPI.Maybe<
@@ -1241,6 +1327,27 @@ export type ProductQuery = {
       >;
     }
   >;
+  standalone: {
+    nodes: Array<
+      Pick<StorefrontAPI.Product, 'id' | 'handle' | 'title'> & {
+        featuredImage?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+        >;
+        priceRange: {
+          minVariantPrice: Pick<
+            StorefrontAPI.MoneyV2,
+            'amount' | 'currencyCode'
+          >;
+        };
+        estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        statutParution?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+      }
+    >;
+  };
 };
 
 export type SearchProductFragment = {__typename: 'Product'} & Pick<
@@ -1514,7 +1621,7 @@ interface GeneratedQueryTypes {
     return: PoliciesQuery;
     variables: PoliciesQueryVariables;
   };
-  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    description\n    featuredImage { url altText width height }\n    options {\n      name\n      optionValues { name }\n    }\n    encodedVariantExistence\n    encodedVariantAvailability\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants(selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    ...TomeMetafields\n    seo { description title }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    id\n    title\n    price { amount currencyCode }\n    compareAtPrice { amount currencyCode }\n    image { id url altText width height }\n    selectedOptions { name value }\n  }\n\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n': {
+  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n    standalone: products(first: 12) {\n      nodes {\n        id handle title\n        featuredImage { url altText width height }\n        priceRange { minVariantPrice { amount currencyCode } }\n        estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n        statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n      }\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    description\n    featuredImage { url altText width height }\n    images(first: 8) { nodes { url altText width height } }\n    options { name optionValues { name } }\n    encodedVariantExistence\n    encodedVariantAvailability\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants(selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    ...TomeMetafields\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    genre: metafield(namespace: "custom", key: "genre") { value }\n    ambiance: metafield(namespace: "custom", key: "ambiance") { value }\n    format: metafield(namespace: "custom", key: "format") { value }\n    nombrePages: metafield(namespace: "custom", key: "nombre_pages") { value }\n    isbn: metafield(namespace: "custom", key: "isbn") { value }\n    relatedUniverse: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          handle\n          title\n          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n          genre: metafield(namespace: "custom", key: "genre") { value }\n          products(first: 8) {\n            nodes {\n              id handle title\n              featuredImage { url altText width height }\n              priceRange { minVariantPrice { amount currencyCode } }\n              statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n            }\n          }\n        }\n      }\n    }\n    seo { description title }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    id\n    title\n    price { amount currencyCode }\n    compareAtPrice { amount currencyCode }\n    image { id url altText width height }\n    selectedOptions { name value }\n  }\n\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n': {
     return: ProductQuery;
     variables: ProductQueryVariables;
   };

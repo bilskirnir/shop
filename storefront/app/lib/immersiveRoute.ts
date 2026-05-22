@@ -1,6 +1,7 @@
 /** Forme minimale d'un match react-router (on ne lit que `handle`). */
 export interface RouteMatchLike {
   handle?: unknown;
+  [key: string]: unknown;
 }
 
 /** True si une des routes actives déclare `handle.immersive === true`. */

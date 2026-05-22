@@ -81,7 +81,7 @@ export function TomePageTemplate({
 
       <section className="fiche-hero">
         <div className="fiche-hero-bg" />
-        <ProductGallery images={images} alt={cover.altText} />
+        <ProductGallery images={images} alt={cover.altText ?? title} />
       </section>
 
       <Container width="reading">

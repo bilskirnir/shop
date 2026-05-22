@@ -38,7 +38,7 @@ export function OneShotPageTemplate({
       <section className="fiche-hero" style={{paddingTop: '40px'}}>
         <div className="fiche-hero-bg" />
         <div className="fiche-fog" />
-        <ProductGallery images={images} alt={cover.altText} />
+        <ProductGallery images={images} alt={cover.altText ?? title} />
         <div className="fiche-rise" style={{position: 'relative', zIndex: 3, marginTop: 'var(--bsk-space-5)'}}>
           <span
             style={{
