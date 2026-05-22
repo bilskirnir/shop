@@ -1,6 +1,8 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {LegalLayout} from '~/components/LegalLayout';
+import '~/styles/legal.css';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
@@ -58,12 +60,9 @@ export default function Page() {
   const {page} = useLoaderData<typeof loader>();
 
   return (
-    <div className="page">
-      <header>
-        <h1>{page.title}</h1>
-      </header>
+    <LegalLayout title={page.title}>
       <main dangerouslySetInnerHTML={{__html: page.body}} />
-    </div>
+    </LegalLayout>
   );
 }
 

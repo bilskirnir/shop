@@ -1,6 +1,8 @@
 import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/policies._index';
 import type {PoliciesQuery, PolicyItemFragment} from 'storefrontapi.generated';
+import {Container} from '~/components/Container';
+import '~/styles/legal.css';
 
 export async function loader({context}: Route.LoaderArgs) {
   const data: PoliciesQuery = await context.storefront.query(POLICIES_QUERY);
@@ -25,16 +27,20 @@ export default function Policies() {
   const {policies} = useLoaderData<typeof loader>();
 
   return (
-    <div className="policies">
-      <h1>Policies</h1>
-      <div>
-        {policies.map((policy) => (
-          <fieldset key={policy.id}>
-            <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
-          </fieldset>
-        ))}
+    <Container width="reading">
+      <div id="top" className="legal-head">
+        <div className="legal-k">Informations</div>
+        <h1>Informations légales</h1>
       </div>
-    </div>
+      <nav className="legal-toc" style={{paddingTop: 'var(--bsk-space-4)'}}>
+        {policies.map((policy) => (
+          <Link key={policy.id} to={`/policies/${policy.handle}`}>
+            {policy.title}
+          </Link>
+        ))}
+      </nav>
+      <div style={{height: 'var(--bsk-space-8)'}} />
+    </Container>
   );
 }
 

@@ -1,6 +1,8 @@
-import {Link, useLoaderData} from 'react-router';
+import {useLoaderData} from 'react-router';
 import type {Route} from './+types/policies.$handle';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import {LegalLayout} from '~/components/LegalLayout';
+import '~/styles/legal.css';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -45,16 +47,9 @@ export default function Policy() {
   const {policy} = useLoaderData<typeof loader>();
 
   return (
-    <div className="policy">
-      <br />
-      <br />
-      <div>
-        <Link to="/policies">← Back to Policies</Link>
-      </div>
-      <br />
-      <h1>{policy.title}</h1>
+    <LegalLayout label="Informations légales" title={policy.title}>
       <div dangerouslySetInnerHTML={{__html: policy.body}} />
-    </div>
+    </LegalLayout>
   );
 }
 
