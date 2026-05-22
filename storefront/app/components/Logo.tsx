@@ -9,7 +9,8 @@ export function Logo({
   height = 40,
   white = true,
 }: {
-  height?: number;
+  /** Hauteur CSS : nombre (px) ou chaîne (ex. `clamp(...)` pour du responsive). */
+  height?: number | string;
   white?: boolean;
 }) {
   return (
