@@ -58,7 +58,7 @@ export function ImmersiveNav({
       </button>
 
       <Link to="/" aria-label="Accueil Bilskirnir" style={{display: 'inline-flex'}}>
-        <Logo height={38} />
+        <Logo height="clamp(44px, 5.5vw, 58px)" />
       </Link>
 
       <button
