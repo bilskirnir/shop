@@ -4,22 +4,24 @@ import {renderWithRouter} from '~/test/render';
 import {Ornament} from '../Ornament';
 
 describe('<Ornament />', () => {
-  it('renders three gold diamond glyphs', () => {
+  it('rend un ✦ doré (séparateur spec)', () => {
     renderWithRouter(<Ornament />);
     const el = screen.getByRole('presentation', {hidden: true});
-    expect(el).toHaveTextContent('◈ ◈ ◈');
+    expect(el).toHaveTextContent('✦');
   });
 
-  it('accepts a custom count', () => {
-    renderWithRouter(<Ornament count={5} />);
+  it('accepte plusieurs glyphes via count', () => {
+    renderWithRouter(<Ornament count={3} />);
     expect(screen.getByRole('presentation', {hidden: true})).toHaveTextContent(
-      '◈ ◈ ◈ ◈ ◈',
+      '✦ ✦ ✦',
     );
   });
 
-  it('is decorative and hidden from assistive tech', () => {
+  it("est décoratif et masqué aux lecteurs d'écran", () => {
     renderWithRouter(<Ornament />);
-    const el = screen.getByRole('presentation', {hidden: true});
-    expect(el).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByRole('presentation', {hidden: true})).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
   });
 });

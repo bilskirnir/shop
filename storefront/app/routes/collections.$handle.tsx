@@ -6,13 +6,18 @@ import {UniverseHero} from '~/components/UniverseHero';
 import {SagaSection} from '~/components/SagaSection';
 import {TomeCard} from '~/components/TomeCard';
 import {Ornament} from '~/components/Ornament';
-import {UNIVERSE_DETAIL_FRAGMENT} from '~/lib/fragments';
+import {UniverseRail, type UniverseRailItem} from '~/components/UniverseRail';
+import {UNIVERSE_DETAIL_FRAGMENT, UNIVERSE_RAIL_FRAGMENT} from '~/lib/fragments';
+import {universeAccentStyle} from '~/lib/universeAccent';
+import {splitLore} from '~/lib/lore';
 import {
   metaobjectField,
+  parseBool,
   parseNumeroTome,
   parseStatutParution,
   richTextToPlain,
 } from '~/lib/tomeMetafields';
+import '~/styles/univers.css';
 
 export const meta: Route.MetaFunction = ({data}) => [
   {title: `${data?.collection.title ?? 'Univers'} — Bilskirnir`},
@@ -24,18 +29,23 @@ const COLLECTION_QUERY = `#graphql
     collection(handle: $handle) {
       ...UniverseDetail
     }
+    otherUniverses: collections(first: 20, sortKey: TITLE) {
+      nodes { ...UniverseRailCard }
+    }
   }
   ${UNIVERSE_DETAIL_FRAGMENT}
+  ${UNIVERSE_RAIL_FRAGMENT}
 ` as const;
 
 export async function loader({context, params}: Route.LoaderArgs) {
   const {handle} = params;
   if (!handle) throw new Response('Missing handle', {status: 400});
-  const {collection} = await context.storefront.query(COLLECTION_QUERY, {
-    variables: {handle},
-  });
+  const {collection, otherUniverses} = await context.storefront.query(
+    COLLECTION_QUERY,
+    {variables: {handle}},
+  );
   if (!collection) throw new Response('Not found', {status: 404});
-  return {collection};
+  return {collection, otherUniverses};
 }
 
 type Collection = NonNullable<CollectionQuery['collection']>;
@@ -67,7 +77,11 @@ function toTomeCardProps(p: ProductNode) {
 }
 
 export default function CollectionRoute() {
-  const {collection} = useLoaderData<typeof loader>();
+  const {collection, otherUniverses} = useLoaderData<typeof loader>();
+
+  const themeColor = collection.couleurTheme?.value ?? null;
+  const genre = collection.genre?.value ?? null;
+  const {quote, body} = splitLore(richTextToPlain(collection.lore?.value));
 
   const heroImageRef = collection.illustrationHero?.reference?.image;
   const heroImage = heroImageRef
@@ -78,22 +92,17 @@ export default function CollectionRoute() {
         height: heroImageRef.height ?? 0,
       }
     : null;
-  const themeColor = collection.couleurTheme?.value ?? null;
-  const lore = richTextToPlain(collection.lore?.value);
+
   const sagaNodes = collection.sagas?.references?.nodes ?? [];
   const products = collection.products.nodes;
 
-  // Group products by saga.handle
   const productsBySaga = new Map<string, ProductNode[]>();
-  const standaloneProducts: ProductNode[] = [];
   for (const p of products) {
     const sagaHandle = p.saga?.reference?.handle ?? null;
     if (sagaHandle) {
       const existing = productsBySaga.get(sagaHandle) ?? [];
       existing.push(p);
       productsBySaga.set(sagaHandle, existing);
-    } else {
-      standaloneProducts.push(p);
     }
   }
 
@@ -103,70 +112,82 @@ export default function CollectionRoute() {
       : ''
   }${products.length} tome${products.length > 1 ? 's' : ''}`;
 
+  const railItems: UniverseRailItem[] = (otherUniverses?.nodes ?? [])
+    .filter((c) => c.handle !== collection.handle)
+    .map((c) => ({
+      handle: c.handle,
+      title: c.title,
+      kicker: parseBool(c.estUneOeuvreIndependante?.value)
+        ? 'Roman indépendant'
+        : 'Univers',
+      accent: c.couleurTheme?.value ?? null,
+    }));
+
   return (
-    <>
+    <div style={universeAccentStyle(themeColor)}>
       <UniverseHero
         title={collection.title}
-        heroImage={heroImage}
-        themeColor={themeColor}
-        lore={lore}
+        kicker={genre}
+        quote={quote}
         stats={stats}
+        heroImage={heroImage}
       />
+
+      {body ? (
+        <Container width="reading">
+          <section style={{padding: 'var(--bsk-space-8) 0'}}>
+            <p
+              style={{
+                fontSize: 'var(--bsk-text-xs)',
+                letterSpacing: 'var(--bsk-tracking-widest)',
+                textTransform: 'uppercase',
+                color: 'var(--bsk-accent-gold)',
+                textAlign: 'center',
+                marginBottom: 'var(--bsk-space-4)',
+              }}
+            >
+              L'univers
+            </p>
+            <p
+              style={{
+                fontSize: 'var(--bsk-text-read)',
+                lineHeight: 1.75,
+                color: 'var(--bsk-fg-primary)',
+                whiteSpace: 'pre-line',
+              }}
+            >
+              {body}
+            </p>
+          </section>
+        </Container>
+      ) : null}
+
       <Container width="content">
         {sagaNodes.length > 0 ? (
           <>
             {sagaNodes.map((saga, i) => {
               const nom = metaobjectField(saga.fields, 'nom') ?? '';
-              const synopsis = richTextToPlain(
-                metaobjectField(saga.fields, 'synopsis'),
-              );
+              const type = metaobjectField(saga.fields, 'type');
+              const synopsis = richTextToPlain(metaobjectField(saga.fields, 'synopsis'));
               const tomes = (productsBySaga.get(saga.handle) ?? [])
                 .map(toTomeCardProps)
                 .sort((a, b) => (a.tomeNumber ?? 0) - (b.tomeNumber ?? 0));
               return (
                 <div key={saga.id}>
-                  <SagaSection nom={nom} synopsis={synopsis} tomes={tomes} />
-                  {i < sagaNodes.length - 1 && <Ornament />}
+                  <SagaSection nom={nom} type={type} synopsis={synopsis} tomes={tomes} />
+                  {i < sagaNodes.length - 1 ? <Ornament /> : null}
                 </div>
               );
             })}
-            {standaloneProducts.length > 0 && (
-              <section style={{padding: 'var(--bsk-space-12) 0'}}>
-                <h2
-                  style={{
-                    fontFamily: 'var(--bsk-font-serif)',
-                    fontSize: 'var(--bsk-text-xl)',
-                    textAlign: 'center',
-                    color: 'var(--bsk-fg-primary)',
-                    marginBottom: 'var(--bsk-space-6)',
-                  }}
-                >
-                  Hors saga
-                </h2>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: 'var(--bsk-space-6)',
-                  }}
-                >
-                  {standaloneProducts
-                    .map(toTomeCardProps)
-                    .sort((a, b) => (a.tomeNumber ?? 0) - (b.tomeNumber ?? 0))
-                    .map((t) => (
-                      <TomeCard key={t.handle} {...t} />
-                    ))}
-                </div>
-              </section>
-            )}
           </>
         ) : (
-          <section style={{padding: 'var(--bsk-space-12) 0'}}>
+          <section style={{padding: 'var(--bsk-space-10) 0'}}>
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: 'var(--bsk-space-6)',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 'var(--bsk-space-5)',
+                alignItems: 'start',
               }}
             >
               {products
@@ -179,6 +200,11 @@ export default function CollectionRoute() {
           </section>
         )}
       </Container>
-    </>
+
+      <Ornament />
+      <Container width="content">
+        <UniverseRail items={railItems} />
+      </Container>
+    </div>
   );
 }

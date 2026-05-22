@@ -3,41 +3,36 @@ import {render, screen} from '@testing-library/react';
 import {UniverseHero} from '../UniverseHero';
 
 describe('UniverseHero', () => {
-  it('rend titre + lore + stats en mode fallback typo', () => {
+  it('rend titre + citation + stats + pastille genre', () => {
     render(
       <UniverseHero
         title="Au Nom des Dieux"
-        lore="Quand les dieux se sont tus, le monde n'a pas cessé de tourner."
-        stats="4 sagas · 6 tomes · en cours"
+        kicker="Fantastique · Mythologie"
+        quote="« Et si les légendes antiques étaient vraies ? »"
+        stats="4 sagas · 6 tomes"
       />,
     );
-    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent(
-      'Au Nom des Dieux',
-    );
-    expect(screen.getByText(/Quand les dieux/)).toBeInTheDocument();
-    expect(screen.getByText('4 sagas · 6 tomes · en cours')).toBeInTheDocument();
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent('Au Nom des Dieux');
+    expect(screen.getByText('Fantastique · Mythologie')).toBeInTheDocument();
+    expect(screen.getByText(/légendes antiques/)).toBeInTheDocument();
+    expect(screen.getByText('4 sagas · 6 tomes')).toBeInTheDocument();
   });
 
-  it('rend l\'image hero quand fournie', () => {
+  it('omet la pastille et la citation quand absentes', () => {
+    render(<UniverseHero title="Fracture" stats="1 tome" />);
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent('Fracture');
+    expect(screen.getByText('1 tome')).toBeInTheDocument();
+    expect(screen.queryByText('Fantastique · Mythologie')).not.toBeInTheDocument();
+    expect(screen.queryByText(/légendes antiques/)).not.toBeInTheDocument();
+  });
+
+  it("rend l'image hero quand fournie", () => {
     render(
       <UniverseHero
         title="Saga X"
-        heroImage={{
-          url: 'https://example.com/hero.jpg',
-          altText: 'Saga X hero',
-          width: 1920,
-          height: 600,
-        }}
+        heroImage={{url: 'https://example.com/hero.jpg', altText: 'Saga X hero', width: 1920, height: 600}}
       />,
     );
     expect(screen.getByAltText('Saga X hero')).toBeInTheDocument();
-  });
-
-  it('applique themeColor en background fallback quand pas d\'image', () => {
-    const {container} = render(
-      <UniverseHero title="Fracture" themeColor="#2a4d5c" />,
-    );
-    const root = container.firstChild as HTMLElement;
-    expect(root.style.background).toContain('#2a4d5c');
   });
 });
