@@ -28,4 +28,18 @@ describe('ImmersiveNav', () => {
     fireEvent.click(screen.getByRole('button', {name: /menu/i}));
     expect(screen.getByText('Au Nom des Dieux')).toBeInTheDocument();
   });
+
+  it('variant solid → position sticky', () => {
+    const {container} = renderWithRouter(
+      <ImmersiveNav universes={universes} cartCount={0} variant="solid" />,
+    );
+    expect((container.querySelector('header') as HTMLElement).style.position).toBe('sticky');
+  });
+
+  it('variant overlay → position fixed', () => {
+    const {container} = renderWithRouter(
+      <ImmersiveNav universes={universes} cartCount={0} variant="overlay" />,
+    );
+    expect((container.querySelector('header') as HTMLElement).style.position).toBe('fixed');
+  });
 });

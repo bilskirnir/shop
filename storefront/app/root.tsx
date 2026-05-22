@@ -18,7 +18,6 @@ import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY, MEGA_MENU_QUERY} from '~/lib/fragments';
 import './styles/fonts.css';
 import globalStyles from '~/styles/global.css?url';
-import {Header} from '~/components/Header';
 import {Footer} from '~/components/Footer';
 import {ImmersiveNav} from '~/components/ImmersiveNav';
 import type {UniverseItem} from '~/components/MegaMenu';
@@ -221,27 +220,21 @@ export default function App() {
       <Aside.Provider>
         <Suspense
           fallback={
-            immersive ? (
-              <ImmersiveNav universes={universes} cartCount={0} />
-            ) : (
-              <Header universes={universes} cartCount={0} />
-            )
+            <ImmersiveNav
+              universes={universes}
+              cartCount={0}
+              variant={immersive ? 'overlay' : 'solid'}
+            />
           }
         >
           <Await resolve={data.cart}>
-            {(cart) =>
-              immersive ? (
-                <ImmersiveNav
-                  universes={universes}
-                  cartCount={cart?.totalQuantity ?? 0}
-                />
-              ) : (
-                <Header
-                  universes={universes}
-                  cartCount={cart?.totalQuantity ?? 0}
-                />
-              )
-            }
+            {(cart) => (
+              <ImmersiveNav
+                universes={universes}
+                cartCount={cart?.totalQuantity ?? 0}
+                variant={immersive ? 'overlay' : 'solid'}
+              />
+            )}
           </Await>
         </Suspense>
         <main>
