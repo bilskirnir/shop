@@ -485,6 +485,16 @@ export type HomeUniverseFragment = Pick<
   };
 };
 
+export type UniverseRailCardFragment = Pick<
+  StorefrontAPI.Collection,
+  'id' | 'handle' | 'title'
+> & {
+  couleurTheme?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.Metafield, 'value'>
+  >;
+};
+
 export type UniverseDetailFragment = Pick<
   StorefrontAPI.Collection,
   'id' | 'handle' | 'title'
@@ -497,6 +507,7 @@ export type UniverseDetailFragment = Pick<
     }>;
   }>;
   lore?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
   couleurTheme?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
   sagas?: StorefrontAPI.Maybe<{
     references?: StorefrontAPI.Maybe<{
@@ -788,6 +799,7 @@ export type CollectionQuery = {
         }>;
       }>;
       lore?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+      genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
       couleurTheme?: StorefrontAPI.Maybe<
         Pick<StorefrontAPI.Metafield, 'value'>
       >;
@@ -860,6 +872,18 @@ export type CollectionQuery = {
       };
     }
   >;
+  otherUniverses: {
+    nodes: Array<
+      Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title'> & {
+        couleurTheme?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+      }
+    >;
+  };
 };
 
 export type CollectionFragment = Pick<
@@ -1466,7 +1490,7 @@ interface GeneratedQueryTypes {
     return: BlogsQuery;
     variables: BlogsQueryVariables;
   };
-  '#graphql\n  query Collection($country: CountryCode, $language: LanguageCode, $handle: String!)\n    @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      ...UniverseDetail\n    }\n  }\n  #graphql\n  fragment UniverseDetail on Collection {\n    id\n    handle\n    title\n    illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {\n      reference {\n        ... on MediaImage { image { url altText width height } }\n      }\n    }\n    lore: metafield(namespace: "custom", key: "lore") { value }\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    sagas: metafield(namespace: "custom", key: "sagas") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            id handle\n            fields { key value reference { ... on MediaImage { image { url altText width height } } } }\n          }\n        }\n      }\n    }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n    products(first: 50) {\n      nodes { ...TileProduct }\n    }\n  }\n  #graphql\n  fragment TileProduct on Product {\n    id\n    handle\n    title\n    featuredImage { url altText width height }\n    priceRange { minVariantPrice { amount currencyCode } }\n    ...TomeMetafields\n  }\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n\n': {
+  '#graphql\n  query Collection($country: CountryCode, $language: LanguageCode, $handle: String!)\n    @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      ...UniverseDetail\n    }\n    otherUniverses: collections(first: 20, sortKey: TITLE) {\n      nodes { ...UniverseRailCard }\n    }\n  }\n  #graphql\n  fragment UniverseDetail on Collection {\n    id\n    handle\n    title\n    illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {\n      reference {\n        ... on MediaImage { image { url altText width height } }\n      }\n    }\n    lore: metafield(namespace: "custom", key: "lore") { value }\n    genre: metafield(namespace: "custom", key: "genre") { value }\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    sagas: metafield(namespace: "custom", key: "sagas") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            id handle\n            fields { key value reference { ... on MediaImage { image { url altText width height } } } }\n          }\n        }\n      }\n    }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n    products(first: 50) {\n      nodes { ...TileProduct }\n    }\n  }\n  #graphql\n  fragment TileProduct on Product {\n    id\n    handle\n    title\n    featuredImage { url altText width height }\n    priceRange { minVariantPrice { amount currencyCode } }\n    ...TomeMetafields\n  }\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n\n  #graphql\n  fragment UniverseRailCard on Collection {\n    id\n    handle\n    title\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n': {
     return: CollectionQuery;
     variables: CollectionQueryVariables;
   };
