@@ -133,6 +133,30 @@ Comme la fiche tome, avec :
 - **L'auteur fondateur** : photo circulaire (Gautier) + bio + liens TikTok/Instagram.
 - Footer.
 
+### 3.6 Panier — drawer (`07-panier-mobile.html`)
+
+Le panier est un **drawer** (Aside Hydrogen déjà monté en Plan 2), pas une page.
+
+- **Barre de progression à paliers (récompenses)** en tête : message dynamique (« Plus que X € pour la livraison offerte 🚚 », puis « …pour un marque-page offert 🎁 », puis « tout débloqué 🎉 »), jalons (camion / cadeau) qui se remplissent en doré, barre qui se met à jour au changement de quantité.
+- **Lignes panier** : couverture (drop-shadow), titre + n° de tome, **note de dédicace** (« Dédicace : Pour Marie », en doré), stepper quantité, prix, retirer. Recalcul en direct.
+- **Footer du drawer** : sous-total, mention « Frais de port et taxes calculés au paiement », **Passer au paiement** (doré) + **Shop Pay**.
+
+**Réglage de la mécanique de récompenses (validé) : piloté par metafields niveau boutique** (admin Shopify), pour que Gautier ajuste sans toucher au code :
+- `cart.seuil_livraison_offerte` (number, ex. `49`).
+- `cart.paliers_cadeaux` : liste `{ seuil:number, produit_cadeau:reference }` (ex. `75 € → marque-page`).
+- Le cadeau s'ajoute comme **ligne à 0 €** quand le seuil est atteint (même mécanique que la dédicace gratuite du Plan 2 : `CartForm` + attribut), et se retire si le sous-total repasse sous le seuil.
+- **Valeurs par défaut raisonnables** si les metafields ne sont pas configurés.
+- La **livraison offerte réelle** reste gérée par les *Shipping rates* Shopify (la barre est l'affichage incitatif ; le seuil doit correspondre au tarif « gratuit > X € » configuré dans Shopify).
+
+### 3.7 Pages légales / info — gabarit (`08-cgu-legal-template-mobile.html`)
+
+Gabarit **générique neutre** (gris + doré, **pas** de couleur d'univers) pour CGU, **Mentions légales, CGV, Livraison & retours, Politique de confidentialité, Contact** :
+
+- En-tête : label, titre, date de mise à jour.
+- **Sommaire ancré** (liens vers les articles).
+- **Articles** numérotés (n° doré), texte lisible 16–17 px, listes à puces `✦`, lien « revenir en haut ».
+- Footer. Contenu alimenté depuis des **pages Shopify** (`/pages/...` ou `/policies/...`).
+
 ---
 
 ## 4. Bugs connus à corriger pendant l'implémentation
@@ -152,9 +176,9 @@ Relevés sur le dev server le 2026-05-22 (la refonte des routes les absorbe) :
 
 ## 6. Hors scope (différé)
 
-- Versions desktop des pages univers / fiche / maison (le design system se transpose ; à maquetter/implémenter en responsive à partir du mobile + du modèle home desktop).
+- Versions desktop des pages univers / fiche / maison / panier / légal (le design system se transpose ; à implémenter en responsive à partir du mobile + du modèle home desktop).
 - Bundles sagas, notify-me « à paraître », précommande via app dédiée (cf. Plan 2 out-of-scope).
-- Pages légales (mentions, CGV, livraison, confidentialité, contact) — à créer (accessibles via menu/footer).
+- **Rédaction** du contenu légal réel (mentions, CGV, livraison, confidentialité) — le **gabarit** est conçu (§3.7) ; le texte juridique reste à rédiger/valider.
 - Rich text formaté (gras/listes) — plain text suffit.
 
 ## 7. Références
