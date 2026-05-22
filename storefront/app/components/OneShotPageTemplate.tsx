@@ -1,7 +1,9 @@
 import type {ReactNode} from 'react';
 import {Container} from './Container';
-import {Ornament} from './Ornament';
-import type {CoverImage} from './WorkTile';
+import {ProductGallery} from './ProductGallery';
+import {ValuesBadges} from './ValuesBadges';
+import {TechSpecs, type TechRow} from './TechSpecs';
+import type {CoverImage} from './Cover';
 
 export interface OneShotPageTemplateProps {
   title: string;
@@ -9,6 +11,8 @@ export interface OneShotPageTemplateProps {
   description: string;
   cover: CoverImage;
   pillLabel: 'ROMAN' | 'RECUEIL' | 'GUIDE';
+  ambiance?: string | null;
+  techRows?: TechRow[];
   purchaseSlot: ReactNode;
   relatedSlot?: ReactNode;
 }
@@ -19,138 +23,129 @@ export function OneShotPageTemplate({
   description,
   cover,
   pillLabel,
+  ambiance,
+  techRows = [],
   purchaseSlot,
   relatedSlot,
 }: OneShotPageTemplateProps) {
+  const images = [cover].filter((c) => c.url);
+  // Pas de fallback sur teaserShort (sinon doublon avec le hero) : l'ambiance
+  // vient d'un metafield dédié, sinon le bandeau n'affiche que son titre.
+  const atmosphereText = ambiance ?? null;
+
   return (
     <>
-      <section
-        style={{
-          position: 'relative',
-          minHeight: '380px',
-          padding: 'var(--bsk-space-12) var(--bsk-space-5)',
-          background: 'var(--bsk-bg-gradient-warm)',
-          textAlign: 'center',
-        }}
-      >
-        <span
-          style={{
-            display: 'inline-block',
-            fontFamily: 'var(--bsk-font-sans)',
-            fontSize: 'var(--bsk-text-xs)',
-            letterSpacing: 'var(--bsk-tracking-widest)',
-            textTransform: 'uppercase',
-            color: 'var(--bsk-bg-base)',
-            background: 'var(--bsk-accent-gold)',
-            padding: 'var(--bsk-space-1) var(--bsk-space-3)',
-            marginBottom: 'var(--bsk-space-5)',
-          }}
-        >
-          {pillLabel} INDÉPENDANT
-        </span>
-        <h1
-          style={{
-            fontFamily: 'var(--bsk-font-serif)',
-            fontSize: 'var(--bsk-text-3xl)',
-            color: 'var(--bsk-fg-primary)',
-            letterSpacing: 'var(--bsk-tracking-tight)',
-            marginBottom: 'var(--bsk-space-5)',
-          }}
-        >
-          {title}
-        </h1>
-        {teaserShort && (
-          <p
+      <section className="fiche-hero" style={{paddingTop: '40px'}}>
+        <div className="fiche-hero-bg" />
+        <div className="fiche-fog" />
+        <ProductGallery images={images} alt={cover.altText ?? title} />
+        <div className="fiche-rise" style={{position: 'relative', zIndex: 3, marginTop: 'var(--bsk-space-5)'}}>
+          <span
             style={{
-              fontFamily: 'var(--bsk-font-serif)',
-              fontStyle: 'italic',
-              fontSize: 'var(--bsk-text-md)',
-              color: 'var(--bsk-fg-secondary)',
-              maxWidth: 'var(--bsk-width-reading)',
-              margin: '0 auto',
+              display: 'inline-flex',
+              fontSize: 'var(--bsk-text-xs)',
+              letterSpacing: 'var(--bsk-tracking-widest)',
+              textTransform: 'uppercase',
+              color: 'var(--bsk-accent-gold)',
+              border: '1px solid var(--bsk-border-gold)',
+              borderRadius: '999px',
+              padding: '6px 14px',
+            }}
+          >
+            {pillLabel} INDÉPENDANT
+          </span>
+          <h1
+            style={{
+              fontFamily: 'var(--bsk-font-display)',
+              fontWeight: 800,
+              fontSize: 'clamp(40px, 12vw, 50px)',
+              lineHeight: 0.94,
+              letterSpacing: '-0.02em',
+              margin: '14px 0 12px',
+              color: 'var(--bsk-fg-primary)',
+            }}
+          >
+            {title}
+          </h1>
+          {teaserShort ? (
+            <p
+              style={{
+                fontStyle: 'italic',
+                fontSize: 'var(--bsk-text-read)',
+                lineHeight: 1.5,
+                color: '#d7cdb6',
+                maxWidth: '300px',
+                margin: '0 auto',
+              }}
+            >
+              {teaserShort}
+            </p>
+          ) : null}
+        </div>
+      </section>
+
+      <Container width="reading">
+        <div style={{padding: 'var(--bsk-space-6) 0'}}>{purchaseSlot}</div>
+        <ValuesBadges />
+        <section style={{padding: 'var(--bsk-space-8) 0'}}>
+          <h2
+            style={{
+              fontFamily: 'var(--bsk-font-display)',
+              fontWeight: 'var(--bsk-weight-bold)',
+              fontSize: 'var(--bsk-text-lg)',
+              color: 'var(--bsk-fg-primary)',
+              marginBottom: 'var(--bsk-space-4)',
+            }}
+          >
+            Le récit
+          </h2>
+          <div
+            style={{
+              fontSize: 'var(--bsk-text-read)',
+              lineHeight: 1.72,
+              color: 'var(--bsk-fg-primary)',
               whiteSpace: 'pre-line',
             }}
           >
-            {teaserShort}
-          </p>
-        )}
+            {description}
+          </div>
+        </section>
+      </Container>
+
+      <section
+        style={{
+          position: 'relative',
+          margin: 'var(--bsk-space-4) 0',
+          padding: '54px 26px',
+          textAlign: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        <span
+          aria-hidden="true"
+          style={{position: 'absolute', inset: 0, background: 'radial-gradient(80% 90% at 50% 30%, var(--bsk-uni), #0c1018)'}}
+        />
+        <span
+          aria-hidden="true"
+          style={{position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(19,20,25,.6), rgba(19,20,25,.2), rgba(19,20,25,.85))'}}
+        />
+        <div style={{position: 'relative', zIndex: 2}}>
+          <div style={{fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--bsk-accent-gold)', marginBottom: 'var(--bsk-space-4)'}}>
+            L'atmosphère du livre
+          </div>
+          {atmosphereText ? (
+            <p style={{fontFamily: 'var(--bsk-font-display)', fontWeight: 700, fontSize: 'var(--bsk-text-lg)', lineHeight: 1.25, maxWidth: '300px', margin: '0 auto', color: 'var(--bsk-fg-primary)'}}>
+              {atmosphereText}
+            </p>
+          ) : null}
+        </div>
       </section>
 
-      <Container width="content">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '45fr 55fr',
-            gap: 'var(--bsk-space-10)',
-            alignItems: 'start',
-            padding: 'var(--bsk-space-10) 0',
-          }}
-        >
-          {cover.url ? (
-            <img
-              src={cover.url}
-              alt={cover.altText}
-              width={cover.width}
-              height={cover.height}
-              style={{
-                width: '100%',
-                height: 'auto',
-                boxShadow: 'var(--bsk-shadow-cover)',
-                borderRadius: '2px',
-              }}
-            />
-          ) : (
-            <div
-              aria-hidden
-              style={{
-                width: '100%',
-                aspectRatio: '2 / 3',
-                background: 'var(--bsk-bg-raised)',
-                borderRadius: '2px',
-              }}
-            />
-          )}
-          <div>{purchaseSlot}</div>
-        </div>
-      </Container>
-
-      <Container width="content">
-        <section
-          style={{
-            padding: 'var(--bsk-space-10) 0',
-            textAlign: 'center',
-          }}
-        >
-          <Ornament />
-          <h2
-            style={{
-              fontFamily: 'var(--bsk-font-serif)',
-              fontSize: 'var(--bsk-text-xl)',
-              color: 'var(--bsk-fg-primary)',
-              margin: 'var(--bsk-space-5) 0',
-            }}
-          >
-            L'atmosphère du livre
-          </h2>
-        </section>
-      </Container>
-
       <Container width="reading">
-        <section
-          style={{
-            padding: '0 0 var(--bsk-space-12)',
-            fontFamily: 'var(--bsk-font-serif)',
-            fontSize: 'var(--bsk-text-md)',
-            lineHeight: 1.7,
-            color: 'var(--bsk-fg-primary)',
-            whiteSpace: 'pre-line',
-          }}
-        >
-          {description}
-        </section>
+        <TechSpecs rows={techRows} />
       </Container>
 
-      {relatedSlot && <Container width="content">{relatedSlot}</Container>}
+      {relatedSlot ? <Container width="content">{relatedSlot}</Container> : null}
     </>
   );
 }

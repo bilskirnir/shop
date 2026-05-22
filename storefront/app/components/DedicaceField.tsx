@@ -17,7 +17,6 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
     setActivated(next);
     onChange({activated: next, name});
   };
-
   const updateName = (next: string) => {
     setName(next);
     onChange({activated, name: next});
@@ -26,60 +25,51 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
   return (
     <div
       style={{
-        padding: 'var(--bsk-space-4) 0',
-        borderTop: '1px solid var(--bsk-border-subtle)',
-        borderBottom: '1px solid var(--bsk-border-subtle)',
+        border: '1px solid var(--bsk-border-subtle)',
+        borderRadius: '14px',
+        padding: '14px 16px',
         margin: 'var(--bsk-space-5) 0',
+        background: 'var(--bsk-bg-raised)',
       }}
     >
-      <label
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--bsk-space-3)',
-          fontFamily: 'var(--bsk-font-sans)',
-          fontSize: 'var(--bsk-text-sm)',
-          color: 'var(--bsk-fg-primary)',
-          cursor: 'pointer',
-        }}
-      >
+      <label style={{display: 'flex', alignItems: 'center', gap: '11px', cursor: 'pointer'}}>
         <input
           type="checkbox"
           checked={activated}
           onChange={(e) => updateActivated(e.target.checked)}
-        />
-        <span>Dédicacer ce livre</span>
-        <span
           style={{
-            color: 'var(--bsk-fg-secondary)',
-            fontSize: 'var(--bsk-text-xs)',
-            letterSpacing: 'var(--bsk-tracking-wide)',
-            textTransform: 'uppercase',
+            width: 20,
+            height: 20,
+            accentColor: 'var(--bsk-accent-gold)',
+            flex: '0 0 auto',
+            cursor: 'pointer',
           }}
-        >
-          Gratuit
+        />
+        <span style={{fontSize: '14.5px', color: 'var(--bsk-fg-primary)'}}>
+          <b style={{fontFamily: 'var(--bsk-font-display)'}}>Dédicacer ce livre</b>{' '}
+          <span style={{fontSize: '11px', color: 'var(--bsk-accent-gold)', letterSpacing: '0.06em'}}>· offert</span>
         </span>
       </label>
-      {activated && (
+      {activated ? (
         <input
           type="text"
           value={name}
           onChange={(e) => updateName(e.target.value)}
-          placeholder="À qui dédicacer ?"
+          placeholder="À qui dédicacer ? (ex. : Pour Marie)"
           style={{
             display: 'block',
             width: '100%',
-            padding: 'var(--bsk-space-3)',
-            marginTop: 'var(--bsk-space-3)',
-            background: 'var(--bsk-bg-raised)',
+            marginTop: '14px',
+            background: 'rgba(0,0,0,.3)',
             border: '1px solid var(--bsk-border-subtle)',
+            borderRadius: '9px',
+            padding: '11px 13px',
             color: 'var(--bsk-fg-primary)',
             fontFamily: 'var(--bsk-font-sans)',
-            fontSize: 'var(--bsk-text-sm)',
-            borderRadius: '2px',
+            fontSize: '14px',
           }}
         />
-      )}
+      ) : null}
     </div>
   );
 }
