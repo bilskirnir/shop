@@ -3,6 +3,8 @@ export type ReleaseStatus = 'publié' | 'précommande' | 'annoncé';
 export interface ReleaseStatusBadgeProps {
   status: ReleaseStatus;
   releaseDate?: string | null;
+  /** Posé en superposition sur une couverture (absolu, centré, au-dessus). */
+  onImage?: boolean;
 }
 
 const FORMATTER = new Intl.DateTimeFormat('fr-FR', {
@@ -21,11 +23,24 @@ function formatReleaseDate(iso: string | null | undefined): string | null {
 export function ReleaseStatusBadge({
   status,
   releaseDate,
+  onImage = false,
 }: ReleaseStatusBadgeProps) {
   if (status === 'publié') return null;
 
   const formatted = formatReleaseDate(releaseDate);
   const label = status === 'précommande' ? 'PRÉCO' : 'À PARAÎTRE';
+
+  const onImageStyle = onImage
+    ? ({
+        position: 'absolute',
+        top: '7%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 3,
+        whiteSpace: 'nowrap',
+        boxShadow: '0 4px 12px rgba(0,0,0,.4)',
+      } as const)
+    : null;
 
   return (
     <span
@@ -47,12 +62,15 @@ export function ReleaseStatusBadge({
         background:
           status === 'précommande'
             ? 'var(--bsk-accent-gold)'
-            : 'transparent',
+            : onImage
+              ? 'rgba(19,20,25,.82)'
+              : 'transparent',
         border:
           status === 'précommande'
             ? 'none'
             : '1px solid var(--bsk-border-subtle)',
         borderRadius: '2px',
+        ...onImageStyle,
       }}
     >
       {label}

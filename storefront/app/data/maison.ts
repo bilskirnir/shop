@@ -40,7 +40,7 @@ export const MAISON_PILLARS: Pillar[] = [
 export const MAISON_AUTHOR = {
   name: 'Gautier Durieux de Madron',
   photoAlt: 'Portrait de Gautier Durieux de Madron',
-  photoUrl: '/images/gautier.jpg', // placeholder — real asset added later
+  photoUrl: '/images/founder-placeholder.svg', // placeholder — swap for Gautier's real photo
   bio: 'Auteur français. Fondateur de Bilskirnir. Construit depuis 2021 l’univers d’Au Nom des Dieux et ses sagas parallèles. ~140 000 lecteurs sur TikTok.',
   links: [
     {label: 'TikTok', href: 'https://tiktok.com/@bilskirnir'},

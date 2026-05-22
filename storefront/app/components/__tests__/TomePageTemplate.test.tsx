@@ -54,4 +54,14 @@ describe('TomePageTemplate', () => {
     renderWithRouter(<TomePageTemplate {...baseProps} />);
     expect(screen.getByText(/Dans l'univers de Au Nom des Dieux/)).toBeInTheDocument();
   });
+
+  it('ne rend pas la couverture en <img> quand elle n\'a pas d\'url', () => {
+    renderWithRouter(
+      <TomePageTemplate
+        {...baseProps}
+        cover={{url: '', altText: 'COVER-X', width: 400, height: 600}}
+      />,
+    );
+    expect(screen.queryByAltText('COVER-X')).toBeNull();
+  });
 });

@@ -28,4 +28,11 @@ describe('ReleaseStatusBadge', () => {
     render(<ReleaseStatusBadge status="précommande" />);
     expect(screen.getByText(/PRÉCO/).closest('span')).toHaveAttribute('data-status', 'précommande');
   });
+
+  it('variante onImage est positionnée en absolu centré au-dessus de l\'image', () => {
+    render(<ReleaseStatusBadge status="précommande" onImage />);
+    const el = screen.getByText(/PRÉCO/).closest('span') as HTMLElement;
+    expect(el.style.position).toBe('absolute');
+    expect(el.style.zIndex).toBe('3');
+  });
 });
