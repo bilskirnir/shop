@@ -4,25 +4,30 @@
 
 :root {
   /* ── Color: background & surfaces ─────────────────────────────── */
-  --bsk-bg-base: #0c0906;          /* deepest — body */
-  --bsk-bg-raised: #15110c;         /* cards, tiles */
-  --bsk-bg-overlay: #1d1812;        /* hovers, mega-menu */
+  --bsk-bg-base: #131419;          /* anthracite — body */
+  --bsk-bg-raised: #191a20;         /* cartes/panneaux */
+  --bsk-bg-overlay: #1d1e26;        /* hovers, drawer */
+  --bsk-bg-footer: #0e0f13;
   --bsk-bg-gradient-warm: radial-gradient(
     ellipse at 50% 0%,
-    #1a140e 0%,
-    #0c0906 60%
+    #1a1b22 0%,
+    #131419 60%
   );
 
   /* ── Color: foreground ────────────────────────────────────────── */
-  --bsk-fg-primary: #f5efe3;        /* main text */
-  --bsk-fg-secondary: #a89b87;      /* metadata, labels */
-  --bsk-fg-muted: #6b6153;          /* disabled, captions */
+  --bsk-fg-primary: #ece4d3;        /* crème chaud — main text */
+  --bsk-fg-secondary: #969089;      /* gris chaud — metadata, labels */
+  --bsk-fg-muted: #6f6a62;          /* disabled, captions */
 
   /* ── Color: accents ───────────────────────────────────────────── */
-  --bsk-accent-gold: #c9a14a;       /* primary accent */
+  --bsk-accent-gold: #d8a657;       /* doré — accent permanent maison */
   --bsk-accent-gold-bright: #e6b95e; /* hover / active */
-  --bsk-accent-gold-dim: #8a6f33;   /* borders, subtle */
-  --bsk-accent-bronze: #8b6b3a;     /* secondary accent */
+  --bsk-accent-gold-dim: #c4912f;   /* borders, subtle */
+  --bsk-accent-bronze: #c4912f;     /* secondary accent */
+
+  /* ── Accent d'univers (ponctuel) — surchargé par page via inline style ── */
+  --bsk-uni: var(--bsk-accent-gold);     /* défaut neutre */
+  --bsk-uni-soft: rgba(216, 166, 87, 0.16);
 
   /* ── Color: semantic ──────────────────────────────────────────── */
   --bsk-status-preorder: var(--bsk-accent-gold);
@@ -30,15 +35,21 @@
   --bsk-status-published: var(--bsk-fg-primary);
 
   /* ── Borders & shadows ────────────────────────────────────────── */
-  --bsk-border-subtle: rgba(168, 155, 135, 0.12);
-  --bsk-border-gold: rgba(201, 161, 74, 0.35);
+  --bsk-border-subtle: rgba(236, 228, 211, 0.13);
+  --bsk-border-gold: rgba(216, 166, 87, 0.35);
   --bsk-shadow-cover: 0 18px 48px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.35);
+  /* couvertures mock-up détourées : ombre qui suit la forme du livre */
+  --bsk-cover-shadow: drop-shadow(0 26px 44px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
   --bsk-shadow-float: 0 8px 24px rgba(0, 0, 0, 0.45);
 
   /* ── Typography: families ─────────────────────────────────────── */
-  --bsk-font-serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  --bsk-font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --bsk-font-display: "Cabinet Grotesk", system-ui, sans-serif;
+  /* compat : l'ancien --bsk-font-serif des composants Plan 2 pointe désormais
+     vers le display (Cabinet Grotesk) jusqu'à leur refonte page par page. */
+  --bsk-font-serif: "Cabinet Grotesk", system-ui, sans-serif;
+  --bsk-font-sans: "Switzer", system-ui, -apple-system, sans-serif;
 
   /* ── Typography: scale (rem-based, 1rem = 16px) ──────────────── */
   --bsk-text-xs: 0.75rem;   /* 12px — labels */
@@ -50,6 +61,7 @@
   --bsk-text-2xl: 2.25rem;  /* 36px — page titles */
   --bsk-text-3xl: 3rem;     /* 48px — hero */
   --bsk-text-4xl: 4rem;     /* 64px — mega hero */
+  --bsk-text-read: 1.0625rem; /* 17px — corps éditorial (lecture) */
 
   /* ── Typography: weights ──────────────────────────────────────── */
   --bsk-weight-regular: 400;
