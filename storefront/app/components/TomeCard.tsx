@@ -1,4 +1,5 @@
 import {Link} from 'react-router';
+import {Cover} from './Cover';
 import {ReleaseStatusBadge, type ReleaseStatus} from './ReleaseStatusBadge';
 import type {CoverImage} from './WorkTile';
 
@@ -29,31 +30,22 @@ export function TomeCard({
         flexDirection: 'column',
         textDecoration: 'none',
         color: 'inherit',
+        textAlign: 'center',
       }}
     >
-      <img
-        src={cover.url}
-        alt={cover.altText}
-        width={cover.width}
-        height={cover.height}
-        loading="lazy"
-        style={{
-          width: '100%',
-          height: 'auto',
-          boxShadow: 'var(--bsk-shadow-cover)',
-          borderRadius: '2px',
-          background: 'var(--bsk-bg-raised)',
-        }}
-      />
+      <div style={{position: 'relative'}}>
+        <ReleaseStatusBadge status={status} releaseDate={releaseDate} onImage />
+        <Cover image={cover} bleed />
+      </div>
       <div
         style={{
           marginTop: 'var(--bsk-space-4)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'var(--bsk-space-2)',
+          gap: 'var(--bsk-space-1)',
         }}
       >
-        {tomeNumber != null && (
+        {tomeNumber != null ? (
           <span
             style={{
               fontFamily: 'var(--bsk-font-sans)',
@@ -65,37 +57,30 @@ export function TomeCard({
           >
             TOME {tomeNumber}
           </span>
-        )}
+        ) : null}
         <span
           style={{
-            fontFamily: 'var(--bsk-font-serif)',
+            fontFamily: 'var(--bsk-font-display)',
+            fontWeight: 'var(--bsk-weight-medium)',
             fontSize: 'var(--bsk-text-lg)',
             color: 'var(--bsk-fg-primary)',
             letterSpacing: 'var(--bsk-tracking-tight)',
+            lineHeight: 1.15,
           }}
         >
           {title}
         </span>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--bsk-space-3)',
-          }}
-        >
-          {status === 'publié' && priceFormatted && (
-            <span
-              style={{
-                fontFamily: 'var(--bsk-font-sans)',
-                fontSize: 'var(--bsk-text-base)',
-                color: 'var(--bsk-fg-primary)',
-              }}
-            >
-              {priceFormatted}
-            </span>
-          )}
-          <ReleaseStatusBadge status={status} releaseDate={releaseDate} />
-        </div>
+        {status === 'publié' && priceFormatted ? (
+          <span
+            style={{
+              fontFamily: 'var(--bsk-font-sans)',
+              fontSize: 'var(--bsk-text-base)',
+              color: 'var(--bsk-accent-gold)',
+            }}
+          >
+            {priceFormatted}
+          </span>
+        ) : null}
       </div>
     </Link>
   );
