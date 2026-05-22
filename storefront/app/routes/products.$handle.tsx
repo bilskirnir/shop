@@ -38,6 +38,12 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     description
     featuredImage { url altText width height }
+    options {
+      name
+      optionValues { name }
+    }
+    encodedVariantExistence
+    encodedVariantAvailability
     selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
       ...ProductVariant
     }
