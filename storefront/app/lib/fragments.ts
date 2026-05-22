@@ -301,6 +301,29 @@ export const TILE_PRODUCT_FRAGMENT = `#graphql
   ${TOME_METAFIELDS_FRAGMENT}
 ` as const;
 
+export const HOME_UNIVERSE_FRAGMENT = `#graphql
+  fragment HomeUniverse on Collection {
+    id
+    handle
+    title
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
+    lore: metafield(namespace: "custom", key: "lore") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {
+      reference {
+        ... on MediaImage { image { url altText width height } }
+      }
+    }
+    products(first: 6, sortKey: COLLECTION_DEFAULT) {
+      nodes {
+        featuredImage { url altText width height }
+        numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
+        statutParution: metafield(namespace: "custom", key: "statut_parution") { value }
+      }
+    }
+  }
+` as const;
+
 export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
   fragment UniverseDetail on Collection {
     id
