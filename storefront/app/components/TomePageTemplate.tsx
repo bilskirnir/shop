@@ -81,18 +81,30 @@ export function TomePageTemplate({
           }}
         >
           <div>
-            <img
-              src={cover.url}
-              alt={cover.altText}
-              width={cover.width}
-              height={cover.height}
-              style={{
-                width: '100%',
-                height: 'auto',
-                boxShadow: 'var(--bsk-shadow-cover)',
-                borderRadius: '2px',
-              }}
-            />
+            {cover.url ? (
+              <img
+                src={cover.url}
+                alt={cover.altText}
+                width={cover.width}
+                height={cover.height}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  boxShadow: 'var(--bsk-shadow-cover)',
+                  borderRadius: '2px',
+                }}
+              />
+            ) : (
+              <div
+                aria-hidden
+                style={{
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  background: 'var(--bsk-bg-raised)',
+                  borderRadius: '2px',
+                }}
+              />
+            )}
           </div>
           <div>
             <h1
