@@ -10,6 +10,7 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
+  useMatches,
 } from 'react-router';
 import {Suspense} from 'react';
 import type {Route} from './+types/root';
@@ -19,9 +20,11 @@ import './styles/fonts.css';
 import globalStyles from '~/styles/global.css?url';
 import {Header} from '~/components/Header';
 import {Footer} from '~/components/Footer';
+import {ImmersiveNav} from '~/components/ImmersiveNav';
 import type {UniverseItem} from '~/components/MegaMenu';
 import {Aside} from '~/components/Aside';
 import {CartMain} from '~/components/CartMain';
+import {isImmersiveRoute} from '~/lib/immersiveRoute';
 
 export type RootLoader = typeof loader;
 
@@ -195,6 +198,8 @@ export default function App() {
     (data.megaMenu as {collections: {nodes: unknown[]}}).collections.nodes,
   );
 
+  const immersive = isImmersiveRoute(useMatches());
+
   return (
     <Analytics.Provider
       cart={data.cart}
@@ -203,21 +208,34 @@ export default function App() {
     >
       <Aside.Provider>
         <Suspense
-          fallback={<Header universes={universes} cartCount={0} />}
+          fallback={
+            immersive ? (
+              <ImmersiveNav universes={universes} cartCount={0} />
+            ) : (
+              <Header universes={universes} cartCount={0} />
+            )
+          }
         >
           <Await resolve={data.cart}>
-            {(cart) => (
-              <Header
-                universes={universes}
-                cartCount={cart?.totalQuantity ?? 0}
-              />
-            )}
+            {(cart) =>
+              immersive ? (
+                <ImmersiveNav
+                  universes={universes}
+                  cartCount={cart?.totalQuantity ?? 0}
+                />
+              ) : (
+                <Header
+                  universes={universes}
+                  cartCount={cart?.totalQuantity ?? 0}
+                />
+              )
+            }
           </Await>
         </Suspense>
         <main>
           <Outlet />
         </main>
-        <Footer />
+        {immersive ? null : <Footer />}
         <Suspense fallback={null}>
           <Await resolve={data.cart}>
             {(cart) =>
