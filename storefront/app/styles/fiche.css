@@ -1,0 +1,102 @@
+/* app/styles/fiche.css — fiche produit (tome + one-shot) */
+
+.fiche-hero {
+  position: relative;
+  text-align: center;
+  padding: 26px 22px 30px;
+  overflow: hidden;
+}
+.fiche-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(58% 44% at 50% 16%, var(--bsk-uni-soft), transparent 60%);
+}
+.fiche-fog {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  background: radial-gradient(45% 30% at 50% 30%, var(--bsk-uni-soft), transparent 65%);
+  animation: fiche-drift 16s ease-in-out infinite alternate;
+}
+.fiche-cover-wrap {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+.fiche-cover {
+  height: 330px;
+  width: auto;
+  border-radius: 6px;
+  filter: var(--bsk-cover-shadow);
+  animation: fiche-float 7s ease-in-out infinite alternate;
+}
+.fiche-thumbs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 18px;
+  position: relative;
+  z-index: 2;
+}
+.fiche-thumb {
+  width: 42px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--bsk-border-subtle);
+  opacity: 0.6;
+  transition: 0.3s;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+.fiche-thumb.is-active,
+.fiche-thumb:hover {
+  opacity: 1;
+  border-color: var(--bsk-accent-gold);
+}
+.fiche-rise > * {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fiche-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.fiche-rise > *:nth-child(2) { animation-delay: 0.12s; }
+.fiche-rise > *:nth-child(3) { animation-delay: 0.24s; }
+
+.fiche-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 80;
+  background: var(--bsk-accent-gold);
+  color: #231603;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: 0.35s;
+  pointer-events: none;
+}
+.fiche-toast.is-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes fiche-float {
+  from { transform: translateY(0) rotate(1.5deg); }
+  to { transform: translateY(-10px) rotate(0deg); }
+}
+@keyframes fiche-rise { to { opacity: 1; transform: none; } }
+@keyframes fiche-drift { to { transform: translate(3%, -3%) scale(1.1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fiche-cover,
+  .fiche-fog { animation: none; }
+  .fiche-rise > * { opacity: 1; transform: none; animation: none; }
+  .fiche-toast { transition: none; }
+}
