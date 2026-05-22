@@ -1,0 +1,195 @@
+/* app/styles/cart.css — panier drawer (récompenses + lignes + pied) */
+
+/* ── Barre de récompenses ── */
+.bsk-rw {
+  padding: 16px 22px 20px;
+  border-bottom: 1px solid var(--bsk-border-subtle);
+  background: var(--bsk-bg-raised);
+}
+.bsk-rw-msg {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  color: var(--bsk-fg-primary);
+}
+.bsk-rw-msg b {
+  color: var(--bsk-accent-gold);
+}
+.bsk-rw-track {
+  position: relative;
+  height: 6px;
+  background: rgba(236, 228, 211, 0.12);
+  border-radius: 999px;
+  margin: 30px 8px 8px;
+}
+.bsk-rw-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--bsk-accent-gold-dim), var(--bsk-accent-gold));
+  transition: width 0.5s ease;
+}
+.bsk-rw-milestone {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.bsk-rw-milestone .bsk-rw-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bsk-bg-raised);
+  border: 2px solid var(--bsk-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bsk-fg-secondary);
+  transition: 0.4s;
+}
+.bsk-rw-milestone .bsk-rw-dot svg {
+  width: 13px;
+  height: 13px;
+}
+.bsk-rw-milestone.is-reached .bsk-rw-dot {
+  border-color: var(--bsk-accent-gold);
+  color: var(--bsk-accent-gold);
+  background: #241b0c;
+}
+.bsk-rw-milestone .bsk-rw-lbl {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--bsk-fg-secondary);
+}
+.bsk-rw-milestone.is-reached .bsk-rw-lbl {
+  color: var(--bsk-accent-gold);
+}
+
+/* ── Lignes panier ── */
+.bsk-cart-line {
+  display: flex;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--bsk-border-subtle);
+  list-style: none;
+}
+.bsk-cart-line img {
+  width: 64px;
+  height: auto;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+}
+.bsk-cart-line-main {
+  flex: 1;
+  min-width: 0;
+}
+.bsk-cart-line-title {
+  font-family: var(--bsk-font-display);
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0 0 6px;
+  line-height: 1.15;
+  color: var(--bsk-fg-primary);
+}
+.bsk-cart-ded {
+  font-size: 12px;
+  color: var(--bsk-accent-gold);
+  margin-bottom: 10px;
+}
+.bsk-cart-line-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bsk-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--bsk-border-subtle);
+  border-radius: 999px;
+}
+.bsk-qty button {
+  width: 30px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--bsk-fg-primary);
+  cursor: pointer;
+  font-size: 15px;
+}
+.bsk-qty button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.bsk-qty span {
+  width: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bsk-fg-primary);
+}
+.bsk-cart-price {
+  font-family: var(--bsk-font-display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--bsk-fg-primary);
+}
+.bsk-cart-remove {
+  font-size: 11px;
+  color: var(--bsk-fg-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 8px;
+  padding: 0;
+}
+
+/* ── Pied du drawer ── */
+.bsk-cart-foot {
+  padding: 18px 22px 24px;
+  border-top: 1px solid var(--bsk-border-subtle);
+  background: var(--bsk-bg-raised);
+}
+.bsk-cart-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.bsk-cart-subtotal .l {
+  font-size: 14px;
+  color: var(--bsk-fg-secondary);
+}
+.bsk-cart-subtotal .v {
+  font-family: var(--bsk-font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--bsk-fg-primary);
+}
+.bsk-cart-shipnote {
+  font-size: 12px;
+  color: var(--bsk-fg-secondary);
+  margin-bottom: 14px;
+}
+.bsk-cart-checkout {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(135deg, var(--bsk-accent-gold), var(--bsk-accent-gold-dim));
+  color: #231603;
+  font-weight: 700;
+  border: none;
+  border-radius: 999px;
+  padding: 16px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
