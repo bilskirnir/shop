@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router';
-import {Cover} from '~/components/Cover';
 import {universeAccentStyle} from '~/lib/universeAccent';
 import type {HomeSlide} from '~/lib/homeSlides';
 
@@ -109,16 +108,23 @@ export function UniverseSlider({slides}: {slides: HomeSlide[]}) {
               <div className="hs-fog" />
 
               <div className="hs-stage">
+                {/* Couvertures dimensionnées par home.css (hauteur), pas via
+                    Cover (qui force width:100% pour les grilles → géant ici). */}
                 {isStack ? (
                   slide.covers.map((cover, c) => (
-                    <Cover
+                    <img
                       key={cover.url}
-                      image={cover}
                       className={`hs-cov ${COVER_CLASSES[c] ?? ''}`}
+                      src={cover.url}
+                      alt={cover.altText ?? ''}
                     />
                   ))
                 ) : (
-                  <Cover image={slide.covers[0]} className="hs-cov is-single" />
+                  <img
+                    className="hs-cov is-single"
+                    src={slide.covers[0].url}
+                    alt={slide.covers[0].altText ?? ''}
+                  />
                 )}
               </div>
 

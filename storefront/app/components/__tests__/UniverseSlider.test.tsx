@@ -72,4 +72,12 @@ describe('UniverseSlider', () => {
     const first = container.querySelector('.hs-slide') as HTMLElement;
     expect(first.className).toContain('hs-stack');
   });
+
+  it('dimensionne les couvertures par CSS (hauteur), sans largeur inline forcée (anti couvertures géantes)', () => {
+    const {container} = renderWithRouter(<UniverseSlider slides={slides} />);
+    const cov = container.querySelector('.hs-cov') as HTMLImageElement;
+    expect(cov.tagName).toBe('IMG');
+    // la taille est pilotée par home.css (.hs-cov height) — pas d'inline width:100%
+    expect(cov.style.width).toBe('');
+  });
 });
