@@ -9,7 +9,7 @@ import {Ornament} from '~/components/Ornament';
 import {UniverseRail, type UniverseRailItem} from '~/components/UniverseRail';
 import {UNIVERSE_DETAIL_FRAGMENT, UNIVERSE_RAIL_FRAGMENT} from '~/lib/fragments';
 import {universeAccentStyle} from '~/lib/universeAccent';
-import {splitLore} from '~/lib/lore';
+import {pickFanCovers} from '~/lib/universeFan';
 import {
   metaobjectField,
   parseBool,
@@ -81,17 +81,8 @@ export default function CollectionRoute() {
 
   const themeColor = collection.couleurTheme?.value ?? null;
   const genre = collection.genre?.value ?? null;
-  const {quote, body} = splitLore(richTextToPlain(collection.lore?.value));
-
-  const heroImageRef = collection.illustrationHero?.reference?.image;
-  const heroImage = heroImageRef
-    ? {
-        url: heroImageRef.url,
-        altText: heroImageRef.altText ?? collection.title,
-        width: heroImageRef.width ?? 0,
-        height: heroImageRef.height ?? 0,
-      }
-    : null;
+  const lore = richTextToPlain(collection.lore?.value);
+  const fanCovers = pickFanCovers(collection.products.nodes);
 
   const sagaNodes = collection.sagas?.references?.nodes ?? [];
   const products = collection.products.nodes;
@@ -127,40 +118,11 @@ export default function CollectionRoute() {
     <div style={universeAccentStyle(themeColor)}>
       <UniverseHero
         title={collection.title}
-        kicker={genre}
-        quote={quote}
+        genre={genre}
+        lore={lore}
         stats={stats}
-        heroImage={heroImage}
+        fanCovers={fanCovers}
       />
-
-      {body ? (
-        <Container width="reading">
-          <section style={{padding: 'var(--bsk-space-8) 0'}}>
-            <p
-              style={{
-                fontSize: 'var(--bsk-text-xs)',
-                letterSpacing: 'var(--bsk-tracking-widest)',
-                textTransform: 'uppercase',
-                color: 'var(--bsk-accent-gold)',
-                textAlign: 'center',
-                marginBottom: 'var(--bsk-space-4)',
-              }}
-            >
-              L'univers
-            </p>
-            <p
-              style={{
-                fontSize: 'var(--bsk-text-read)',
-                lineHeight: 1.75,
-                color: 'var(--bsk-fg-primary)',
-                whiteSpace: 'pre-line',
-              }}
-            >
-              {body}
-            </p>
-          </section>
-        </Container>
-      ) : null}
 
       <Container width="content">
         {sagaNodes.length > 0 ? (

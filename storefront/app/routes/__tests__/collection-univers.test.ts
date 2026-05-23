@@ -8,11 +8,14 @@ describe('collections.$handle (page univers)', () => {
     expect(src).toContain('universeAccentStyle');
     expect(src).toContain("'~/styles/univers.css'");
   });
-  it('utilise splitLore, UniverseRail et la query otherUniverses', () => {
-    expect(src).toContain('splitLore');
+  it('utilise pickFanCovers, UniverseRail et la query otherUniverses', () => {
+    expect(src).toContain('pickFanCovers');
     expect(src).toContain('UniverseRail');
     expect(src).toContain('otherUniverses');
     expect(src).toContain('UNIVERSE_RAIL_FRAGMENT');
+  });
+  it('ne dépend plus de heroImage', () => {
+    expect(src).not.toContain('heroImage');
   });
   it('sépare les sagas par un Ornament', () => {
     expect(src).toContain('<Ornament');
