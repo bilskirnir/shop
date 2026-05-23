@@ -241,15 +241,19 @@ export default function App() {
           <Outlet />
         </main>
         {immersive ? null : <Footer />}
-        <Suspense fallback={null}>
-          <Await resolve={data.cart}>
-            {(cart) => (
-              <Aside type="cart" heading="Votre panier">
-                <CartMain layout="aside" cart={cart ?? null} />
-              </Aside>
-            )}
-          </Await>
-        </Suspense>
+        <Aside type="cart" heading="Votre panier">
+          <Suspense
+            fallback={
+              <p style={{padding: 'var(--bsk-space-6) var(--bsk-space-5)', color: 'var(--bsk-fg-secondary)'}}>
+                Chargement du panier…
+              </p>
+            }
+          >
+            <Await resolve={data.cart}>
+              {(cart) => <CartMain layout="aside" cart={cart ?? null} />}
+            </Await>
+          </Suspense>
+        </Aside>
       </Aside.Provider>
     </Analytics.Provider>
   );

@@ -53,11 +53,12 @@ function AddButton({
           fontWeight: 700,
           letterSpacing: '0.03em',
           color: '#231603',
+          height: '46px',
           background: available
             ? 'linear-gradient(135deg, var(--bsk-accent-gold), var(--bsk-accent-gold-dim))'
             : 'var(--bsk-fg-muted)',
-          border: 'none',
-          borderRadius: '999px',
+          border: '1px solid rgba(236, 228, 211, 0.18)',
+          borderRadius: '10px',
           cursor: available ? 'pointer' : 'not-allowed',
         }}
       >
@@ -189,12 +190,12 @@ export function TomeAddToCart({
       <DedicaceField onChange={setDedicace} />
 
       <div style={{display: 'flex', gap: '12px', marginBottom: '12px'}}>
-        <div style={{display: 'flex', alignItems: 'center', border: '1px solid var(--bsk-border-subtle)', borderRadius: '999px', overflow: 'hidden'}}>
+        <div style={{display: 'flex', alignItems: 'center', border: '1px solid var(--bsk-border-subtle)', borderRadius: '10px', overflow: 'hidden', height: '46px'}}>
           <button
             type="button"
             aria-label="diminuer la quantité"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            style={{width: 42, height: 50, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
+            style={{width: 42, height: 44, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
           >
             −
           </button>
@@ -203,7 +204,7 @@ export function TomeAddToCart({
             type="button"
             aria-label="augmenter la quantité"
             onClick={() => setQuantity((q) => q + 1)}
-            style={{width: 42, height: 50, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
+            style={{width: 42, height: 44, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
           >
             +
           </button>
