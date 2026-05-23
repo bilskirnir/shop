@@ -75,14 +75,16 @@ export function OneShotPageTemplate({
         </section>
       </Container>
 
-      <section className="fiche-univ-band">
-        <span className="fiche-univ-bg" aria-hidden="true" />
-        <span className="fiche-univ-scrim" aria-hidden="true" />
-        <span className="fiche-univ-inner">
-          <span className="fiche-univ-k">L'atmosphère du livre</span>
-          {atmosphereText ? <span className="fiche-univ-name">{atmosphereText}</span> : null}
-        </span>
-      </section>
+      <Container width="content">
+        <section className="fiche-univ-band">
+          <span className="fiche-univ-bg" aria-hidden="true" />
+          <span className="fiche-univ-scrim" aria-hidden="true" />
+          <span className="fiche-univ-inner">
+            <span className="fiche-univ-k">L'atmosphère du livre</span>
+            {atmosphereText ? <span className="fiche-univ-name">{atmosphereText}</span> : null}
+          </span>
+        </section>
+      </Container>
 
       <Container width="content">
         <section className="fiche-section fiche-section--tech">
