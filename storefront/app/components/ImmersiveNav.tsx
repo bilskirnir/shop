@@ -43,7 +43,7 @@ export function ImmersiveNav({
     gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
     alignItems: 'center',
     gap: 'var(--bsk-space-4)',
-    padding: '16px 22px',
+    padding: '16px clamp(22px, 4vw, 48px)',
     transition: 'transform .35s var(--bsk-ease), background .3s, border-color .3s',
     transform: !isOverlay && hidden ? 'translateY(-104%)' : 'none',
     background: isOverlay
@@ -52,7 +52,7 @@ export function ImmersiveNav({
         ? 'rgba(19,20,25,.94)'
         : 'linear-gradient(to bottom, rgba(14,15,19,.7), transparent)',
     backdropFilter: isSolid ? 'blur(12px)' : undefined,
-    borderBottom: `1px solid ${isSolid ? 'var(--bsk-border-subtle)' : 'transparent'}`,
+    borderBottom: 'none',
   };
 
   const inProgressUniverses = universes.filter((u) => !u.isStandalone);

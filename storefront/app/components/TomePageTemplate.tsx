@@ -95,9 +95,6 @@ export function TomePageTemplate({
               <div>{purchaseSlot}</div>
             </div>
           </div>
-          <div className="fiche-cue" aria-hidden="true">
-            ↓ Le récit
-          </div>
         </Container>
       </section>
 
