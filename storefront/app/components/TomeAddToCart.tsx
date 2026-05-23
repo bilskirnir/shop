@@ -112,6 +112,48 @@ export function TomeAddToCart({
     );
   }
 
+  if (!available) {
+    return (
+      <div>
+        <p
+          style={{
+            fontFamily: 'var(--bsk-font-display)',
+            fontWeight: 700,
+            fontSize: 'var(--bsk-text-xl)',
+            color: 'var(--bsk-fg-primary)',
+            margin: '6px 0 18px',
+          }}
+        >
+          {priceFormatted}
+        </p>
+        <div
+          style={{
+            padding: 'var(--bsk-space-5)',
+            border: '1px solid var(--bsk-border-subtle)',
+            background: 'var(--bsk-bg-raised)',
+            borderRadius: '14px',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: 'var(--bsk-font-sans)',
+              fontSize: 'var(--bsk-text-xs)',
+              letterSpacing: 'var(--bsk-tracking-widest)',
+              textTransform: 'uppercase',
+              color: 'var(--bsk-fg-secondary)',
+              marginBottom: 'var(--bsk-space-3)',
+            }}
+          >
+            Épuisé
+          </p>
+          <p style={{fontStyle: 'italic', color: 'var(--bsk-fg-secondary)'}}>
+            Ce titre est momentanément en rupture de stock. Il sera bientôt de retour.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const ctaLabel = status === 'précommande' ? 'Précommander' : 'Ajouter au panier';
 
   const lineAttributes: Array<{key: string; value: string}> = [];

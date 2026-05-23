@@ -46,6 +46,15 @@ describe('TomeAddToCart', () => {
     expect(openSpy).toHaveBeenCalledWith('cart');
   });
 
+  it('publié mais en rupture : affiche « Épuisé », pas de bouton Ajouter', () => {
+    renderWithRouter(
+      <TomeAddToCart variantId="gid://v/1" available={false} status="publié" priceFormatted="18,90 €" />,
+    );
+    expect(screen.getByText(/épuisé/i)).toBeInTheDocument();
+    expect(screen.getByText('18,90 €')).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /Ajouter au panier/})).toBeNull();
+  });
+
   it('précommande : CTA Précommander', () => {
     renderWithRouter(
       <TomeAddToCart variantId="gid://v/1" available status="précommande" priceFormatted="18,90 €" />,
