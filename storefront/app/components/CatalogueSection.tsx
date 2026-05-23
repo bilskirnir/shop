@@ -28,7 +28,7 @@ export function CatalogueSection({name, accent, href, tomes}: CatalogueSectionPr
       <ul className="cat-grid">
         {tomes.map((t) => (
           <li key={t.handle}>
-            <TomeCard {...t} halo={accent} />
+            <TomeCard {...t} halo={accent} coverFixed />
           </li>
         ))}
       </ul>

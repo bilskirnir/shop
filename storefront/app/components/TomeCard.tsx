@@ -13,6 +13,8 @@ export interface TomeCardProps {
   priceFormatted?: string | null;
   /** Couleur d'accent : rend un halo derrière la couverture (catalogue). */
   halo?: string | null;
+  /** Couverture à hauteur fixe (object-fit contain) + hover (catalogue). */
+  coverFixed?: boolean;
 }
 
 export function TomeCard({
@@ -24,9 +26,11 @@ export function TomeCard({
   tomeNumber,
   priceFormatted,
   halo,
+  coverFixed = false,
 }: TomeCardProps) {
   return (
     <Link
+      className="tome-card"
       to={`/products/${handle}`}
       style={{
         display: 'flex',
@@ -45,7 +49,20 @@ export function TomeCard({
           />
         ) : null}
         <ReleaseStatusBadge status={status} releaseDate={releaseDate} onImage />
-        <Cover image={cover} bleed />
+        {coverFixed ? (
+          <div className="tome-card-cover-box">
+            {cover.url ? (
+              <img
+                className="tome-card-cover"
+                src={cover.url}
+                alt={cover.altText}
+                loading="lazy"
+              />
+            ) : null}
+          </div>
+        ) : (
+          <Cover image={cover} bleed />
+        )}
       </div>
       <div
         style={{
