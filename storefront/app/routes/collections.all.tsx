@@ -1,122 +1,74 @@
 import type {Route} from './+types/collections.all';
 import {useLoaderData} from 'react-router';
-import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {ProductItem} from '~/components/ProductItem';
-import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {Container} from '~/components/Container';
+import {Ornament} from '~/components/Ornament';
+import {CatalogueSection} from '~/components/CatalogueSection';
+import {
+  buildCatalogue,
+  type CatalogueProduct,
+  type CatalogueUniverse,
+} from '~/lib/catalogue';
+import {todaySeed} from '~/lib/seededShuffle';
+import {TILE_PRODUCT_FRAGMENT, UNIVERSE_RAIL_FRAGMENT} from '~/lib/fragments';
+import '~/styles/catalogue.css';
 
-export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Products`}];
-};
+export const meta: Route.MetaFunction = () => [{title: 'Œuvres — Bilskirnir'}];
 
-export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+const CATALOGUE_QUERY = `#graphql
+  query Catalogue($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 100) {
+      nodes { ...TileProduct }
+    }
+    collections(first: 30, sortKey: TITLE) {
+      nodes { ...UniverseRailCard }
+    }
+  }
+  ${TILE_PRODUCT_FRAGMENT}
+  ${UNIVERSE_RAIL_FRAGMENT}
+` as const;
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context, request}: Route.LoaderArgs) {
-  const {storefront} = context;
-  const paginationVariables = getPaginationVariables(request, {
-    pageBy: 8,
+export async function loader({context}: Route.LoaderArgs) {
+  const data = await context.storefront.query(CATALOGUE_QUERY, {
+    cache: context.storefront.CacheShort(),
   });
-
-  const [{products}] = await Promise.all([
-    storefront.query(CATALOG_QUERY, {
-      variables: {...paginationVariables},
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-  return {products};
+  const sections = buildCatalogue(
+    data.products.nodes as unknown as CatalogueProduct[],
+    data.collections.nodes as unknown as CatalogueUniverse[],
+    todaySeed(),
+  );
+  return {sections};
 }
 
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: Route.LoaderArgs) {
-  return {};
-}
-
-export default function Collection() {
-  const {products} = useLoaderData<typeof loader>();
+export default function Catalogue() {
+  const {sections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
-      <PaginatedResourceSection<CollectionItemFragment>
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
-    </div>
+    <Container width="content">
+      <header className="cat-head">
+        <div className="cat-k">Le catalogue</div>
+        <h1 className="cat-h1">Œuvres</h1>
+        <p className="cat-sub">Toutes les œuvres de la maison, par univers</p>
+      </header>
+
+      {sections.length === 0 ? (
+        <p
+          style={{
+            textAlign: 'center',
+            color: 'var(--bsk-fg-secondary)',
+            padding: 'var(--bsk-space-10) 0',
+          }}
+        >
+          Le catalogue arrive bientôt.
+        </p>
+      ) : (
+        sections.map((s, i) => (
+          <div key={s.key}>
+            <CatalogueSection name={s.name} accent={s.accent} href={s.href} tomes={s.tomes} />
+            {i < sections.length - 1 ? <Ornament /> : null}
+          </div>
+        ))
+      )}
+    </Container>
   );
 }
-
-const COLLECTION_ITEM_FRAGMENT = `#graphql
-  fragment MoneyCollectionItem on MoneyV2 {
-    amount
-    currencyCode
-  }
-  fragment CollectionItem on Product {
-    id
-    handle
-    title
-    featuredImage {
-      id
-      altText
-      url
-      width
-      height
-    }
-    priceRange {
-      minVariantPrice {
-        ...MoneyCollectionItem
-      }
-      maxVariantPrice {
-        ...MoneyCollectionItem
-      }
-    }
-  }
-` as const;
-
-// NOTE: https://shopify.dev/docs/api/storefront/latest/objects/product
-const CATALOG_QUERY = `#graphql
-  query Catalog(
-    $country: CountryCode
-    $language: LanguageCode
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(country: $country, language: $language) {
-    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
-      nodes {
-        ...CollectionItem
-      }
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-  ${COLLECTION_ITEM_FRAGMENT}
-` as const;

@@ -1,4 +1,4 @@
-import type {CoverImage} from '~/components/Cover';
+import type {CoverImage} from '~/components/WorkTile';
 import type {TomeCardProps} from '~/components/TomeCard';
 import {parseBool, parseNumeroTome, parseStatutParution} from '~/lib/tomeMetafields';
 import {seededShuffle} from '~/lib/seededShuffle';
