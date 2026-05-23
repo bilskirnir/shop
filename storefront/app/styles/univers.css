@@ -2,15 +2,79 @@
 
 .uni-hero {
   position: relative;
-  min-height: 440px;
+  padding: 70px 24px 44px;
+  overflow: hidden;
+}
+.uni-hero-inner {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 90px 26px 48px;
-  overflow: hidden;
+  gap: var(--bsk-space-6);
 }
+.uni-hero-text {
+  max-width: 520px;
+}
+.uni-hero-pill {
+  display: inline-flex;
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-fg-primary);
+  border: 1px solid var(--bsk-border-subtle);
+  border-radius: 999px;
+  padding: 6px 13px;
+}
+.uni-hero-title {
+  font-family: var(--bsk-font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 9vw, 46px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: var(--bsk-space-4) 0 var(--bsk-space-3);
+  color: var(--bsk-fg-primary);
+}
+.uni-hero-lore {
+  font-style: italic;
+  font-size: var(--bsk-text-read);
+  line-height: 1.6;
+  color: #d8ceb6;
+  margin: 0 0 var(--bsk-space-4);
+}
+.uni-hero-stats {
+  font-family: var(--bsk-font-sans);
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+}
+
+/* Éventail de couvertures (décoratif, 1–3) */
+.uni-fan {
+  position: relative;
+  flex: 0 0 auto;
+  width: 226px;
+  height: 232px;
+  margin: 0 auto;
+}
+.uni-fan-cover {
+  position: absolute;
+  top: 8px;
+  width: 130px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: var(--bsk-shadow-cover);
+  background: var(--bsk-bg-raised);
+}
+.uni-fan--1 .uni-fan-cover:nth-child(1) { left: 48px; transform: rotate(-2deg); }
+.uni-fan--2 .uni-fan-cover:nth-child(1) { left: 18px; transform: rotate(-8deg); }
+.uni-fan--2 .uni-fan-cover:nth-child(2) { left: 78px; top: 0; transform: rotate(7deg); z-index: 2; }
+.uni-fan--3 .uni-fan-cover:nth-child(1) { left: 0; transform: rotate(-9deg); }
+.uni-fan--3 .uni-fan-cover:nth-child(2) { left: 48px; top: 0; transform: rotate(2deg); z-index: 3; }
+.uni-fan--3 .uni-fan-cover:nth-child(3) { left: 96px; transform: rotate(11deg); z-index: 2; }
 .uni-hero-bg {
   position: absolute;
   inset: 0;
@@ -85,7 +149,7 @@
 /* ── Grille de tomes (saga + grille plate) ── */
 .saga-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--bsk-space-6) var(--bsk-space-5);
   align-items: start;
 }
@@ -181,12 +245,24 @@
 /* ── Desktop ── */
 @media (min-width: 860px) {
   .uni-hero {
-    min-height: 80vh;
     margin-top: -96px;
-    padding: 150px 30px 64px;
+    padding: 150px 44px 56px;
+  }
+  .uni-hero-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    gap: var(--bsk-space-10);
+  }
+  .uni-hero-text {
+    text-align: left;
+  }
+  .uni-hero-title {
+    font-size: clamp(44px, 5vw, 60px);
   }
   .saga-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--bsk-space-8) var(--bsk-space-6);
   }
   .uni-rail-row {

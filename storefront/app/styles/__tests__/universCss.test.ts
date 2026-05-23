@@ -15,10 +15,11 @@ describe('univers.css', () => {
   it('neutralise les animations en reduced-motion', () => {
     expect(css).toContain('prefers-reduced-motion: reduce');
   });
-  it('couche desktop : grille saga 3 colonnes + carte univers', () => {
+  it('couche desktop : grille tomes 4 colonnes + carte univers + éventail', () => {
     expect(css).toMatch(/@media\s*\(min-width:\s*860px\)/);
     expect(css).toContain('.saga-grid');
-    expect(css).toContain('repeat(3');
+    expect(css).toContain('repeat(4');
     expect(css).toContain('.uni-card');
+    expect(css).toContain('.uni-fan');
   });
 });
