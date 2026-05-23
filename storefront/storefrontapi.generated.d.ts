@@ -505,6 +505,24 @@ export type UniverseRailCardFragment = Pick<
   >;
 };
 
+export type UniverseIndexCardFragment = Pick<
+  StorefrontAPI.Collection,
+  'id' | 'handle' | 'title'
+> & {
+  couleurTheme?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  lore?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+  estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.Metafield, 'value'>
+  >;
+  sagas?: StorefrontAPI.Maybe<{
+    references?: StorefrontAPI.Maybe<{
+      nodes: Array<Pick<StorefrontAPI.Metaobject, 'id'>>;
+    }>;
+  }>;
+  products: {nodes: Array<Pick<StorefrontAPI.Product, 'id'>>};
+};
+
 export type UniverseDetailFragment = Pick<
   StorefrontAPI.Collection,
   'id' | 'handle' | 'title'
@@ -896,43 +914,30 @@ export type CollectionQuery = {
   };
 };
 
-export type CollectionFragment = Pick<
-  StorefrontAPI.Collection,
-  'id' | 'title' | 'handle'
-> & {
-  image?: StorefrontAPI.Maybe<
-    Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>
-  >;
-};
-
-export type StoreCollectionsQueryVariables = StorefrontAPI.Exact<{
+export type CollectionsIndexQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  endCursor?: StorefrontAPI.InputMaybe<
-    StorefrontAPI.Scalars['String']['input']
-  >;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  startCursor?: StorefrontAPI.InputMaybe<
-    StorefrontAPI.Scalars['String']['input']
-  >;
 }>;
 
-export type StoreCollectionsQuery = {
+export type CollectionsIndexQuery = {
   collections: {
     nodes: Array<
-      Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'> & {
-        image?: StorefrontAPI.Maybe<
-          Pick<
-            StorefrontAPI.Image,
-            'id' | 'url' | 'altText' | 'width' | 'height'
-          >
+      Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title'> & {
+        couleurTheme?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
         >;
+        genre?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+        lore?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+        estUneOeuvreIndependante?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value'>
+        >;
+        sagas?: StorefrontAPI.Maybe<{
+          references?: StorefrontAPI.Maybe<{
+            nodes: Array<Pick<StorefrontAPI.Metaobject, 'id'>>;
+          }>;
+        }>;
+        products: {nodes: Array<Pick<StorefrontAPI.Product, 'id'>>};
       }
-    >;
-    pageInfo: Pick<
-      StorefrontAPI.PageInfo,
-      'hasNextPage' | 'hasPreviousPage' | 'startCursor' | 'endCursor'
     >;
   };
 };
@@ -1615,9 +1620,9 @@ interface GeneratedQueryTypes {
     return: CollectionQuery;
     variables: CollectionQueryVariables;
   };
-  '#graphql\n  fragment Collection on Collection {\n    id\n    title\n    handle\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n  }\n  query StoreCollections(\n    $country: CountryCode\n    $endCursor: String\n    $first: Int\n    $language: LanguageCode\n    $last: Int\n    $startCursor: String\n  ) @inContext(country: $country, language: $language) {\n    collections(\n      first: $first,\n      last: $last,\n      before: $startCursor,\n      after: $endCursor\n    ) {\n      nodes {\n        ...Collection\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n': {
-    return: StoreCollectionsQuery;
-    variables: StoreCollectionsQueryVariables;
+  '#graphql\n  query CollectionsIndex($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 50, sortKey: TITLE) {\n      nodes { ...UniverseIndexCard }\n    }\n  }\n  #graphql\n  fragment UniverseIndexCard on Collection {\n    id\n    handle\n    title\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    genre: metafield(namespace: "custom", key: "genre") { value }\n    lore: metafield(namespace: "custom", key: "lore") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n    sagas: metafield(namespace: "custom", key: "sagas") {\n      references(first: 10) { nodes { ... on Metaobject { id } } }\n    }\n    products(first: 50) { nodes { id } }\n  }\n\n': {
+    return: CollectionsIndexQuery;
+    variables: CollectionsIndexQueryVariables;
   };
   '#graphql\n  query Catalogue($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    products(first: 100) {\n      nodes { ...TileProduct }\n    }\n    collections(first: 30, sortKey: TITLE) {\n      nodes { ...UniverseRailCard }\n    }\n  }\n  #graphql\n  fragment TileProduct on Product {\n    id\n    handle\n    title\n    featuredImage { url altText width height }\n    priceRange { minVariantPrice { amount currencyCode } }\n    ...TomeMetafields\n  }\n  #graphql\n  fragment TomeMetafields on Product {\n    univers: metafield(namespace: "custom", key: "univers") {\n      reference {\n        ... on Collection {\n          id handle title\n        }\n      }\n    }\n    saga: metafield(namespace: "custom", key: "saga") {\n      reference {\n        ... on Metaobject {\n          id handle\n          fields { key value }\n        }\n      }\n    }\n    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }\n    statutParution: metafield(namespace: "custom", key: "statut_parution") { value }\n    dateParution: metafield(namespace: "custom", key: "date_parution") { value }\n    teaserCourt: metafield(namespace: "custom", key: "teaser_court") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n\n  #graphql\n  fragment UniverseRailCard on Collection {\n    id\n    handle\n    title\n    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }\n    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }\n  }\n\n': {
     return: CatalogueQuery;

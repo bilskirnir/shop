@@ -10,7 +10,7 @@ export interface UniverseRailItem {
 export function UniverseRail({items}: {items: UniverseRailItem[]}) {
   if (items.length === 0) return null;
   return (
-    <section style={{padding: 'var(--bsk-space-10) 0 var(--bsk-space-8) var(--bsk-space-5)'}}>
+    <section className="uni-rail" style={{padding: 'var(--bsk-space-10) 0 var(--bsk-space-8) var(--bsk-space-5)'}}>
       <h2
         style={{
           fontFamily: 'var(--bsk-font-display)',
@@ -22,14 +22,7 @@ export function UniverseRail({items}: {items: UniverseRailItem[]}) {
       >
         Découvrir un autre univers
       </h2>
-      <div
-        style={{
-          display: 'flex',
-          gap: 'var(--bsk-space-4)',
-          overflowX: 'auto',
-          paddingBottom: 'var(--bsk-space-2)',
-        }}
-      >
+      <div className="uni-rail-row">
         {items.map((it) => (
           <Link
             key={it.handle}

@@ -79,14 +79,7 @@ export function SagaSection({nom, type, synopsis, tomes, bundleHref}: SagaSectio
           </Link>
         ) : null}
       </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 'var(--bsk-space-5)',
-          alignItems: 'start',
-        }}
-      >
+      <div className="saga-grid">
         {tomes.map((t) => (
           <TomeCard key={t.handle} {...t} />
         ))}

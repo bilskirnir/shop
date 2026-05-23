@@ -47,7 +47,7 @@ export function UniverseHero({title, kicker, quote, stats, heroImage}: UniverseH
           style={{
             fontFamily: 'var(--bsk-font-display)',
             fontWeight: 800,
-            fontSize: 'clamp(40px, 12vw, 52px)',
+            fontSize: 'clamp(40px, 7vw, 64px)',
             lineHeight: 0.92,
             letterSpacing: '-0.02em',
             margin: 'var(--bsk-space-4) 0 var(--bsk-space-3)',

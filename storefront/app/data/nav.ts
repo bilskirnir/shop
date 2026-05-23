@@ -5,6 +5,7 @@ export type NavItem = {
 };
 
 export const PRIMARY_NAV: NavItem[] = [
+  {label: 'Accueil', href: '/'},
   {label: 'Œuvres', href: '/collections/all'},
   {label: 'Univers', href: '/collections', hasMegaMenu: true},
   {label: 'Goodies', href: '/collections/goodies'},
