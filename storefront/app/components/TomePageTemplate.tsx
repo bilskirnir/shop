@@ -75,143 +75,66 @@ export function TomePageTemplate({
 
   return (
     <>
-      <Container width="reading">
-        <Breadcrumbs items={breadcrumbs} />
-      </Container>
-
       <section className="fiche-hero">
         <div className="fiche-hero-bg" />
-        <ProductGallery images={images} alt={cover.altText ?? title} />
+        <div className="fiche-fog" aria-hidden="true" />
+        <span className="fiche-emblem" aria-hidden="true">
+          ✦
+        </span>
+        <Container width="content">
+          <Breadcrumbs items={breadcrumbs} />
+          <div className="fiche-hero-inner">
+            <div className="fiche-hero-cover">
+              <ProductGallery images={images} alt={cover.altText ?? title} />
+            </div>
+            <div className="fiche-buy fiche-rise">
+              {pill ? <span className="fiche-pill">{pill}</span> : null}
+              {tomeLabel ? <div className="fiche-tomelabel">{tomeLabel}</div> : null}
+              <h1 className="fiche-title">{title}</h1>
+              {teaserShort ? <blockquote className="fiche-teaser">{teaserShort}</blockquote> : null}
+              <div>{purchaseSlot}</div>
+            </div>
+          </div>
+          <div className="fiche-cue" aria-hidden="true">
+            ↓ Le récit
+          </div>
+        </Container>
       </section>
 
-      <Container width="reading">
-        <div className="fiche-rise" style={{padding: 'var(--bsk-space-2) 0 var(--bsk-space-6)'}}>
-          {pill ? (
-            <span
-              style={{
-                display: 'inline-flex',
-                fontSize: 'var(--bsk-text-xs)',
-                letterSpacing: 'var(--bsk-tracking-widest)',
-                textTransform: 'uppercase',
-                color: 'var(--bsk-fg-primary)',
-                border: '1px solid var(--bsk-border-subtle)',
-                borderRadius: '999px',
-                padding: '6px 13px',
-              }}
-            >
-              {pill}
-            </span>
-          ) : null}
-          {tomeLabel ? (
-            <div
-              style={{
-                fontSize: 'var(--bsk-text-xs)',
-                letterSpacing: 'var(--bsk-tracking-widest)',
-                textTransform: 'uppercase',
-                color: 'var(--bsk-fg-secondary)',
-                margin: '16px 0 6px',
-              }}
-            >
-              {tomeLabel}
-            </div>
-          ) : null}
-          <h1
-            style={{
-              fontFamily: 'var(--bsk-font-display)',
-              fontWeight: 800,
-              fontSize: 'var(--bsk-text-2xl)',
-              lineHeight: 1,
-              letterSpacing: '-0.02em',
-              color: 'var(--bsk-fg-primary)',
-            }}
-          >
-            {title}
-          </h1>
-          {teaserShort ? (
-            <blockquote
-              style={{
-                margin: '18px 0',
-                padding: '12px 16px',
-                borderLeft: '2px solid var(--bsk-accent-gold)',
-                fontStyle: 'italic',
-                fontSize: 'var(--bsk-text-base)',
-                lineHeight: 1.5,
-                color: '#ddd2b8',
-                background: 'rgba(216,166,87,.05)',
-                whiteSpace: 'pre-line',
-              }}
-            >
-              {teaserShort}
-            </blockquote>
-          ) : null}
-          <div>{purchaseSlot}</div>
-        </div>
+      <div className="fiche-values-band">
+        <Container width="content">
+          <ValuesBadges />
+        </Container>
+      </div>
 
-        <ValuesBadges />
-
-        <section style={{padding: 'var(--bsk-space-8) 0'}}>
-          <h2
-            style={{
-              fontFamily: 'var(--bsk-font-display)',
-              fontWeight: 'var(--bsk-weight-bold)',
-              fontSize: 'var(--bsk-text-lg)',
-              color: 'var(--bsk-fg-primary)',
-              marginBottom: 'var(--bsk-space-4)',
-            }}
-          >
-            Le récit
-          </h2>
-          <div
-            style={{
-              fontSize: 'var(--bsk-text-read)',
-              lineHeight: 1.72,
-              color: 'var(--bsk-fg-primary)',
-              whiteSpace: 'pre-line',
-            }}
-          >
-            {description}
-          </div>
+      <Container width="content">
+        <section className="fiche-section fiche-section--read">
+          <div className="fiche-k">Le récit</div>
+          <div className="fiche-recit-body">{description}</div>
         </section>
       </Container>
 
-      <Container width="reading">
-        <Link
-          to={`/collections/${universe.handle}`}
-          style={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'flex-end',
-            minHeight: '170px',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            padding: '18px',
-            textDecoration: 'none',
-            background: 'radial-gradient(75% 85% at 60% 18%, var(--bsk-uni), #0c1a17)',
-          }}
-        >
-          <span
-            aria-hidden="true"
-            style={{position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.82), transparent 70%)'}}
-          />
-          <span style={{position: 'relative', zIndex: 2}}>
-            {universeKicker ? (
-              <span style={{display: 'block', fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--bsk-accent-gold)'}}>
-                {universeKicker}
-              </span>
-            ) : null}
-            <span style={{display: 'block', fontFamily: 'var(--bsk-font-display)', fontWeight: 700, fontSize: 'var(--bsk-text-lg)', color: 'var(--bsk-fg-primary)', margin: '4px 0 10px'}}>
-              Dans l'univers de {universe.title}
-            </span>
-            <span style={{display: 'inline-block', fontSize: '12px', color: 'var(--bsk-fg-primary)', border: '1px solid rgba(236,228,211,.3)', borderRadius: '999px', padding: '7px 14px'}}>
-              Explorer l'univers →
-            </span>
-          </span>
-        </Link>
+      <Link to={`/collections/${universe.handle}`} className="fiche-univ-band">
+        <span className="fiche-univ-bg" aria-hidden="true" />
+        <span className="fiche-univ-scrim" aria-hidden="true" />
+        <span className="fiche-univ-inner">
+          {universeKicker ? <span className="fiche-univ-k">{universeKicker}</span> : null}
+          <span className="fiche-univ-name">Dans l'univers de {universe.title}</span>
+          <span className="fiche-univ-cta">Explorer l'univers →</span>
+        </span>
+      </Link>
 
-        <TechSpecs rows={techRows} />
+      <Container width="content">
+        <section className="fiche-section fiche-section--tech">
+          <TechSpecs rows={techRows} />
+        </section>
       </Container>
 
-      {relatedSlot ? <Container width="content">{relatedSlot}</Container> : null}
+      {relatedSlot ? (
+        <Container width="content">
+          <div className="fiche-related">{relatedSlot}</div>
+        </Container>
+      ) : null}
     </>
   );
 }

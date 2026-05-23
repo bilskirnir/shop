@@ -29,123 +29,72 @@ export function OneShotPageTemplate({
   relatedSlot,
 }: OneShotPageTemplateProps) {
   const images = [cover].filter((c) => c.url);
-  // Pas de fallback sur teaserShort (sinon doublon avec le hero) : l'ambiance
-  // vient d'un metafield dédié, sinon le bandeau n'affiche que son titre.
   const atmosphereText = ambiance ?? null;
 
   return (
     <>
-      <section className="fiche-hero" style={{paddingTop: '40px'}}>
+      <section className="fiche-hero">
         <div className="fiche-hero-bg" />
-        <div className="fiche-fog" />
-        <ProductGallery images={images} alt={cover.altText ?? title} />
-        <div className="fiche-rise" style={{position: 'relative', zIndex: 3, marginTop: 'var(--bsk-space-5)'}}>
-          <span
-            style={{
-              display: 'inline-flex',
-              fontSize: 'var(--bsk-text-xs)',
-              letterSpacing: 'var(--bsk-tracking-widest)',
-              textTransform: 'uppercase',
-              color: 'var(--bsk-accent-gold)',
-              border: '1px solid var(--bsk-border-gold)',
-              borderRadius: '999px',
-              padding: '6px 14px',
-            }}
-          >
-            {pillLabel} INDÉPENDANT
-          </span>
-          <h1
-            style={{
-              fontFamily: 'var(--bsk-font-display)',
-              fontWeight: 800,
-              fontSize: 'clamp(40px, 12vw, 50px)',
-              lineHeight: 0.94,
-              letterSpacing: '-0.02em',
-              margin: '14px 0 12px',
-              color: 'var(--bsk-fg-primary)',
-            }}
-          >
-            {title}
-          </h1>
-          {teaserShort ? (
-            <p
-              style={{
-                fontStyle: 'italic',
-                fontSize: 'var(--bsk-text-read)',
-                lineHeight: 1.5,
-                color: '#d7cdb6',
-                maxWidth: '300px',
-                margin: '0 auto',
-              }}
-            >
-              {teaserShort}
-            </p>
-          ) : null}
-        </div>
+        <div className="fiche-fog" aria-hidden="true" />
+        <span className="fiche-emblem" aria-hidden="true">
+          ✦
+        </span>
+        <Container width="content">
+          <div className="fiche-hero-inner">
+            <div className="fiche-hero-cover">
+              <ProductGallery images={images} alt={cover.altText ?? title} />
+            </div>
+            <div className="fiche-buy fiche-rise">
+              <span
+                className="fiche-pill"
+                style={{color: 'var(--bsk-accent-gold)', borderColor: 'var(--bsk-border-gold)'}}
+              >
+                {pillLabel} INDÉPENDANT
+              </span>
+              <h1 className="fiche-title">{title}</h1>
+              {teaserShort ? <blockquote className="fiche-teaser">{teaserShort}</blockquote> : null}
+              <div>{purchaseSlot}</div>
+            </div>
+          </div>
+          <div className="fiche-cue" aria-hidden="true">
+            ↓ Le récit
+          </div>
+        </Container>
       </section>
 
-      <Container width="reading">
-        <div style={{padding: 'var(--bsk-space-6) 0'}}>{purchaseSlot}</div>
-        <ValuesBadges />
-        <section style={{padding: 'var(--bsk-space-8) 0'}}>
-          <h2
-            style={{
-              fontFamily: 'var(--bsk-font-display)',
-              fontWeight: 'var(--bsk-weight-bold)',
-              fontSize: 'var(--bsk-text-lg)',
-              color: 'var(--bsk-fg-primary)',
-              marginBottom: 'var(--bsk-space-4)',
-            }}
-          >
-            Le récit
-          </h2>
-          <div
-            style={{
-              fontSize: 'var(--bsk-text-read)',
-              lineHeight: 1.72,
-              color: 'var(--bsk-fg-primary)',
-              whiteSpace: 'pre-line',
-            }}
-          >
-            {description}
-          </div>
+      <div className="fiche-values-band">
+        <Container width="content">
+          <ValuesBadges />
+        </Container>
+      </div>
+
+      <Container width="content">
+        <section className="fiche-section fiche-section--read">
+          <div className="fiche-k">Le récit</div>
+          <div className="fiche-recit-body">{description}</div>
         </section>
       </Container>
 
-      <section
-        style={{
-          position: 'relative',
-          margin: 'var(--bsk-space-4) 0',
-          padding: '54px 26px',
-          textAlign: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <span
-          aria-hidden="true"
-          style={{position: 'absolute', inset: 0, background: 'radial-gradient(80% 90% at 50% 30%, var(--bsk-uni), #0c1018)'}}
-        />
-        <span
-          aria-hidden="true"
-          style={{position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(19,20,25,.6), rgba(19,20,25,.2), rgba(19,20,25,.85))'}}
-        />
-        <div style={{position: 'relative', zIndex: 2}}>
-          <div style={{fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--bsk-accent-gold)', marginBottom: 'var(--bsk-space-4)'}}>
-            L'atmosphère du livre
-          </div>
-          {atmosphereText ? (
-            <p style={{fontFamily: 'var(--bsk-font-display)', fontWeight: 700, fontSize: 'var(--bsk-text-lg)', lineHeight: 1.25, maxWidth: '300px', margin: '0 auto', color: 'var(--bsk-fg-primary)'}}>
-              {atmosphereText}
-            </p>
-          ) : null}
-        </div>
+      <section className="fiche-univ-band">
+        <span className="fiche-univ-bg" aria-hidden="true" />
+        <span className="fiche-univ-scrim" aria-hidden="true" />
+        <span className="fiche-univ-inner">
+          <span className="fiche-univ-k">L'atmosphère du livre</span>
+          {atmosphereText ? <span className="fiche-univ-name">{atmosphereText}</span> : null}
+        </span>
       </section>
 
-      <Container width="reading">
-        <TechSpecs rows={techRows} />
+      <Container width="content">
+        <section className="fiche-section fiche-section--tech">
+          <TechSpecs rows={techRows} />
+        </section>
       </Container>
 
-      {relatedSlot ? <Container width="content">{relatedSlot}</Container> : null}
+      {relatedSlot ? (
+        <Container width="content">
+          <div className="fiche-related">{relatedSlot}</div>
+        </Container>
+      ) : null}
     </>
   );
 }

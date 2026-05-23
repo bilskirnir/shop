@@ -25,4 +25,9 @@ describe('RelatedRail', () => {
     const {container} = renderWithRouter(<RelatedRail heading="X" items={[]} />);
     expect(container.firstChild).toBeNull();
   });
+  it('porte les classes ciblables (desktop)', () => {
+    const {container} = renderWithRouter(<RelatedRail heading="X" items={items} />);
+    expect(container.querySelector('.bsk-related-row')).not.toBeNull();
+    expect(container.querySelector('.bsk-related-card')).not.toBeNull();
+  });
 });

@@ -100,3 +100,223 @@
   .fiche-rise > * { opacity: 1; transform: none; animation: none; }
   .fiche-toast { transition: none; }
 }
+
+/* ── Bloc d'achat & sections (classes partagées tome + one-shot) ── */
+.fiche-emblem {
+  position: absolute;
+  top: 44%;
+  left: 42%;
+  transform: translate(-50%, -50%);
+  font-size: 160px;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.04;
+  z-index: 1;
+  pointer-events: none;
+}
+.fiche-hero-inner {
+  position: relative;
+  z-index: 3;
+}
+.fiche-pill {
+  display: inline-flex;
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-fg-primary);
+  border: 1px solid var(--bsk-border-subtle);
+  border-radius: 999px;
+  padding: 6px 13px;
+}
+.fiche-tomelabel {
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-fg-secondary);
+  margin: 16px 0 6px;
+}
+.fiche-title {
+  font-family: var(--bsk-font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 8vw, 54px);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  color: var(--bsk-fg-primary);
+  margin: 8px 0 0;
+}
+.fiche-teaser {
+  margin: 18px 0;
+  padding: 12px 16px;
+  border-left: 2px solid var(--bsk-accent-gold);
+  font-style: italic;
+  font-size: var(--bsk-text-base);
+  line-height: 1.5;
+  color: #ddd2b8;
+  background: rgba(216, 166, 87, 0.05);
+  white-space: pre-line;
+}
+
+.fiche-values-band {
+  border-top: 1px solid var(--bsk-border-subtle);
+  border-bottom: 1px solid var(--bsk-border-subtle);
+}
+
+.fiche-section {
+  padding: var(--bsk-space-8) 0;
+}
+.fiche-k {
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+  margin-bottom: var(--bsk-space-4);
+}
+.fiche-recit-body {
+  font-size: var(--bsk-text-read);
+  line-height: 1.72;
+  color: var(--bsk-fg-primary);
+  white-space: pre-line;
+}
+
+.fiche-univ-band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+  padding: 48px 26px;
+  overflow: hidden;
+  text-decoration: none;
+}
+.fiche-univ-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 120% at 50% 20%, var(--bsk-uni), #0c1217);
+}
+.fiche-univ-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(19, 20, 25, 0.5), rgba(19, 20, 25, 0.85));
+}
+.fiche-univ-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 520px;
+}
+.fiche-univ-k {
+  display: block;
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+  margin-bottom: var(--bsk-space-3);
+}
+.fiche-univ-name {
+  display: block;
+  font-family: var(--bsk-font-display);
+  font-weight: 800;
+  font-size: var(--bsk-text-xl);
+  color: var(--bsk-fg-primary);
+  margin-bottom: var(--bsk-space-4);
+}
+.fiche-univ-cta {
+  display: inline-block;
+  font-size: var(--bsk-text-sm);
+  color: var(--bsk-fg-primary);
+  border: 1px solid rgba(236, 228, 211, 0.35);
+  border-radius: 999px;
+  padding: 8px 16px;
+}
+
+.fiche-cue {
+  display: none;
+}
+
+.bsk-related-card {
+  flex: 0 0 auto;
+  width: 120px;
+}
+.bsk-related-cover {
+  width: 128%;
+  margin: 0 -14%;
+}
+
+/* ── Desktop ── */
+@media (min-width: 860px) {
+  .fiche-hero {
+    min-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 96px 0 80px;
+  }
+  .fiche-hero-bg {
+    background: radial-gradient(85% 95% at 24% 34%, var(--bsk-uni), transparent 55%),
+      radial-gradient(140% 130% at 50% 130%, rgba(10, 14, 18, 0.96), var(--bsk-bg-base));
+    opacity: 0.85;
+  }
+  .fiche-hero-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--bsk-space-10);
+  }
+  .fiche-hero-cover {
+    flex: 0 0 auto;
+    width: 300px;
+    transform: rotate(-2.5deg);
+  }
+  .fiche-buy {
+    flex: 1;
+    max-width: 420px;
+    text-align: left;
+  }
+  .fiche-title {
+    font-size: clamp(44px, 4.4vw, 56px);
+  }
+  .fiche-cue {
+    display: block;
+    text-align: center;
+    margin-top: var(--bsk-space-8);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--bsk-fg-secondary);
+  }
+
+  .fiche-section--read {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .fiche-section--read .fiche-recit-body {
+    text-align: left;
+  }
+  .fiche-section--tech {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .fiche-univ-band {
+    min-height: 230px;
+  }
+  .fiche-univ-name {
+    font-size: var(--bsk-text-2xl);
+  }
+
+  .fiche-related {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .fiche-related .bsk-related-row {
+    overflow: visible;
+    justify-content: space-between;
+  }
+  .fiche-related .bsk-related-card {
+    flex: 1;
+    max-width: 150px;
+  }
+  .fiche-related .bsk-related-cover {
+    width: 100%;
+    margin: 0;
+  }
+}
