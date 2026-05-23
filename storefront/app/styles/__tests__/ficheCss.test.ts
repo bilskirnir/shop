@@ -19,4 +19,10 @@ describe('fiche.css', () => {
   it('neutralise les animations en reduced-motion', () => {
     expect(css).toContain('prefers-reduced-motion: reduce');
   });
+  it('couche desktop : hero en grille 2 colonnes + bandeau univers', () => {
+    expect(css).toMatch(/@media\s*\(min-width:\s*860px\)/);
+    expect(css).toContain('.fiche-hero-inner');
+    expect(css).toContain('.fiche-buy');
+    expect(css).toContain('.fiche-univ-band');
+  });
 });
