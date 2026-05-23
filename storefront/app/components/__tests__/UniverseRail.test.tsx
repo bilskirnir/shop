@@ -22,4 +22,9 @@ describe('UniverseRail', () => {
     const {container} = renderWithRouter(<UniverseRail items={[]} />);
     expect(container.firstChild).toBeNull();
   });
+
+  it('porte les classes ciblables (desktop)', () => {
+    const {container} = renderWithRouter(<UniverseRail items={items} />);
+    expect(container.querySelector('.uni-rail-row')).not.toBeNull();
+  });
 });
