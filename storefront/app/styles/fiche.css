@@ -245,11 +245,11 @@
 /* ── Desktop ── */
 @media (min-width: 860px) {
   .fiche-hero {
-    min-height: 86vh;
+    min-height: 68vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 96px 0 80px;
+    padding: 44px 0 44px;
   }
   .fiche-hero-bg {
     background: radial-gradient(85% 95% at 24% 34%, var(--bsk-uni), transparent 55%),
@@ -264,8 +264,10 @@
   }
   .fiche-hero-cover {
     flex: 0 0 auto;
-    width: 300px;
     transform: rotate(-2.5deg);
+  }
+  .fiche-hero-cover .fiche-cover {
+    height: 460px;
   }
   .fiche-buy {
     flex: 1;
