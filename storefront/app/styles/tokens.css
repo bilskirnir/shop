@@ -37,6 +37,9 @@
   /* ── Borders & shadows ────────────────────────────────────────── */
   --bsk-border-subtle: rgba(236, 228, 211, 0.13);
   --bsk-border-gold: rgba(216, 166, 87, 0.35);
+  /* rayon de base du site : tout élément non totalement rond (boutons,
+     champs, cartes…) utilise ce rayon. Calé sur la zone de dédicaces. */
+  --bsk-radius: 14px;
   --bsk-shadow-cover: 0 18px 48px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.35);
   /* couvertures mock-up détourées : ombre qui suit la forme du livre */

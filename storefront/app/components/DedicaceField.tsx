@@ -26,7 +26,7 @@ export function DedicaceField({onChange}: DedicaceFieldProps) {
     <div
       style={{
         border: '1px solid var(--bsk-border-subtle)',
-        borderRadius: '14px',
+        borderRadius: 'var(--bsk-radius)',
         padding: '14px 16px',
         margin: 'var(--bsk-space-5) 0',
         background: 'var(--bsk-bg-raised)',

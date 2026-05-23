@@ -57,8 +57,8 @@ function AddButton({
           background: available
             ? 'linear-gradient(135deg, var(--bsk-accent-gold), var(--bsk-accent-gold-dim))'
             : 'var(--bsk-fg-muted)',
-          border: '1px solid rgba(236, 228, 211, 0.18)',
-          borderRadius: '10px',
+          border: 'none',
+          borderRadius: 'var(--bsk-radius)',
           cursor: available ? 'pointer' : 'not-allowed',
         }}
       >
@@ -90,7 +90,7 @@ export function TomeAddToCart({
           padding: 'var(--bsk-space-5)',
           border: '1px solid var(--bsk-border-subtle)',
           background: 'var(--bsk-bg-raised)',
-          borderRadius: '14px',
+          borderRadius: 'var(--bsk-radius)',
         }}
       >
         <p
@@ -132,7 +132,7 @@ export function TomeAddToCart({
             padding: 'var(--bsk-space-5)',
             border: '1px solid var(--bsk-border-subtle)',
             background: 'var(--bsk-bg-raised)',
-            borderRadius: '14px',
+            borderRadius: 'var(--bsk-radius)',
           }}
         >
           <p
@@ -190,7 +190,7 @@ export function TomeAddToCart({
       <DedicaceField onChange={setDedicace} />
 
       <div style={{display: 'flex', gap: '12px', marginBottom: '12px'}}>
-        <div style={{display: 'flex', alignItems: 'center', border: '1px solid var(--bsk-border-subtle)', borderRadius: '10px', overflow: 'hidden', height: '46px'}}>
+        <div style={{display: 'flex', alignItems: 'center', border: '1px solid var(--bsk-border-subtle)', borderRadius: 'var(--bsk-radius)', overflow: 'hidden', height: '46px'}}>
           <button
             type="button"
             aria-label="diminuer la quantité"
