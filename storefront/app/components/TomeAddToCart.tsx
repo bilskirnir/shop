@@ -4,6 +4,7 @@ import type {FetcherWithComponents} from 'react-router';
 import {ShopPayButton} from '@shopify/hydrogen-react';
 import {DedicaceField, type DedicaceState} from './DedicaceField';
 import type {ReleaseStatus} from './ReleaseStatusBadge';
+import {useAside} from './Aside';
 
 export interface TomeAddToCartProps {
   variantId: string;
@@ -19,10 +20,12 @@ function AddButton({
   fetcher,
   available,
   label,
+  onAdd,
 }: {
   fetcher: FetcherWithComponents<unknown>;
   available: boolean;
   label: string;
+  onAdd: () => void;
 }) {
   const [showToast, setShowToast] = useState(false);
   const prev = useRef(fetcher.state);
@@ -40,6 +43,7 @@ function AddButton({
     <>
       <button
         type="submit"
+        onClick={onAdd}
         disabled={!available || fetcher.state !== 'idle'}
         style={{
           flex: 1,
@@ -76,6 +80,7 @@ export function TomeAddToCart({
 }: TomeAddToCartProps) {
   const [dedicace, setDedicace] = useState<DedicaceState>({activated: false, name: ''});
   const [quantity, setQuantity] = useState(1);
+  const {open} = useAside();
 
   if (status === 'annoncé') {
     return (
@@ -163,7 +168,12 @@ export function TomeAddToCart({
         </div>
         <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
           {(fetcher: FetcherWithComponents<unknown>) => (
-            <AddButton fetcher={fetcher} available={available} label={ctaLabel} />
+            <AddButton
+              fetcher={fetcher}
+              available={available}
+              label={ctaLabel}
+              onAdd={() => open('cart')}
+            />
           )}
         </CartForm>
       </div>

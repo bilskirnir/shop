@@ -16,4 +16,10 @@ describe('cart.css', () => {
   it('jalon atteint en doré', () => {
     expect(css).toContain('.bsk-rw-milestone.is-reached');
   });
+  it('définit le conteneur du tiroir (overlay + panneau coulissant)', () => {
+    expect(css).toContain('.overlay');
+    expect(css).toContain('.overlay.expanded');
+    expect(css).toContain('.close-outside');
+    expect(css).toMatch(/translateX\(100%\)/);
+  });
 });

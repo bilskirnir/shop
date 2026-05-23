@@ -243,13 +243,11 @@ export default function App() {
         {immersive ? null : <Footer />}
         <Suspense fallback={null}>
           <Await resolve={data.cart}>
-            {(cart) =>
-              cart ? (
-                <Aside type="cart" heading="Votre panier">
-                  <CartMain layout="aside" cart={cart} />
-                </Aside>
-              ) : null
-            }
+            {(cart) => (
+              <Aside type="cart" heading="Votre panier">
+                <CartMain layout="aside" cart={cart ?? null} />
+              </Aside>
+            )}
           </Await>
         </Suspense>
       </Aside.Provider>

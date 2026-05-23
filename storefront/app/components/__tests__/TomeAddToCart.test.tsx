@@ -17,6 +17,12 @@ vi.mock('@shopify/hydrogen', async (orig) => {
   return {...actual, CartForm};
 });
 
+// useAside dépend du provider Aside (contexte) — on le mocke pour capter open().
+const {openSpy} = vi.hoisted(() => ({openSpy: vi.fn()}));
+vi.mock('~/components/Aside', () => ({
+  useAside: () => ({open: openSpy, close: vi.fn(), type: 'closed'}),
+}));
+
 const {TomeAddToCart} = await import('../TomeAddToCart');
 
 describe('TomeAddToCart', () => {
@@ -29,6 +35,15 @@ describe('TomeAddToCart', () => {
     expect(screen.getByText('1')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', {name: /augmenter la quantité/i}));
     expect(screen.getByText('2')).toBeInTheDocument();
+  });
+
+  it('ouvre le tiroir panier au clic sur Ajouter', () => {
+    openSpy.mockClear();
+    renderWithRouter(
+      <TomeAddToCart variantId="gid://v/1" available status="publié" priceFormatted="18,90 €" />,
+    );
+    fireEvent.click(screen.getByRole('button', {name: /Ajouter au panier/}));
+    expect(openSpy).toHaveBeenCalledWith('cart');
   });
 
   it('précommande : CTA Précommander', () => {
