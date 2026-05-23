@@ -15,4 +15,10 @@ describe('univers.css', () => {
   it('neutralise les animations en reduced-motion', () => {
     expect(css).toContain('prefers-reduced-motion: reduce');
   });
+  it('couche desktop : grille saga 3 colonnes + carte univers', () => {
+    expect(css).toMatch(/@media\s*\(min-width:\s*860px\)/);
+    expect(css).toContain('.saga-grid');
+    expect(css).toContain('repeat(3');
+    expect(css).toContain('.uni-card');
+  });
 });

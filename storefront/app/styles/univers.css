@@ -81,3 +81,123 @@
   .uni-cue { animation: none; }
   .uni-rise > * { opacity: 1; transform: none; animation: none; }
 }
+
+/* ── Grille de tomes (saga + grille plate) ── */
+.saga-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--bsk-space-6) var(--bsk-space-5);
+  align-items: start;
+}
+
+/* ── Rail « autres univers » : classes ciblables ── */
+.uni-rail-row {
+  display: flex;
+  gap: var(--bsk-space-4);
+  overflow-x: auto;
+  padding-bottom: var(--bsk-space-2);
+}
+
+/* ── Carte d'univers (index « Nos univers ») ── */
+.uni-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 200px;
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--bsk-fg-primary);
+}
+.uni-card-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 110% at 25% 30%, var(--bsk-uni), #0c1217);
+}
+.uni-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 12, 11, 0.85) 30%, rgba(8, 12, 11, 0.3) 78%);
+}
+.uni-card-emblem {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 130px;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.07;
+  pointer-events: none;
+}
+.uni-card-inner {
+  position: relative;
+  z-index: 2;
+  padding: 30px 34px;
+  max-width: 560px;
+}
+.uni-card-pill {
+  display: inline-flex;
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-fg-primary);
+  border: 1px solid rgba(236, 228, 211, 0.3);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.uni-card-name {
+  font-family: var(--bsk-font-display);
+  font-weight: 800;
+  font-size: var(--bsk-text-2xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 14px 0 10px;
+  color: var(--bsk-fg-primary);
+}
+.uni-card-lore {
+  font-style: italic;
+  font-size: var(--bsk-text-base);
+  color: #e0d6bd;
+  max-width: 440px;
+  margin-bottom: 12px;
+}
+.uni-card-stats {
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-wide);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+  margin-bottom: 16px;
+}
+.uni-card-cta {
+  display: inline-block;
+  font-size: var(--bsk-text-sm);
+  color: var(--bsk-fg-primary);
+  border: 1px solid rgba(236, 228, 211, 0.35);
+  border-radius: 999px;
+  padding: 9px 18px;
+}
+
+/* ── Desktop ── */
+@media (min-width: 860px) {
+  .uni-hero {
+    min-height: 80vh;
+    margin-top: -96px;
+    padding: 150px 30px 64px;
+  }
+  .saga-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--bsk-space-8) var(--bsk-space-6);
+  }
+  .uni-rail-row {
+    overflow: visible;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .uni-card {
+    min-height: 240px;
+  }
+  .uni-card-name {
+    font-size: var(--bsk-text-3xl);
+  }
+}
