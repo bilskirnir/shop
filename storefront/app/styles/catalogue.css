@@ -1,0 +1,86 @@
+/* app/styles/catalogue.css — page catalogue Œuvres */
+
+.cat-head {
+  text-align: center;
+  padding: var(--bsk-space-10) var(--bsk-space-5) var(--bsk-space-5);
+}
+.cat-k {
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+  margin-bottom: var(--bsk-space-2);
+}
+.cat-h1 {
+  font-family: var(--bsk-font-display);
+  font-weight: 800;
+  font-size: var(--bsk-text-2xl);
+  letter-spacing: -0.02em;
+  color: var(--bsk-fg-primary);
+  line-height: 1;
+}
+.cat-sub {
+  font-size: var(--bsk-text-sm);
+  color: var(--bsk-fg-secondary);
+  margin-top: var(--bsk-space-3);
+}
+
+.cat-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--bsk-space-4);
+  margin: 0 0 var(--bsk-space-6);
+}
+.cat-sec-name {
+  font-family: var(--bsk-font-display);
+  font-weight: 700;
+  font-size: var(--bsk-text-xl);
+  color: var(--bsk-fg-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-sec-name .cat-star {
+  color: var(--bsk-uni);
+}
+.cat-sec-link {
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-wide);
+  text-transform: uppercase;
+  color: var(--bsk-accent-gold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--bsk-space-6) var(--bsk-space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cat-cover-wrap {
+  position: relative;
+}
+.cat-halo {
+  position: absolute;
+  inset: -10% -6% 0;
+  z-index: -1;
+  border-radius: 50%;
+  opacity: 0.18;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+@media (min-width: 860px) {
+  .cat-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--bsk-space-8) var(--bsk-space-6);
+  }
+  .cat-h1 {
+    font-size: var(--bsk-text-3xl);
+  }
+}

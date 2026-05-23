@@ -45,4 +45,22 @@ describe('TomeCard', () => {
     expect(screen.queryByText('18,90 €')).not.toBeInTheDocument();
     expect(screen.getByText(/À PARAÎTRE/)).toBeInTheDocument();
   });
+
+  it('rend un halo quand `halo` est fourni', () => {
+    const {container} = renderWithRouter(
+      <TomeCard {...baseTome} status="publié" priceFormatted="18,90 €" halo="#2f8a78" />,
+    );
+    const halo = container.querySelector('.cat-halo') as HTMLElement;
+    expect(halo).not.toBeNull();
+    const style = halo.getAttribute('style') ?? '';
+    expect(style).toContain('radial-gradient');
+    expect(style).toContain('rgb(47, 138, 120)'); // #2f8a78 sérialisé
+  });
+
+  it('pas de halo par défaut', () => {
+    const {container} = renderWithRouter(
+      <TomeCard {...baseTome} status="publié" priceFormatted="18,90 €" />,
+    );
+    expect(container.querySelector('.cat-halo')).toBeNull();
+  });
 });

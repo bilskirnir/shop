@@ -11,6 +11,8 @@ export interface TomeCardProps {
   releaseDate?: string | null;
   tomeNumber?: number | null;
   priceFormatted?: string | null;
+  /** Couleur d'accent : rend un halo derrière la couverture (catalogue). */
+  halo?: string | null;
 }
 
 export function TomeCard({
@@ -21,6 +23,7 @@ export function TomeCard({
   releaseDate,
   tomeNumber,
   priceFormatted,
+  halo,
 }: TomeCardProps) {
   return (
     <Link
@@ -33,7 +36,14 @@ export function TomeCard({
         textAlign: 'center',
       }}
     >
-      <div style={{position: 'relative'}}>
+      <div className="cat-cover-wrap" style={{position: 'relative'}}>
+        {halo ? (
+          <span
+            className="cat-halo"
+            aria-hidden="true"
+            style={{background: `radial-gradient(60% 50% at 50% 40%, ${halo}, transparent 70%)`}}
+          />
+        ) : null}
         <ReleaseStatusBadge status={status} releaseDate={releaseDate} onImage />
         <Cover image={cover} bleed />
       </div>
