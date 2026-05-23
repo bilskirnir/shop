@@ -182,14 +182,7 @@ export default function CollectionRoute() {
           </>
         ) : (
           <section style={{padding: 'var(--bsk-space-10) 0'}}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 'var(--bsk-space-5)',
-                alignItems: 'start',
-              }}
-            >
+            <div className="saga-grid">
               {products
                 .map(toTomeCardProps)
                 .sort((a, b) => (a.tomeNumber ?? 0) - (b.tomeNumber ?? 0))
