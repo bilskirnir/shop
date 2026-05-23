@@ -114,15 +114,17 @@ export function TomePageTemplate({
         </section>
       </Container>
 
-      <Link to={`/collections/${universe.handle}`} className="fiche-univ-band">
-        <span className="fiche-univ-bg" aria-hidden="true" />
-        <span className="fiche-univ-scrim" aria-hidden="true" />
-        <span className="fiche-univ-inner">
-          {universeKicker ? <span className="fiche-univ-k">{universeKicker}</span> : null}
-          <span className="fiche-univ-name">Dans l'univers de {universe.title}</span>
-          <span className="fiche-univ-cta">Explorer l'univers →</span>
-        </span>
-      </Link>
+      <Container width="content">
+        <Link to={`/collections/${universe.handle}`} className="fiche-univ-band">
+          <span className="fiche-univ-bg" aria-hidden="true" />
+          <span className="fiche-univ-scrim" aria-hidden="true" />
+          <span className="fiche-univ-inner">
+            {universeKicker ? <span className="fiche-univ-k">{universeKicker}</span> : null}
+            <span className="fiche-univ-name">Dans l'univers de {universe.title}</span>
+            <span className="fiche-univ-cta">Explorer l'univers →</span>
+          </span>
+        </Link>
+      </Container>
 
       <Container width="content">
         <section className="fiche-section fiche-section--tech">

@@ -188,6 +188,8 @@
   padding: 48px 26px;
   overflow: hidden;
   text-decoration: none;
+  border-radius: 16px;
+  margin: var(--bsk-space-6) 0;
 }
 .fiche-univ-bg {
   position: absolute;
@@ -249,12 +251,15 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 44px 0 44px;
+    /* remonte sous la nav (sticky/transparente) pour que l'atmosphère
+       passe derrière la barre ; on compense par le padding-top */
+    margin-top: -96px;
+    padding: 140px 0 44px;
   }
   .fiche-hero-bg {
-    background: radial-gradient(85% 95% at 24% 34%, var(--bsk-uni), transparent 55%),
+    background: radial-gradient(72% 80% at 26% 36%, var(--bsk-uni), transparent 52%),
       radial-gradient(140% 130% at 50% 130%, rgba(10, 14, 18, 0.96), var(--bsk-bg-base));
-    opacity: 0.85;
+    opacity: 0.55;
   }
   .fiche-hero-inner {
     display: flex;
