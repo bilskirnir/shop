@@ -46,14 +46,17 @@ function AddButton({
         onClick={onAdd}
         disabled={!available || fetcher.state !== 'idle'}
         style={{
-          flex: 1,
-          padding: '14px',
+          width: '100%',
+          height: '50px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 18px',
           fontFamily: 'var(--bsk-font-sans)',
           fontSize: '15px',
           fontWeight: 700,
           letterSpacing: '0.03em',
           color: '#231603',
-          height: '46px',
           background: available
             ? 'linear-gradient(135deg, var(--bsk-accent-gold), var(--bsk-accent-gold-dim))'
             : 'var(--bsk-fg-muted)',
@@ -190,12 +193,12 @@ export function TomeAddToCart({
       <DedicaceField onChange={setDedicace} />
 
       <div style={{display: 'flex', gap: '12px', marginBottom: '12px'}}>
-        <div style={{display: 'flex', alignItems: 'center', border: '1px solid var(--bsk-border-subtle)', borderRadius: 'var(--bsk-radius)', overflow: 'hidden', height: '46px'}}>
+        <div style={{display: 'flex', alignItems: 'center', flex: '0 0 auto', border: '1px solid var(--bsk-border-subtle)', borderRadius: 'var(--bsk-radius)', overflow: 'hidden', height: '50px'}}>
           <button
             type="button"
             aria-label="diminuer la quantité"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            style={{width: 42, height: 44, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
+            style={{width: 44, height: 48, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
           >
             −
           </button>
@@ -204,21 +207,23 @@ export function TomeAddToCart({
             type="button"
             aria-label="augmenter la quantité"
             onClick={() => setQuantity((q) => q + 1)}
-            style={{width: 42, height: 44, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
+            style={{width: 44, height: 48, background: 'transparent', border: 'none', color: 'var(--bsk-fg-primary)', fontSize: 18, cursor: 'pointer'}}
           >
             +
           </button>
         </div>
-        <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
-          {(fetcher: FetcherWithComponents<unknown>) => (
-            <AddButton
-              fetcher={fetcher}
-              available={available}
-              label={ctaLabel}
-              onAdd={() => open('cart')}
-            />
-          )}
-        </CartForm>
+        <div style={{flex: 1, minWidth: 0}}>
+          <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
+            {(fetcher: FetcherWithComponents<unknown>) => (
+              <AddButton
+                fetcher={fetcher}
+                available={available}
+                label={ctaLabel}
+                onAdd={() => open('cart')}
+              />
+            )}
+          </CartForm>
+        </div>
       </div>
 
       {storeDomain && variantId ? (
