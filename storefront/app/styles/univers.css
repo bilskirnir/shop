@@ -148,10 +148,15 @@
 
 /* ── Grille de tomes (saga + grille plate) ── */
 .saga-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
   gap: var(--bsk-space-6) var(--bsk-space-5);
-  align-items: start;
+}
+.saga-grid > * {
+  flex: 0 1 150px;
+  max-width: 200px;
 }
 
 /* ── Rail « autres univers » : classes ciblables ── */
@@ -253,17 +258,22 @@
     align-items: center;
     justify-content: center;
     text-align: left;
-    gap: var(--bsk-space-10);
+    gap: var(--bsk-space-8);
+    max-width: 880px;
+    margin: 0 auto;
   }
   .uni-hero-text {
     text-align: left;
+    max-width: 460px;
   }
   .uni-hero-title {
     font-size: clamp(44px, 5vw, 60px);
   }
   .saga-grid {
-    grid-template-columns: repeat(4, 1fr);
     gap: var(--bsk-space-8) var(--bsk-space-6);
+  }
+  .saga-grid > * {
+    flex: 0 1 180px;
   }
   .uni-rail-row {
     overflow: visible;
