@@ -336,6 +336,22 @@ export const UNIVERSE_RAIL_FRAGMENT = `#graphql
   }
 ` as const;
 
+export const UNIVERSE_INDEX_FRAGMENT = `#graphql
+  fragment UniverseIndexCard on Collection {
+    id
+    handle
+    title
+    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    genre: metafield(namespace: "custom", key: "genre") { value }
+    lore: metafield(namespace: "custom", key: "lore") { value }
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
+    sagas: metafield(namespace: "custom", key: "sagas") {
+      references(first: 10) { nodes { ... on Metaobject { id } } }
+    }
+    products(first: 50) { nodes { id } }
+  }
+` as const;
+
 export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
   fragment UniverseDetail on Collection {
     id
