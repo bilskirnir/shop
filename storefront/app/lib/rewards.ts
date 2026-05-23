@@ -9,7 +9,7 @@ export interface RewardsConfig {
 
 export const DEFAULT_REWARDS: RewardsConfig = {
   freeShippingThreshold: 49,
-  giftTiers: [{threshold: 75, label: 'un marque-page'}],
+  giftTiers: [],
 };
 
 export interface RewardMilestone {
@@ -74,7 +74,7 @@ export function computeRewards(subtotal: number, config: RewardsConfig): Rewards
   const nextUnreached = all.find((m) => subtotal < m.threshold);
   let message: string;
   if (!nextUnreached) {
-    message = 'Tout débloqué 🎉';
+    message = config.giftTiers.length > 0 ? 'Tout débloqué 🎉' : 'Livraison offerte ✓';
   } else if (nextUnreached.kind === 'shipping') {
     message = `Plus que ${EUR.format(nextUnreached.threshold - subtotal)} pour la livraison offerte 🚚`;
   } else {

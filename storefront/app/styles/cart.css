@@ -1,15 +1,20 @@
 /* app/styles/cart.css — panier drawer (récompenses + lignes + pied) */
 
-/* ── Barre de récompenses ── */
+/* ── Barre de récompenses (épurée : livraison offerte) ── */
 .bsk-rw {
-  padding: 16px 22px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 22px;
   border-bottom: 1px solid var(--bsk-border-subtle);
   background: var(--bsk-bg-raised);
 }
 .bsk-rw-msg {
-  font-size: 14px;
+  flex: 1 1 100%;
+  font-size: 13.5px;
   line-height: 1.4;
-  margin-bottom: 16px;
+  margin: 0;
   color: var(--bsk-fg-primary);
 }
 .bsk-rw-msg b {
@@ -17,10 +22,11 @@
 }
 .bsk-rw-track {
   position: relative;
+  flex: 1;
   height: 6px;
   background: rgba(236, 228, 211, 0.12);
   border-radius: 999px;
-  margin: 30px 8px 8px;
+  overflow: hidden;
 }
 .bsk-rw-fill {
   position: absolute;
@@ -31,45 +37,14 @@
   background: linear-gradient(90deg, var(--bsk-accent-gold-dim), var(--bsk-accent-gold));
   transition: width 0.5s ease;
 }
-.bsk-rw-milestone {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-.bsk-rw-milestone .bsk-rw-dot {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--bsk-bg-raised);
-  border: 2px solid var(--bsk-border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--bsk-fg-secondary);
-  transition: 0.4s;
-}
-.bsk-rw-milestone .bsk-rw-dot svg {
-  width: 13px;
-  height: 13px;
-}
-.bsk-rw-milestone.is-reached .bsk-rw-dot {
-  border-color: var(--bsk-accent-gold);
+.bsk-rw-pct {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--bsk-accent-gold);
-  background: #241b0c;
-}
-.bsk-rw-milestone .bsk-rw-lbl {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-size: 9.5px;
-  letter-spacing: 0.04em;
-  color: var(--bsk-fg-secondary);
-}
-.bsk-rw-milestone.is-reached .bsk-rw-lbl {
-  color: var(--bsk-accent-gold);
+  min-width: 30px;
+  text-align: right;
 }
 
 /* ── Lignes panier ── */

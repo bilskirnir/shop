@@ -47,4 +47,16 @@ describe('computeRewards', () => {
     expect(r.milestones[0].leftPct).toBeCloseTo((49 / 75) * 100, 1);
     expect(r.milestones[1].leftPct).toBe(100);
   });
+
+  it('par défaut : seulement la livraison (pas de palier cadeau)', () => {
+    expect(DEFAULT_REWARDS.giftTiers).toEqual([]);
+  });
+
+  it('sans palier cadeau : remplissage relatif à la livraison + message « Livraison offerte ✓ »', () => {
+    const shipOnly = {freeShippingThreshold: 49, giftTiers: []};
+    expect(computeRewards(36.75, shipOnly).fillPct).toBeCloseTo((36.75 / 49) * 100, 1);
+    const done = computeRewards(50, shipOnly);
+    expect(done.fillPct).toBe(100);
+    expect(done.message).toBe('Livraison offerte ✓');
+  });
 });
