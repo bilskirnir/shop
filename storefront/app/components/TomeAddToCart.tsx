@@ -227,13 +227,31 @@ export function TomeAddToCart({
       </div>
 
       {storeDomain && variantId ? (
-        <div style={{marginBottom: '12px'}}>
-          <ShopPayButton
-            variantIdsAndQuantities={[{id: variantId, quantity}]}
-            storeDomain={storeDomain}
-            width="100%"
-          />
-        </div>
+        <>
+          <div
+            aria-hidden="true"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              margin: '2px 0 12px',
+              color: 'var(--bsk-fg-secondary)',
+            }}
+          >
+            <span style={{flex: 1, height: 1, background: 'var(--bsk-border-subtle)'}} />
+            <span style={{fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase'}}>
+              ou
+            </span>
+            <span style={{flex: 1, height: 1, background: 'var(--bsk-border-subtle)'}} />
+          </div>
+          <div style={{marginBottom: '12px'}}>
+            <ShopPayButton
+              variantIdsAndQuantities={[{id: variantId, quantity}]}
+              storeDomain={storeDomain}
+              width="100%"
+            />
+          </div>
+        </>
       ) : null}
 
       <a
