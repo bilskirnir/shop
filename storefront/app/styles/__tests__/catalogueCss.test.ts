@@ -13,4 +13,10 @@ describe('catalogue.css', () => {
   it("halo de couleur d'univers", () => {
     expect(css).toContain('.cat-halo');
   });
+  it('couverture à hauteur fixe en object-fit cover + hover', () => {
+    expect(css).toContain('.tome-card-cover-box');
+    expect(css).toMatch(/object-fit:\s*cover/);
+    expect(css).toContain('.tome-card:hover');
+    expect(css).toContain('--tome-cover-h');
+  });
 });

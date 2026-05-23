@@ -63,4 +63,13 @@ describe('TomeCard', () => {
     );
     expect(container.querySelector('.cat-halo')).toBeNull();
   });
+
+  it('coverFixed → image en hauteur fixe (.tome-card-cover)', () => {
+    const {container} = renderWithRouter(
+      <TomeCard {...baseTome} status="publié" priceFormatted="18,90 €" coverFixed />,
+    );
+    const img = container.querySelector('.tome-card-cover') as HTMLImageElement;
+    expect(img).not.toBeNull();
+    expect(img.getAttribute('alt')).toBe('Le Sang Versé');
+  });
 });
