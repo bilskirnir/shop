@@ -237,6 +237,10 @@
   flex: 0 0 auto;
   width: 120px;
 }
+.bsk-related-cover {
+  width: 128%;
+  margin: 0 -14%;
+}
 
 /* ── Desktop ── */
 @media (min-width: 860px) {
@@ -310,5 +314,9 @@
   .fiche-related .bsk-related-card {
     flex: 1;
     max-width: 150px;
+  }
+  .fiche-related .bsk-related-cover {
+    width: 100%;
+    margin: 0;
   }
 }

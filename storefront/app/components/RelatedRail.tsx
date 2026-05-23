@@ -11,7 +11,13 @@ export interface RelatedItem {
 export function RelatedRail({heading, items}: {heading: string; items: RelatedItem[]}) {
   if (items.length === 0) return null;
   return (
-    <section style={{padding: 'var(--bsk-space-6) 0 var(--bsk-space-6) var(--bsk-space-5)', borderTop: '1px solid var(--bsk-border-subtle)'}}>
+    <section
+      className="bsk-related"
+      style={{
+        padding: 'var(--bsk-space-6) 0 var(--bsk-space-6) var(--bsk-space-5)',
+        borderTop: '1px solid var(--bsk-border-subtle)',
+      }}
+    >
       <h2
         style={{
           fontFamily: 'var(--bsk-font-display)',
@@ -23,14 +29,18 @@ export function RelatedRail({heading, items}: {heading: string; items: RelatedIt
       >
         {heading}
       </h2>
-      <div style={{display: 'flex', gap: 'var(--bsk-space-4)', overflowX: 'auto', paddingBottom: 'var(--bsk-space-2)'}}>
+      <div
+        className="bsk-related-row"
+        style={{display: 'flex', gap: 'var(--bsk-space-4)', overflowX: 'auto', paddingBottom: 'var(--bsk-space-2)'}}
+      >
         {items.map((it) => (
           <Link
             key={it.handle}
             to={`/products/${it.handle}`}
-            style={{flex: '0 0 auto', width: '120px', textDecoration: 'none', color: 'inherit', textAlign: 'center'}}
+            className="bsk-related-card"
+            style={{textDecoration: 'none', color: 'inherit', textAlign: 'center'}}
           >
-            <div style={{width: '128%', margin: '0 -14%'}}>
+            <div className="bsk-related-cover">
               <Cover image={it.cover} />
             </div>
             <div
