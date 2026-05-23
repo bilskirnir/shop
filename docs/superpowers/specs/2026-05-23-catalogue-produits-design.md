@@ -40,7 +40,7 @@ Les produits sont **regroupés par univers** (via le metafield produit `custom.u
   - **halo discret** de la couleur d'univers derrière la couverture (opacité ~16-20 %),
   - **badge de statut posé sur la couverture** (`ReleaseStatusBadge onImage`) : `Préco · <date>` / `À paraître`,
   - dessous, centré : **n° de tome** (si présent, caps muted) · **titre** (Cabinet Grotesk) · **prix** en doré si publié, sinon « Précommander » / l'année (« 2026 ») pour à paraître.
-- Univers triés par titre (ordre stable) ; tomes triés par n° de tome.
+- **Ordre des sections univers : rotation quotidienne** (cf. §3.6) — pas toujours les mêmes en tête. Les **tomes au sein d'une section restent triés par n° de tome** (ordre de lecture 1·2·3).
 
 ### 3.3 Section « Romans indépendants »
 - Regroupe les produits marqués `est_une_oeuvre_independante = true`.
@@ -53,6 +53,14 @@ Les produits sont **regroupés par univers** (via le metafield produit `custom.u
 ### 3.5 Séparateurs
 - `Ornament` (`✦` doré + filets) entre chaque section.
 
+### 3.6 Rotation quotidienne (équité — « pas toujours les mêmes en premier »)
+Fidèle à la philosophie maison (aucune œuvre vedette, tout au même niveau), l'**ordre des sections univers tourne chaque jour** :
+- Un helper pur `seededShuffle(items, seed)` (PRNG déterministe, ex. mulberry32) réordonne les **sections univers** entre elles.
+- **Graine = index du jour** (`Math.floor(Date.now() / 86_400_000)`), calculée **dans le loader (côté serveur)** ; l'ordre est passé au composant, qui le rend tel quel → **aucun aléa côté client, pas de mismatch d'hydratation**, et stable pendant toute la journée (compatible cache).
+- Résultat : ordre **stable dans la journée**, **différent chaque jour**, équitable dans le temps.
+- Les **« Romans indépendants »** sont eux aussi **mélangés entre eux** avec la même graine. Les sections « Romans indépendants » et « Autres œuvres » restent **après** les univers (structure lisible) ; seules les sections univers tournent entre elles, et les œuvres indépendantes tournent entre elles.
+- `seededShuffle` est **pur et testable** (graine fixe → ordre déterministe).
+
 ## 4. Données / requête
 
 - Récupérer **tous les produits** (jusqu'à ~100, pas de pagination — catalogue réduit ; à revisiter si la collection grandit) via `TILE_PRODUCT_FRAGMENT` (fournit `featuredImage`, `priceRange`, et `TomeMetafields` : `univers {reference {handle title}}`, `numero_tome`, `statut_parution`, `date_parution`, `est_une_oeuvre_independante`).
@@ -64,6 +72,7 @@ Les produits sont **regroupés par univers** (via le metafield produit `custom.u
 
 - **Réutilisés** : `TomeCard` (Plan 3 — couverture bleed + badge onImage + n°/titre/prix), `Cover`, `ReleaseStatusBadge`, `Ornament`, `universeAccentStyle`, `Container`.
 - **Nouveau** : un petit composant de section catalogue (`CatalogueSection` : props `name`, `accent`, `href?`, `tomes: TomeCardProps[]`, `showTomeNumber?`) rendant l'en-tête (✦ + nom teinté + lien optionnel) + la grille responsive. Le **halo** d'univers est ajouté soit dans `TomeCard` (variante/prop `halo`), soit via un wrapper dans la section ; décision d'implémentation au plan (préférence : prop optionnelle sur `TomeCard` pour rester DRY).
+- **Nouveau (logique pure)** : `seededShuffle(items, seed)` (PRNG déterministe) — réordonne les sections univers + les romans indépendants selon la graine du jour (§3.6). Testable.
 - **CSS** : une feuille `catalogue.css` pour la grille responsive (4↔2 colonnes), le gap entre couvertures, et le halo. Pas d'animation lourde (page de liste) ; éventuellement une légère cascade d'apparition, neutralisée en `prefers-reduced-motion`.
 - **Route** : `collections.all.tsx` réécrite (en-tête + sections) ; `products._index.tsx` (redirect).
 
