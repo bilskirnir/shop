@@ -7,15 +7,16 @@ import '~/styles/atoms.css';
 export function SagaPanel({
   screen,
   index,
-  active = false,
+  state = 'active',
 }: {
   screen: HomeScreen;
   index: number;
-  active?: boolean;
+  /** Position relative au panneau actif : 'above' (parti vers le haut), 'active' (révélé), 'below' (en attente). */
+  state?: 'above' | 'active' | 'below';
 }) {
   return (
     <section
-      className={`bsk-saga-panel${active ? ' is-active' : ''}`}
+      className={`bsk-saga-panel is-${state}`}
       style={universeAccentStyle(screen.accent ?? undefined)}
       aria-label={screen.title}
     >

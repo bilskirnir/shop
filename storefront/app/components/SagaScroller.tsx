@@ -13,7 +13,11 @@ export function SagaScroller({screens}: {screens: HomeScreen[]}) {
     <div className="bsk-scroller" ref={containerRef}>
       {screens.map((s, i) => (
         <div className="bsk-scroller-panel" data-panel key={s.key}>
-          <SagaPanel screen={s} index={i} active={i === activeIndex} />
+          <SagaPanel
+            screen={s}
+            index={i}
+            state={i < activeIndex ? 'above' : i === activeIndex ? 'active' : 'below'}
+          />
         </div>
       ))}
       <div
