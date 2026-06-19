@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import type {CSSProperties} from 'react';
 import {Link} from 'react-router';
-import {Logo} from '~/components/Logo';
 import type {UniverseItem} from '~/components/MegaMenu';
 import {useAside} from '~/components/Aside';
 import {useHideOnScroll} from '~/hooks/useHideOnScroll';
@@ -40,7 +39,7 @@ export function ImmersiveNav({
     right: 0,
     zIndex: 60,
     display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
+    gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
     gap: 'var(--bsk-space-4)',
     padding: '16px clamp(22px, 4vw, 48px)',
@@ -59,8 +58,8 @@ export function ImmersiveNav({
 
   return (
     <>
-      <header style={headerStyle}>
-        <div style={{justifySelf: 'start', display: 'flex', alignItems: 'center', minWidth: 0}}>
+      <header style={headerStyle} data-variant={isOverlay ? 'overlay' : isSolid ? 'solid' : 'top'}>
+        <div style={{justifySelf: 'start', display: 'flex', alignItems: 'center', gap: 'var(--bsk-space-4)', minWidth: 0}}>
           <button
             type="button"
             className="bsk-nav-burger"
@@ -72,20 +71,18 @@ export function ImmersiveNav({
             <span />
             <span />
           </button>
-          <nav className="bsk-nav-links" aria-label="Navigation principale">
-            {PRIMARY_NAV.map((item) => (
-              <Link key={item.label} className="bsk-nav-link" to={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div style={{justifySelf: 'center'}}>
-          <Link to="/" aria-label="Accueil Bilskirnir" style={{display: 'inline-flex'}}>
-            <Logo height="clamp(44px, 5.5vw, 58px)" />
+          <Link to="/" aria-label="Accueil Bilskirnir" className="bsk-nav-wordmark">
+            BILSKIRNIR
           </Link>
         </div>
+
+        <nav className="bsk-nav-links" aria-label="Navigation principale" style={{justifySelf: 'center'}}>
+          {PRIMARY_NAV.map((item) => (
+            <Link key={item.label} className="bsk-nav-link" to={item.href}>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
         <div style={{justifySelf: 'end'}}>
           <button
@@ -119,8 +116,8 @@ export function ImmersiveNav({
                   minWidth: 16,
                   height: 16,
                   borderRadius: 999,
-                  background: 'var(--bsk-accent-gold)',
-                  color: '#231603',
+                  background: 'var(--bsk-uni)',
+                  color: 'var(--bsk-ink)',
                   fontSize: 9,
                   fontWeight: 700,
                   display: 'flex',

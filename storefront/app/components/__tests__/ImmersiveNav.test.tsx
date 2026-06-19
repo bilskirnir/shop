@@ -1,5 +1,6 @@
 import {describe, it, expect, vi} from 'vitest';
-import {screen, fireEvent} from '@testing-library/react';
+import {render, screen, fireEvent} from '@testing-library/react';
+import {createRoutesStub} from 'react-router';
 import {renderWithRouter} from '~/test/render';
 import {ImmersiveNav} from '../ImmersiveNav';
 import {PRIMARY_NAV} from '~/data/nav';
@@ -8,14 +9,39 @@ vi.mock('~/components/Aside', () => ({
   useAside: () => ({open: vi.fn(), close: vi.fn(), type: 'closed'}),
 }));
 
+vi.mock('~/hooks/useHideOnScroll', () => ({
+  useHideOnScroll: () => ({solid: false, hidden: false}),
+}));
+
 const universes = [
   {id: '1', handle: 'au-nom-des-dieux', title: 'Au Nom des Dieux', isStandalone: false},
 ];
 
+function renderNav(variant: 'overlay' | 'solid') {
+  const Stub = createRoutesStub([
+    {path: '/', Component: () => (
+      <ImmersiveNav universes={[]} cartCount={0} variant={variant} />
+    )},
+  ]);
+  return render(<Stub initialEntries={['/']} />);
+}
+
+describe('ImmersiveNav (encre)', () => {
+  it('affiche le wordmark BILSKIRNIR', () => {
+    renderNav('overlay');
+    expect(screen.getByText('BILSKIRNIR')).toBeInTheDocument();
+  });
+
+  it('expose le variant via data-variant', () => {
+    const {container} = renderNav('overlay');
+    expect(container.querySelector('header')).toHaveAttribute('data-variant', 'overlay');
+  });
+});
+
 describe('ImmersiveNav', () => {
-  it('rend le logo de la maison', () => {
+  it('affiche le wordmark BILSKIRNIR à gauche', () => {
     renderWithRouter(<ImmersiveNav universes={universes} cartCount={0} />);
-    expect(screen.getByRole('img', {name: /bilskirnir/i})).toBeInTheDocument();
+    expect(screen.getByText('BILSKIRNIR')).toBeInTheDocument();
   });
 
   it('affiche la pastille de quantité quand le panier est non vide', () => {
