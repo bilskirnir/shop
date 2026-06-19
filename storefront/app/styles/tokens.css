@@ -25,8 +25,13 @@
   --bsk-accent-gold-dim: #c4912f;   /* borders, subtle */
   --bsk-accent-bronze: #c4912f;     /* secondary accent */
 
+  /* ── Refonte 2 « encre » ─────────────────────────────────────── */
+  --bsk-ink: #0b0b0c;               /* fond encre (nuovo base) */
+  --bsk-cream: #f2efe7;             /* texte crème (nouveau primary) */
+  --bsk-grain-opacity: 0.35;
+
   /* ── Accent d'univers (ponctuel) — surchargé par page via inline style ── */
-  --bsk-uni: var(--bsk-accent-gold);     /* défaut neutre */
+  --bsk-uni: var(--bsk-cream);     /* accent univers — crème neutre par défaut */
   --bsk-uni-soft: rgba(216, 166, 87, 0.16);
 
   /* ── Color: semantic ──────────────────────────────────────────── */
@@ -48,11 +53,9 @@
   --bsk-shadow-float: 0 8px 24px rgba(0, 0, 0, 0.45);
 
   /* ── Typography: families ─────────────────────────────────────── */
-  --bsk-font-display: "Cabinet Grotesk", system-ui, sans-serif;
-  /* compat : l'ancien --bsk-font-serif des composants Plan 2 pointe désormais
-     vers le display (Cabinet Grotesk) jusqu'à leur refonte page par page. */
-  --bsk-font-serif: "Cabinet Grotesk", system-ui, sans-serif;
-  --bsk-font-sans: "Switzer", system-ui, -apple-system, sans-serif;
+  --bsk-font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --bsk-font-serif: "Bricolage Grotesque", system-ui, sans-serif;
+  --bsk-font-sans: "Inter", system-ui, -apple-system, sans-serif;
 
   /* ── Typography: scale (rem-based, 1rem = 16px) ──────────────── */
   --bsk-text-xs: 0.75rem;   /* 12px — labels */
