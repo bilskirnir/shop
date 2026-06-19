@@ -8,23 +8,23 @@
   text-decoration:none;transition:transform var(--bsk-duration-fast) var(--bsk-ease),opacity var(--bsk-duration-fast)}
 .bsk-btn:active{transform:translateY(1px)}
 .bsk-btn--cream{background:var(--bsk-cream);color:var(--bsk-ink)}
-.bsk-btn--ghost{background:transparent;color:var(--bsk-cream);border-color:rgba(242,239,231,.35)}
+.bsk-btn--ghost{background:transparent;color:var(--bsk-cream);border-color:color-mix(in srgb,var(--bsk-cream) 35%,transparent)}
 .bsk-btn--accent{background:var(--bsk-uni);color:var(--bsk-ink)}
-.bsk-btn--disabled,.bsk-btn:disabled{background:rgba(242,239,231,.12);color:rgba(242,239,231,.4);cursor:not-allowed}
+.bsk-btn--disabled,.bsk-btn:disabled{background:color-mix(in srgb,var(--bsk-cream) 12%,transparent);color:color-mix(in srgb,var(--bsk-cream) 40%,transparent);cursor:not-allowed}
 
 /* Badges */
 .bsk-badge{display:inline-flex;align-items:center;font-family:var(--bsk-font-sans);
   font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid}
 .bsk-badge--accent{color:var(--bsk-uni);border-color:color-mix(in srgb,var(--bsk-uni) 60%,transparent);background:color-mix(in srgb,var(--bsk-uni) 10%,transparent)}
-.bsk-badge--cream{color:var(--bsk-cream);border-color:rgba(242,239,231,.3);background:transparent}
+.bsk-badge--cream{color:var(--bsk-cream);border-color:color-mix(in srgb,var(--bsk-cream) 30%,transparent);background:transparent}
 .bsk-badge--solid{color:var(--bsk-ink);background:var(--bsk-uni);border-color:var(--bsk-uni)}
 
 /* Champs */
-.bsk-field{background:rgba(242,239,231,.05);border:1px solid rgba(242,239,231,.18);
+.bsk-field{background:color-mix(in srgb,var(--bsk-cream) 5%,transparent);border:1px solid color-mix(in srgb,var(--bsk-cream) 18%,transparent);
   border-radius:var(--bsk-radius);padding:11px 14px;font-family:var(--bsk-font-sans);font-size:13px;color:var(--bsk-cream)}
-.bsk-mailrow{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(242,239,231,.4);padding-bottom:7px}
+.bsk-mailrow{display:flex;align-items:center;gap:10px;border-bottom:1px solid color-mix(in srgb,var(--bsk-cream) 40%,transparent);padding-bottom:7px}
 .bsk-mailrow input{flex:1;background:none;border:0;color:var(--bsk-cream);font-family:var(--bsk-font-sans);font-size:13px;outline:none}
-.bsk-stepper{display:inline-flex;align-items:center;gap:14px;border:1px solid rgba(242,239,231,.22);border-radius:999px;padding:5px 12px;font-size:14px;color:var(--bsk-cream)}
+.bsk-stepper{display:inline-flex;align-items:center;gap:14px;border:1px solid color-mix(in srgb,var(--bsk-cream) 22%,transparent);border-radius:999px;padding:5px 12px;font-size:14px;color:var(--bsk-cream)}
 
 /* Kicker (label + filet) */
 .bsk-kicker{display:inline-block;font-family:var(--bsk-font-sans);font-size:10px;font-weight:600;
@@ -33,7 +33,7 @@
 
 /* Puces de progression */
 .bsk-dots{display:flex;flex-direction:column;gap:8px}
-.bsk-dots button{width:5px;height:5px;padding:0;border:0;border-radius:50%;background:rgba(242,239,231,.28);cursor:pointer;transition:height var(--bsk-duration-fast),background var(--bsk-duration-fast)}
+.bsk-dots button{width:5px;height:5px;padding:0;border:0;border-radius:50%;background:color-mix(in srgb,var(--bsk-cream) 28%,transparent);cursor:pointer;transition:height var(--bsk-duration-fast),background var(--bsk-duration-fast)}
 .bsk-dots button[aria-current="true"]{background:var(--bsk-uni);height:20px;border-radius:3px}
 
 /* Finition : grain + halo (utilitaires) */
@@ -44,4 +44,5 @@
 
 @media (prefers-reduced-motion: reduce){
   .bsk-btn{transition:none}
+  .bsk-dots button{transition:none}
 }

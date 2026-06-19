@@ -10,7 +10,7 @@ export function ProgressDots({
   onJump?: (i: number) => void;
 }) {
   return (
-    <div className="bsk-dots" role="tablist" aria-label="Sagas">
+    <div className="bsk-dots" role="group" aria-label="Sagas">
       {Array.from({length: count}, (_, i) => (
         <button
           key={i}

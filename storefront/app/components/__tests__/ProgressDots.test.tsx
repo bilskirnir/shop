@@ -9,6 +9,7 @@ describe('ProgressDots', () => {
     expect(dots).toHaveLength(3);
     expect(dots[1]).toHaveAttribute('aria-current', 'true');
     expect(dots[0]).toHaveAttribute('aria-current', 'false');
+    expect(dots[2]).toHaveAttribute('aria-current', 'false');
   });
 
   it('appelle onJump avec l\'index au clic', () => {
