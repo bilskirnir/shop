@@ -16,7 +16,7 @@ describe('home.css', () => {
     expect(css).toContain('var(--bsk-ease)');
   });
   it('porte les animations clés', () => {
-    expect(css).toMatch(/@keyframes\s+revealUp/);
+    expect(css).toMatch(/@keyframes\s+textIn/);
   });
   it('neutralise les animations en reduced-motion', () => {
     expect(css).toContain('prefers-reduced-motion: reduce');

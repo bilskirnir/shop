@@ -23,17 +23,21 @@
    le haut » ; le contenu se révèle/efface par-dessus. */
 .bsk-saga-text > *{opacity:0}
 .bsk-saga-fan{opacity:0}
-.bsk-saga-panel.is-active .bsk-saga-text > *{animation:revealUp 1.1s var(--bsk-ease) both}
+/* Entrée (actif) : le texte monte en cascade, l'éventail flotte jusqu'à sa place */
+.bsk-saga-panel.is-active .bsk-saga-text > *{animation:textIn 1.1s var(--bsk-ease) both}
 .bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(1){animation-delay:.12s}
 .bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(2){animation-delay:.26s}
 .bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(3){animation-delay:.40s}
 .bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(4){animation-delay:.54s}
-.bsk-saga-panel.is-active .bsk-saga-fan{animation:fadeIn 1.2s var(--bsk-ease) .2s both}
-.bsk-saga-panel.is-above .bsk-saga-text > *,
-.bsk-saga-panel.is-above .bsk-saga-fan{animation:fadeOut .5s var(--bsk-ease) both}
-@keyframes revealUp{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+.bsk-saga-panel.is-active .bsk-saga-fan{animation:fanIn 1.1s var(--bsk-ease) .1s both}
+/* Sortie (au-dessus) : éventail + textes S'ENVOLENT vers le haut → sensation qu'ils flottent
+   par-dessus la section (parallaxe : ils montent plus vite que la piste). */
+.bsk-saga-panel.is-above .bsk-saga-text > *{animation:textOut .85s var(--bsk-ease) both}
+.bsk-saga-panel.is-above .bsk-saga-fan{animation:fanOut .85s var(--bsk-ease) both}
+@keyframes textIn{from{opacity:0;transform:translateY(54px)}to{opacity:1;transform:translateY(0)}}
+@keyframes textOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-84px)}}
+@keyframes fanIn{from{opacity:0;transform:translateX(-50%) translateY(64px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes fanOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-120px)}}
 /* Ambiance (boucles) : l'éventail respire, le halo pulse */
 .bsk-saga-fan .uni-fan{animation:fanFloat 9s ease-in-out infinite}
 @keyframes fanFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(.6deg)}}
@@ -42,7 +46,7 @@
 
 /* Footer : son contenu monte + apparaît quand on atteint la section */
 .bsk-track-panel--footer .bsk-footer-inner{opacity:0}
-.bsk-track-panel--footer.is-active .bsk-footer-inner{animation:revealUp 1.1s var(--bsk-ease) both}
+.bsk-track-panel--footer.is-active .bsk-footer-inner{animation:textIn 1.1s var(--bsk-ease) both}
 
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite, tailles responsives */
 @media (min-width: 860px){
@@ -61,6 +65,9 @@
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
+  /* éventail desktop centré en translateY(-50%) → on redéfinit l'entrée/sortie qui flottent */
+  @keyframes fanIn{from{opacity:0;transform:translateY(calc(-50% + 72px))}to{opacity:1;transform:translateY(-50%)}}
+  @keyframes fanOut{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% - 140px))}}
 }
 
 @media (prefers-reduced-motion: reduce){
