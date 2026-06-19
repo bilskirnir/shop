@@ -5,7 +5,9 @@
 .bsk-track-panel{height:100dvh}
 
 .bsk-saga-panel{position:relative;height:100%;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
-.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.45}
+.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55}
+/* voile de couleur (couleur de la saga) qui unifie l'image et donne le ton */
+.bsk-saga-bg::after{content:"";position:absolute;inset:0;background:var(--bsk-uni);opacity:.32;mix-blend-mode:soft-light}
 .bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:.42}
 .bsk-saga-mist{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
 .bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:2;will-change:transform,opacity}
@@ -74,7 +76,7 @@
   .bsk-saga-halo{left:auto;right:-8vw;top:50%;width:min(96vw,1850px);height:min(96vw,1850px);opacity:.55;transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
-  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
+  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 0%,var(--bsk-ink) 32%,transparent 74%)}
   /* éventail desktop centré en translateY(-50%) → on redéfinit l'entrée/sortie qui flottent */
   @keyframes fanIn{from{opacity:0;transform:translateY(calc(-50% + 72px))}to{opacity:1;transform:translateY(-50%)}}
   @keyframes fanOut{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% - 140px))}}
