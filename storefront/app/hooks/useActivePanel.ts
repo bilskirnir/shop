@@ -17,7 +17,7 @@ export function useActivePanel(count: number) {
           }
         }
       },
-      {threshold: [0.5, 0.9]},
+      {root, threshold: [0.5, 0.9]},
     );
     panels.forEach((p) => io.observe(p));
     return () => io.disconnect();

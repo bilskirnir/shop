@@ -9,7 +9,6 @@ export function SagaPanel({screen, index}: {screen: HomeScreen; index: number}) 
     <section
       className="bsk-saga-panel"
       style={universeAccentStyle(screen.accent ?? undefined)}
-      aria-roledescription="diapositive"
       aria-label={screen.title}
     >
       <div className="bsk-saga-halo bsk-halo" aria-hidden="true" />
@@ -26,7 +25,7 @@ export function SagaPanel({screen, index}: {screen: HomeScreen; index: number}) 
           {screen.ctaLabel} →
         </Link>
       </div>
-      {index === 0 ? <div className="bsk-saga-cue" aria-hidden="true">↓ saga suivante</div> : null}
+      {index === 0 ? <div className="bsk-saga-cue" aria-hidden="true">↓ suite</div> : null}
     </section>
   );
 }
