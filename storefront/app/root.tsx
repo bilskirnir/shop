@@ -181,6 +181,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
           '.bsk-nav-scrim{opacity:0;pointer-events:none}' +
           '.overlay{opacity:0;visibility:hidden}' +
           '.overlay>aside{transform:translateX(100%)}' +
+          '.bsk-scroller{height:100dvh;overflow:hidden}' +
           '.bsk-splash{position:fixed;inset:0;z-index:9990;display:flex;align-items:center;justify-content:center;background:#0b0b0c;animation:bskSplashOut 1.25s ease forwards}' +
           '.bsk-splash-mark{animation:bskSplashPulse 1.3s ease-in-out infinite}' +
           '@keyframes bskSplashOut{0%,52%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}' +
