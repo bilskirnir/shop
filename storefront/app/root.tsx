@@ -17,7 +17,7 @@ import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY, MEGA_MENU_QUERY} from '~/lib/fragments';
 import './styles/fonts.css';
-import globalStyles from '~/styles/global.css?url';
+import '~/styles/global.css';
 import {Footer} from '~/components/Footer';
 import {Splash} from '~/components/Splash';
 import {ImmersiveNav} from '~/components/ImmersiveNav';
@@ -172,7 +172,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={globalStyles}></link>
         {/* CSS critique : panneaux coulissants (tiroir menu + panier) en position
             FERMÉE dès le <head>, avant le 1er paint — évite le flash FOUC en dev
             (nav.css/cart.css sont injectés par Vite après le paint). */}
