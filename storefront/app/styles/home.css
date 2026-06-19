@@ -61,7 +61,7 @@
 @media (min-width: 860px){
   .bsk-saga-panel{padding:0 6vw 9vh}
   /* couvertures relatives au viewport (--cw) + éventail en FLEX (côte à côte) */
-  .bsk-saga-fan{--cw:clamp(210px,16vw,400px);left:auto;right:6vw;top:50%;transform:translateY(-50%);width:auto}
+  .bsk-saga-fan{--cw:clamp(294px,22vw,560px);left:auto;right:6vw;top:50%;transform:translateY(-50%);width:auto}
   .bsk-saga-fan .uni-fan{display:flex;justify-content:center;align-items:flex-start;width:auto;height:auto;margin:0}
   .bsk-saga-fan .uni-fan-cover{position:static;left:auto;top:auto;width:var(--cw);height:auto;aspect-ratio:2 / 3;border-radius:8px}
   .bsk-saga-fan .uni-fan--1 .uni-fan-cover{transform:rotate(-3deg)}
@@ -70,7 +70,7 @@
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){transform:rotate(-7deg);margin-top:calc(var(--cw) * 0.06)}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){margin-left:calc(var(--cw) * -0.2);z-index:3}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){transform:rotate(7deg);margin-top:calc(var(--cw) * 0.06);margin-left:calc(var(--cw) * -0.2);z-index:2}
-  .bsk-saga-halo{left:auto;right:2vw;top:50%;width:min(64vw,880px);height:min(64vw,880px);opacity:.52;transform:translateY(-50%)}
+  .bsk-saga-halo{left:auto;right:-4vw;top:50%;width:min(84vw,1320px);height:min(84vw,1320px);opacity:.55;transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
