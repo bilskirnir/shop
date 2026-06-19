@@ -20,3 +20,17 @@ export function universeAccentStyle(
     ['--bsk-uni-soft' as keyof CSSProperties]: `rgba(${r},${g},${b},0.16)`,
   } as CSSProperties;
 }
+
+/**
+ * Résout la couleur d'accent à appliquer : saga d'abord, puis univers, sinon
+ * `null` (= accent crème neutre des tokens). Les valeurs non-hex sont ignorées.
+ */
+export function resolveAccentColor(
+  sagaColor?: string | null,
+  universeColor?: string | null,
+): string | null {
+  for (const c of [sagaColor, universeColor]) {
+    if (c && HEX.test(c)) return c;
+  }
+  return null;
+}
