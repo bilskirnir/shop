@@ -52,8 +52,9 @@ const SAGA_KEYS = {nom: 'nom', accroche: 'accroche', lore: 'lore', couleur: 'cou
 
 /** Trie par n° de tome puis garde les 3 premières couvertures non nulles. */
 function coversFrom(nodes: ProductCover[]): FanCover[] {
+  const tome = (p: ProductCover) => parseNumeroTome(p.numeroTome?.value) ?? Infinity;
   return [...nodes]
-    .sort((a, b) => parseNumeroTome(a.numeroTome?.value) - parseNumeroTome(b.numeroTome?.value))
+    .sort((a, b) => tome(a) - tome(b))
     .map((p) => (p.featuredImage?.url ? {url: p.featuredImage.url, altText: p.featuredImage.altText ?? ''} : null))
     .filter((c): c is FanCover => c !== null)
     .slice(0, 3);

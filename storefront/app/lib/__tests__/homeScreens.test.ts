@@ -79,4 +79,20 @@ describe('buildHomeScreens', () => {
     const screens = buildHomeScreens([universe()], [work()]);
     expect(screens.map((s) => s.kind)).toEqual(['saga', 'oneshot']);
   });
+
+  it('CTA « Précommander » pour une œuvre en précommande', () => {
+    const [s] = buildHomeScreens([], [work({statutParution: {value: 'précommande'}})]);
+    expect(s.ctaLabel).toBe('Précommander');
+  });
+
+  it('ordonne les couvertures sans numéro de tome en dernier (tri déterministe)', () => {
+    const node = sagaNode();
+    const tomes = node.fields.find((f) => f.key === 'tomes')!;
+    tomes.references!.nodes = [
+      {featuredImage: {url: 'https://x/sans.jpg', altText: 'sans'}, numeroTome: {value: null}},
+      {featuredImage: {url: 'https://x/t1.jpg', altText: 'T1'}, numeroTome: {value: '1'}},
+    ];
+    const u = universe({sagas: {references: {nodes: [node]}}});
+    expect(buildHomeScreens([u], [])[0].covers.map((c) => c.altText)).toEqual(['T1', 'sans']);
+  });
 });
