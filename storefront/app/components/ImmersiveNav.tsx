@@ -73,7 +73,7 @@ export function ImmersiveNav({
             <span />
           </button>
           <Link to="/" aria-label="Accueil Bilskirnir" className="bsk-nav-wordmark">
-            <Logo height={26} />
+            <Logo height={34} />
             BILSKIRNIR
           </Link>
         </div>
