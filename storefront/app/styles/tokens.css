@@ -20,10 +20,12 @@
   --bsk-fg-muted: #6f6a62;          /* disabled, captions */
 
   /* ── Color: accents ───────────────────────────────────────────── */
-  --bsk-accent-gold: #d8a657;       /* doré — accent permanent maison */
-  --bsk-accent-gold-bright: #e6b95e; /* hover / active */
-  --bsk-accent-gold-dim: #c4912f;   /* borders, subtle */
-  --bsk-accent-bronze: #c4912f;     /* secondary accent */
+  /* migré refonte 2 : l'ancien doré devient l'accent d'univers (--bsk-uni,
+     crème neutre par défaut, couleur de l'univers quand un accent est posé). */
+  --bsk-accent-gold: var(--bsk-uni);
+  --bsk-accent-gold-bright: var(--bsk-uni);
+  --bsk-accent-gold-dim: var(--bsk-uni);
+  --bsk-accent-bronze: var(--bsk-uni);
 
   /* ── Refonte 2 « encre » ─────────────────────────────────────── */
   --bsk-ink: #0b0b0c;               /* fond encre (nouveau base) */
@@ -41,7 +43,7 @@
 
   /* ── Borders & shadows ────────────────────────────────────────── */
   --bsk-border-subtle: rgba(236, 228, 211, 0.13);
-  --bsk-border-gold: rgba(216, 166, 87, 0.35);
+  --bsk-border-gold: color-mix(in srgb, var(--bsk-uni) 35%, transparent);
   /* rayon de base du site : tout élément non totalement rond (boutons,
      champs, cartes…) utilise ce rayon. Calé sur la zone de dédicaces. */
   --bsk-radius: 14px;
