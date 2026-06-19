@@ -1,0 +1,19 @@
+/* app/styles/footer.css — footer F3 « encre » (panneau final + global). */
+.bsk-footer{position:relative;overflow:hidden;background:var(--bsk-ink);color:var(--bsk-cream);
+  border-top:1px solid color-mix(in srgb,var(--bsk-cream) 12%,transparent)}
+.bsk-footer--panel{min-height:100dvh;display:flex;align-items:center;border-top:0;scroll-snap-align:start}
+.bsk-footer-halo{left:50%;top:-120px;width:420px;height:300px;transform:translateX(-50%);
+  background:radial-gradient(circle,color-mix(in srgb,var(--bsk-cream) 22%,transparent),transparent 65%);opacity:.4}
+.bsk-footer-inner{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:48px 28px;text-align:center;width:100%}
+.bsk-footer-wordmark{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(28px,7vw,40px);
+  letter-spacing:-.02em;line-height:1;margin-bottom:16px}
+.bsk-footer-big{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(28px,7vw,40px);
+  letter-spacing:-.02em;line-height:1;margin:10px 0 18px}
+.bsk-footer-form{max-width:320px;margin:0 auto 24px}
+.bsk-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-bottom:24px}
+.bsk-footer-links a{font-family:var(--bsk-font-sans);font-size:12.5px;color:var(--bsk-cream);opacity:.6;text-decoration:none}
+.bsk-footer-links a:hover{opacity:1}
+.bsk-footer-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;
+  border-top:1px solid color-mix(in srgb,var(--bsk-cream) 12%,transparent);padding-top:14px;
+  font-family:var(--bsk-font-sans);font-size:11px;opacity:.5}
+.bsk-footer-base a{color:var(--bsk-cream);text-decoration:none}
