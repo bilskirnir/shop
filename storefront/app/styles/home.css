@@ -1,8 +1,10 @@
-/* app/styles/home.css — accueil vertical « Reels » par saga (Refonte 2). */
-.bsk-scroller{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;background:var(--bsk-ink);color:var(--bsk-cream)}
-.bsk-scroller-panel{scroll-snap-align:start;scroll-snap-stop:always;min-height:100dvh;position:relative}
+/* app/styles/home.css — accueil « fullpage » par saga (Refonte 2).
+   Une section plein écran à la fois ; la piste (.bsk-track) glisse en douceur. */
+.bsk-scroller{position:relative;height:100dvh;overflow:hidden;background:var(--bsk-ink);color:var(--bsk-cream)}
+.bsk-track{will-change:transform;transition:transform 1s cubic-bezier(.66,0,.2,1)}
+.bsk-track-panel{height:100dvh}
 
-.bsk-saga-panel{position:relative;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
+.bsk-saga-panel{position:relative;height:100%;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
 .bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:.42}
 .bsk-saga-mist{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
 .bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:2;will-change:transform,opacity}
@@ -14,39 +16,33 @@
 @keyframes cueBob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.3}50%{transform:translateX(-50%) translateY(6px);opacity:.65}}
 .bsk-scroller-dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40}
 
-/* ===================== VIE & ANIMATIONS (fiables, sans scroll-timeline) =====================
-   La classe `is-active` est posée en JS (useActivePanel/IntersectionObserver) sur le panneau
-   visible → l'apparition du contenu est jouée par des transitions CSS classiques.
-   En plus, animations d'ambiance en boucle (éventail qui respire, halo qui pulse) pour que la
-   page soit VIVANTE même à l'arrêt. */
-/* Trois états posés en JS : below (en attente, caché) → active (révélé) → above (parti vers le haut).
-   On utilise des ANIMATIONS (pas des transitions) → l'entrée se joue AU MONTAGE (donc dès le
-   chargement sur la 1ʳᵉ section) et se rejoue à chaque (ré)activation. */
+/* ===================== VIE & ANIMATIONS (fiables) =====================
+   `state` (below/active/above) est posé en JS. On utilise des ANIMATIONS (pas des
+   transitions) → l'entrée se joue AU MONTAGE (1ʳᵉ section animée dès le chargement)
+   et se rejoue à chaque activation. La piste qui glisse fournit le mouvement « vers
+   le haut » ; le contenu se révèle/efface par-dessus. */
 .bsk-saga-text > *{opacity:0}
 .bsk-saga-fan{opacity:0}
-/* Entrée : révélation en cascade (kicker → titre → lore → CTA) qui monte en douceur */
 .bsk-saga-panel.is-active .bsk-saga-text > *{animation:revealUp 1.1s var(--bsk-ease) both}
-.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(1){animation-delay:.10s}
-.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(2){animation-delay:.24s}
-.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(3){animation-delay:.38s}
-.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(4){animation-delay:.52s}
-.bsk-saga-panel.is-active .bsk-saga-fan{animation:fadeIn 1.3s var(--bsk-ease) .2s both}
-/* Sortie VERS LE HAUT quand on quitte la section (elle « part » vers le haut, zen) */
-.bsk-saga-panel.is-above .bsk-saga-text > *{animation:exitUp .9s var(--bsk-ease) both}
-.bsk-saga-panel.is-above .bsk-saga-fan{animation:exitFade .8s var(--bsk-ease) both}
+.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(1){animation-delay:.12s}
+.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(2){animation-delay:.26s}
+.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(3){animation-delay:.40s}
+.bsk-saga-panel.is-active .bsk-saga-text > *:nth-child(4){animation-delay:.54s}
+.bsk-saga-panel.is-active .bsk-saga-fan{animation:fadeIn 1.2s var(--bsk-ease) .2s both}
+.bsk-saga-panel.is-above .bsk-saga-text > *,
+.bsk-saga-panel.is-above .bsk-saga-fan{animation:fadeOut .5s var(--bsk-ease) both}
 @keyframes revealUp{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
-@keyframes exitUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-64px)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes exitFade{from{opacity:1}to{opacity:0}}
-/* Ambiance (boucles, toujours actives) : l'éventail respire, le halo pulse */
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+/* Ambiance (boucles) : l'éventail respire, le halo pulse */
 .bsk-saga-fan .uni-fan{animation:fanFloat 9s ease-in-out infinite}
 @keyframes fanFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(.6deg)}}
 .bsk-saga-halo{animation:haloPulse 9s ease-in-out infinite}
 @keyframes haloPulse{0%,100%{opacity:.34}50%{opacity:.62}}
 
 /* Footer : son contenu monte + apparaît quand on atteint la section */
-.bsk-scroller-panel--footer .bsk-footer-inner{opacity:0}
-.bsk-scroller-panel--footer.is-active .bsk-footer-inner{animation:revealUp 1.1s var(--bsk-ease) both}
+.bsk-track-panel--footer .bsk-footer-inner{opacity:0}
+.bsk-track-panel--footer.is-active .bsk-footer-inner{animation:revealUp 1.1s var(--bsk-ease) both}
 
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite, tailles responsives */
 @media (min-width: 860px){
@@ -68,7 +64,7 @@
 }
 
 @media (prefers-reduced-motion: reduce){
-  .bsk-scroller{scroll-behavior:auto}
-  .bsk-saga-text > *,.bsk-saga-fan,.bsk-scroller-panel--footer .bsk-footer-inner{opacity:1 !important;transform:none !important;animation:none !important}
+  .bsk-track{transition:none}
+  .bsk-saga-text > *,.bsk-saga-fan,.bsk-track-panel--footer .bsk-footer-inner{opacity:1 !important;transform:none !important;animation:none !important}
   .bsk-saga-fan .uni-fan,.bsk-saga-halo,.bsk-saga-cue{animation:none}
 }

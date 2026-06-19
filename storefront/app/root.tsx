@@ -19,6 +19,7 @@ import {FOOTER_QUERY, HEADER_QUERY, MEGA_MENU_QUERY} from '~/lib/fragments';
 import './styles/fonts.css';
 import globalStyles from '~/styles/global.css?url';
 import {Footer} from '~/components/Footer';
+import {Splash} from '~/components/Splash';
 import {ImmersiveNav} from '~/components/ImmersiveNav';
 import type {UniverseItem} from '~/components/MegaMenu';
 import {Aside} from '~/components/Aside';
@@ -179,13 +180,18 @@ export function Layout({children}: {children?: React.ReactNode}) {
           '.bsk-nav-drawer{transform:translateX(-100%)}' +
           '.bsk-nav-scrim{opacity:0;pointer-events:none}' +
           '.overlay{opacity:0;visibility:hidden}' +
-          '.overlay>aside{transform:translateX(100%)}'
+          '.overlay>aside{transform:translateX(100%)}' +
+          '.bsk-splash{position:fixed;inset:0;z-index:9990;display:flex;align-items:center;justify-content:center;background:#0b0b0c;animation:bskSplashOut 1.25s ease forwards}' +
+          '.bsk-splash-mark{animation:bskSplashPulse 1.3s ease-in-out infinite}' +
+          '@keyframes bskSplashOut{0%,52%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}' +
+          '@keyframes bskSplashPulse{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1)}}'
         }</style>
         <Meta />
         <Links />
       </head>
       <body>
         {children}
+        <Splash />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
