@@ -382,3 +382,41 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
   }
   ${TILE_PRODUCT_FRAGMENT}
 ` as const;
+
+export const HOME_SAGA_FRAGMENT = `#graphql
+  fragment HomeSaga on Collection {
+    id
+    handle
+    title
+    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
+    lore: metafield(namespace: "custom", key: "lore") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    sagas: metafield(namespace: "custom", key: "sagas") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields { key value
+              references(first: 6) {
+                nodes {
+                  ... on Product {
+                    featuredImage { url altText }
+                    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    products(first: 6, sortKey: COLLECTION_DEFAULT) {
+      nodes {
+        featuredImage { url altText }
+        numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
+        statutParution: metafield(namespace: "custom", key: "statut_parution") { value }
+      }
+    }
+  }
+` as const;
