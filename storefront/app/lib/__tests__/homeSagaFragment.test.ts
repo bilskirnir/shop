@@ -11,5 +11,6 @@ describe('HOME_SAGA_FRAGMENT', () => {
     expect(HOME_SAGA_FRAGMENT).toContain('key: "illustration_hero"');
     expect(HOME_SAGA_FRAGMENT).toContain('... on MediaImage');
     expect(HOME_SAGA_FRAGMENT).toContain('featuredImage { url altText }');
+    expect(HOME_SAGA_FRAGMENT).toContain('key: "auteur"');
   });
 });

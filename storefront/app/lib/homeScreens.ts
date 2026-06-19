@@ -10,6 +10,8 @@ import type {FanCover} from '~/lib/universeFan';
 interface MV {value?: string | null}
 interface ProductCover {
   featuredImage?: {url: string; altText?: string | null} | null;
+  /** Lien produit → metaobject Auteur (`custom.auteur`) ; nom via le champ `nom`. */
+  auteur?: {reference?: {nom?: MV | null} | null} | null;
 }
 interface ImageRefValue {reference?: {image?: {url?: string | null} | null} | null}
 /**
@@ -47,6 +49,8 @@ export interface HomeScreen {
   kicker: string;
   title: string;
   lore: string | null;
+  /** Auteur de la saga (metaobject Auteur des tomes) — affiché « Par … ». */
+  author: string | null;
   accent: string | null;
   covers: FanCover[];
   /** Image de fond optionnelle (illustration hero de la saga, sinon de l'univers). */
@@ -81,9 +85,13 @@ function field(node: SagaNode, key: string): SagaField | undefined {
 }
 
 function sagaScreen(node: SagaNode): HomeScreen | null {
-  const covers = coversInOrder(field(node, SAGA_KEYS.tomes)?.references?.nodes ?? []);
+  const tomeNodes = field(node, SAGA_KEYS.tomes)?.references?.nodes ?? [];
+  const covers = coversInOrder(tomeNodes);
   if (covers.length === 0) return null;
 
+  // Auteur : 1er tome qui en porte un (metaobject Auteur via custom.auteur → champ nom).
+  const author =
+    tomeNodes.map((t) => t.auteur?.reference?.nom?.value?.trim()).find(Boolean) ?? null;
   const univers = field(node, SAGA_KEYS.univers)?.reference ?? null;
   const lore = richTextToPlain(metaobjectField(node.fields, SAGA_KEYS.synopsis)).trim();
 
@@ -97,6 +105,7 @@ function sagaScreen(node: SagaNode): HomeScreen | null {
     kicker: univers?.title ? `${univers.title} — Saga` : 'Saga',
     title: metaobjectField(node.fields, SAGA_KEYS.nom) ?? node.handle,
     lore: lore || null,
+    author,
     // pas de champ couleur sur la saga → on hérite de la couleur de l'univers parent
     accent: resolveAccentColor(null, univers?.couleurTheme?.value),
     covers,
@@ -118,6 +127,7 @@ function workScreen(w: ScreenWork): HomeScreen | null {
     kicker: 'Roman indépendant',
     title: w.title,
     lore: richTextToPlain(w.teaserCourt?.value).trim() || null,
+    author: null,
     accent: null,
     covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],
     background: null,

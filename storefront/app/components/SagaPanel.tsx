@@ -36,6 +36,7 @@ export function SagaPanel({
       <div className="bsk-saga-text" data-parallax="text">
         <span className="bsk-kicker">{screen.kicker}</span>
         <h2 className="bsk-saga-title">{screen.title}</h2>
+        {screen.author ? <p className="bsk-saga-author">Par {screen.author}</p> : null}
         {screen.lore ? <p className="bsk-saga-lore">{screen.lore}</p> : null}
         <Link to={screen.href} className="bsk-btn bsk-btn--cream bsk-saga-cta">
           {screen.ctaLabel} →

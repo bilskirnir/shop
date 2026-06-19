@@ -55,6 +55,18 @@ describe('buildHomeScreens', () => {
     expect(buildHomeScreens([sagaNode()], [])[0].accent).toBe('#8b6b3a');
   });
 
+  it("expose l'auteur du 1er tome qui en porte un (metaobject Auteur)", () => {
+    const n = sagaNode();
+    n.fields.find((f) => f.key === 'ordre_des_tomes')!.references!.nodes[0].auteur = {
+      reference: {nom: {value: 'Gautier Durieux de Madron'}},
+    };
+    expect(buildHomeScreens([n], [])[0].author).toBe('Gautier Durieux de Madron');
+  });
+
+  it("author null si aucun tome n'a d'auteur", () => {
+    expect(buildHomeScreens([sagaNode()], [])[0].author).toBeNull();
+  });
+
   it("utilise l'illustration de la saga si dispo, sinon celle de l'univers", () => {
     expect(buildHomeScreens([sagaNode()], [])[0].background).toBe('https://x/banner.webp');
     const withHero = sagaNode();

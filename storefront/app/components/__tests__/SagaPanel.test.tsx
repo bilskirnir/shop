@@ -6,7 +6,7 @@ import type {HomeScreen} from '~/lib/homeScreens';
 
 const base: HomeScreen = {
   key: 'k', kind: 'saga', kicker: 'Au Nom des Dieux — Saga', title: "De l'Eau et du Sang",
-  lore: 'Le silence des dieux.', accent: '#2fb6c4',
+  lore: 'Le silence des dieux.', author: 'Gautier Durieux de Madron', accent: '#2fb6c4',
   covers: [{url: 'https://x/1.jpg', altText: 'T1'}], background: null, href: '/collections/au-nom-des-dieux#eau', ctaLabel: 'Entrer dans la saga',
 };
 
@@ -21,6 +21,11 @@ describe('SagaPanel', () => {
     expect(screen.getByRole('heading', {name: "De l'Eau et du Sang"})).toBeInTheDocument();
     expect(screen.getByText('Au Nom des Dieux — Saga')).toBeInTheDocument();
     expect(screen.getByRole('link', {name: /Entrer dans la saga/})).toHaveAttribute('href', '/collections/au-nom-des-dieux#eau');
+  });
+
+  it("affiche l'auteur préfixé « Par »", () => {
+    renderPanel(base);
+    expect(screen.getByText(/Par Gautier Durieux de Madron/)).toBeInTheDocument();
   });
 
   it("applique la couleur d'accent de la saga via --bsk-uni", () => {

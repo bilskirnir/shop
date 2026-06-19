@@ -376,6 +376,13 @@ export const HOME_SAGA_FRAGMENT = `#graphql
         nodes {
           ... on Product {
             featuredImage { url altText }
+            auteur: metafield(namespace: "custom", key: "auteur") {
+              reference {
+                ... on Metaobject {
+                  nom: field(key: "nom") { value }
+                }
+              }
+            }
           }
         }
       }
