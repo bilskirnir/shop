@@ -172,6 +172,15 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="stylesheet" href={globalStyles}></link>
+        {/* CSS critique : panneaux coulissants (tiroir menu + panier) en position
+            FERMÉE dès le <head>, avant le 1er paint — évite le flash FOUC en dev
+            (nav.css/cart.css sont injectés par Vite après le paint). */}
+        <style>{
+          '.bsk-nav-drawer{transform:translateX(-100%)}' +
+          '.bsk-nav-scrim{opacity:0;pointer-events:none}' +
+          '.overlay{opacity:0;visibility:hidden}' +
+          '.overlay>aside{transform:translateX(100%)}'
+        }</style>
         <Meta />
         <Links />
       </head>
