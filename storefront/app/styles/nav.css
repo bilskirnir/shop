@@ -18,20 +18,21 @@
 }
 .bsk-nav-links {
   display: none;
-  gap: 26px;
+  gap: 18px;
   align-items: center;
 }
 .bsk-nav-link {
   font-family: var(--bsk-font-sans);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--bsk-fg-secondary);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--bsk-cream);
+  opacity: .7;
   text-decoration: none;
-  transition: color 0.25s;
   white-space: nowrap;
+  transition: opacity var(--bsk-duration-fast);
 }
 .bsk-nav-link:hover {
-  color: var(--bsk-accent-gold);
+  opacity: 1;
 }
 
 @media (min-width: 860px) {
@@ -136,11 +137,6 @@
   }
 }
 
-/* Encre redesign — wordmark + nav links (Task 5) */
+/* Encre redesign — wordmark (Task 5) */
 .bsk-nav-wordmark{font-family:var(--bsk-font-display);font-weight:800;font-size:18px;
   letter-spacing:-.01em;color:var(--bsk-cream);text-decoration:none}
-.bsk-nav-links{display:flex;gap:18px}
-.bsk-nav-link{font-family:var(--bsk-font-sans);font-size:12px;letter-spacing:.04em;
-  color:var(--bsk-cream);opacity:.7;text-decoration:none}
-.bsk-nav-link:hover{opacity:1}
-@media (max-width: 760px){.bsk-nav-links{display:none}}
