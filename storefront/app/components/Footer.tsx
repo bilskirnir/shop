@@ -1,4 +1,5 @@
 import {Link} from 'react-router';
+import {Logo} from '~/components/Logo';
 import {FOOTER_NAV} from '~/data/nav';
 import '~/styles/footer.css';
 
@@ -9,6 +10,9 @@ export function Footer({asPanel = false}: {asPanel?: boolean}) {
     <footer className={`bsk-footer${asPanel ? ' bsk-footer--panel' : ''}`}>
       <div className="bsk-footer-halo bsk-halo" aria-hidden="true" />
       <div className="bsk-footer-inner">
+        <div className="bsk-footer-emblem">
+          <Logo height={68} />
+        </div>
         <div className="bsk-footer-wordmark">BILSKIRNIR</div>
         <span className="bsk-kicker">Restez dans l'univers</span>
         <p className="bsk-footer-big">Reçois les annonces<br />de sortie.</p>

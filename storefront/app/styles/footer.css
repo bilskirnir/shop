@@ -5,6 +5,7 @@
 .bsk-footer-halo{left:50%;top:-120px;width:420px;height:300px;transform:translateX(-50%);
   background:radial-gradient(circle,color-mix(in srgb,var(--bsk-cream) 22%,transparent),transparent 65%);opacity:.4}
 .bsk-footer-inner{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:48px 28px;text-align:center;width:100%}
+.bsk-footer-emblem{display:flex;justify-content:center;margin-bottom:18px}
 .bsk-footer-wordmark{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(28px,7vw,40px);
   letter-spacing:-.02em;line-height:1;margin-bottom:16px}
 .bsk-footer-big{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(28px,7vw,40px);
