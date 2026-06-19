@@ -1,6 +1,5 @@
 import {
   parseBool,
-  parseNumeroTome,
   parseStatutParution,
   metaobjectField,
   richTextToPlain,
@@ -11,23 +10,29 @@ import type {FanCover} from '~/lib/universeFan';
 interface MV {value?: string | null}
 interface ProductCover {
   featuredImage?: {url: string; altText?: string | null} | null;
-  numeroTome?: MV | null;
-  statutParution?: MV | null;
+}
+interface ImageRefValue {reference?: {image?: {url?: string | null} | null} | null}
+/**
+ * Référence portée par un champ de la saga :
+ * - `univers_parent` → une Collection (handle/title/couleur/illustration_hero).
+ * - `illustration_hero_de_la_saga` → un MediaImage (`image.url`).
+ */
+interface SagaRef {
+  handle?: string | null;
+  title?: string | null;
+  couleurTheme?: MV | null;
+  illustrationHero?: ImageRefValue | null;
+  image?: {url?: string | null} | null;
 }
 interface SagaField {
   key: string;
   value?: string | null;
   references?: {nodes: ProductCover[]} | null;
+  reference?: SagaRef | null;
 }
-export interface SagaNode {id: string; handle: string; fields: SagaField[]}
-export interface ScreenCollection {
-  id: string; handle: string; title: string;
-  estUneOeuvreIndependante?: MV | null;
-  lore?: MV | null;
-  couleurTheme?: MV | null;
-  sagas?: {references?: {nodes: SagaNode[]} | null} | null;
-  products: {nodes: ProductCover[]};
-}
+/** Un metaobject `saga` (interrogé directement via `metaobjects(type:"saga")`). */
+export interface SagaNode {handle: string; fields: SagaField[]}
+
 export interface ScreenWork {
   id: string; handle: string; title: string;
   estUneOeuvreIndependante?: MV | null;
@@ -38,62 +43,68 @@ export interface ScreenWork {
 
 export interface HomeScreen {
   key: string;
-  kind: 'saga' | 'universe' | 'oneshot';
+  kind: 'saga' | 'oneshot';
   kicker: string;
   title: string;
   lore: string | null;
   accent: string | null;
   covers: FanCover[];
+  /** Image de fond optionnelle (illustration hero de la saga, sinon de l'univers). */
+  background: string | null;
   href: string;
   ctaLabel: string;
 }
 
-const SAGA_KEYS = {nom: 'nom', accroche: 'accroche', lore: 'lore', couleur: 'couleur', tomes: 'tomes'};
+/** Clés réelles du metaobject `saga` (confirmées sur le store live, 2026-06-19). */
+const SAGA_KEYS = {
+  nom: 'nom',
+  synopsis: 'synopsis',
+  tomes: 'ordre_des_tomes',
+  univers: 'univers_parent',
+  hero: 'illustration_hero_de_la_saga',
+} as const;
 
-/** Trie par n° de tome puis garde les 3 premières couvertures non nulles. */
-function coversFrom(nodes: ProductCover[]): FanCover[] {
-  const tome = (p: ProductCover) => parseNumeroTome(p.numeroTome?.value) ?? Infinity;
-  return [...nodes]
-    .sort((a, b) => tome(a) - tome(b))
-    .map((p) => (p.featuredImage?.url ? {url: p.featuredImage.url, altText: p.featuredImage.altText ?? ''} : null))
+/** Couvertures dans l'ordre EXPLICITE de `ordre_des_tomes` (pas de tri), max 3. */
+function coversInOrder(nodes: ProductCover[]): FanCover[] {
+  return nodes
+    .map((p) =>
+      p.featuredImage?.url
+        ? {url: p.featuredImage.url, altText: p.featuredImage.altText ?? ''}
+        : null,
+    )
     .filter((c): c is FanCover => c !== null)
     .slice(0, 3);
 }
 
-function sagaScreen(u: ScreenCollection, node: SagaNode): HomeScreen | null {
-  const refs = node.fields.find((f) => f.key === SAGA_KEYS.tomes)?.references?.nodes ?? [];
-  const covers = coversFrom(refs);
-  if (covers.length === 0) return null;
-  const accent = resolveAccentColor(metaobjectField(node.fields, SAGA_KEYS.couleur), u.couleurTheme?.value);
-  const lore = richTextToPlain(
-    metaobjectField(node.fields, SAGA_KEYS.lore) ?? metaobjectField(node.fields, SAGA_KEYS.accroche),
-  ).trim();
-  return {
-    key: node.id,
-    kind: 'saga',
-    kicker: `${u.title} — Saga`,
-    title: metaobjectField(node.fields, SAGA_KEYS.nom) ?? node.handle,
-    lore: lore || null,
-    accent,
-    covers,
-    href: `/collections/${u.handle}#${node.handle}`,
-    ctaLabel: 'Entrer dans la saga',
-  };
+function field(node: SagaNode, key: string): SagaField | undefined {
+  return node.fields.find((f) => f.key === key);
 }
 
-function universeScreen(u: ScreenCollection): HomeScreen | null {
-  const covers = coversFrom(u.products.nodes);
+function sagaScreen(node: SagaNode): HomeScreen | null {
+  const covers = coversInOrder(field(node, SAGA_KEYS.tomes)?.references?.nodes ?? []);
   if (covers.length === 0) return null;
+
+  const univers = field(node, SAGA_KEYS.univers)?.reference ?? null;
+  const lore = richTextToPlain(metaobjectField(node.fields, SAGA_KEYS.synopsis)).trim();
+
+  // Fond : illustration de la saga si dispo, sinon celle de l'univers parent.
+  const sagaHero = field(node, SAGA_KEYS.hero)?.reference?.image?.url ?? null;
+  const universHero = univers?.illustrationHero?.reference?.image?.url ?? null;
+
   return {
-    key: u.id,
-    kind: 'universe',
-    kicker: 'Univers',
-    title: u.title,
-    lore: richTextToPlain(u.lore?.value).trim() || null,
-    accent: resolveAccentColor(null, u.couleurTheme?.value),
+    key: node.handle,
+    kind: 'saga',
+    kicker: univers?.title ? `${univers.title} — Saga` : 'Saga',
+    title: metaobjectField(node.fields, SAGA_KEYS.nom) ?? node.handle,
+    lore: lore || null,
+    // pas de champ couleur sur la saga → on hérite de la couleur de l'univers parent
+    accent: resolveAccentColor(null, univers?.couleurTheme?.value),
     covers,
-    href: `/collections/${u.handle}`,
-    ctaLabel: "Explorer l'univers",
+    background: sagaHero ?? universHero,
+    href: univers?.handle
+      ? `/collections/${univers.handle}#${node.handle}`
+      : '/collections/all',
+    ctaLabel: 'Entrer dans la saga',
   };
 }
 
@@ -109,29 +120,25 @@ function workScreen(w: ScreenWork): HomeScreen | null {
     lore: richTextToPlain(w.teaserCourt?.value).trim() || null,
     accent: null,
     covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],
+    background: null,
     href: `/products/${w.handle}`,
     ctaLabel: status === 'précommande' ? 'Précommander' : 'Découvrir le livre',
   };
 }
 
+/** Sagas (metaobjects) d'abord, puis one-shots (œuvres indépendantes). */
 export function buildHomeScreens(
-  collections: ReadonlyArray<ScreenCollection>,
+  sagas: ReadonlyArray<SagaNode>,
   works: ReadonlyArray<ScreenWork>,
 ): HomeScreen[] {
   const out: HomeScreen[] = [];
-  for (const u of collections) {
-    if (parseBool(u.estUneOeuvreIndependante?.value)) continue;
-    const sagas = u.sagas?.references?.nodes ?? [];
-    const sagaScreens = sagas.map((n) => sagaScreen(u, n)).filter((s): s is HomeScreen => s !== null);
-    if (sagaScreens.length > 0) out.push(...sagaScreens);
-    else {
-      const fallback = universeScreen(u);
-      if (fallback) out.push(fallback);
-    }
+  for (const s of sagas) {
+    const screen = sagaScreen(s);
+    if (screen) out.push(screen);
   }
   for (const w of works) {
-    const s = workScreen(w);
-    if (s) out.push(s);
+    const screen = workScreen(w);
+    if (screen) out.push(screen);
   }
   return out;
 }

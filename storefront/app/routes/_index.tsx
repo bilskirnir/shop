@@ -3,7 +3,7 @@ import type {Route} from './+types/_index';
 import {SagaScroller} from '~/components/SagaScroller';
 import {
   buildHomeScreens,
-  type ScreenCollection,
+  type SagaNode,
   type ScreenWork,
 } from '~/lib/homeScreens';
 import {HOME_SAGA_FRAGMENT, TILE_PRODUCT_FRAGMENT} from '~/lib/fragments';
@@ -18,7 +18,7 @@ export const handle = {immersive: true};
 const HOME_QUERY = `#graphql
   query Home($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 20, sortKey: TITLE) {
+    sagas: metaobjects(type: "saga", first: 20) {
       nodes { ...HomeSaga }
     }
     products(first: 50) {
@@ -36,8 +36,8 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  const collections = data.collections.nodes as unknown as ScreenCollection[];
+  const sagas = data.sagas.nodes as unknown as SagaNode[];
   const works = data.products.nodes as unknown as ScreenWork[];
-  const screens = buildHomeScreens(collections, works);
+  const screens = buildHomeScreens(sagas, works);
   return <SagaScroller screens={screens} />;
 }

@@ -1,98 +1,97 @@
 import {describe, it, expect} from 'vitest';
-import {buildHomeScreens, type ScreenCollection, type ScreenWork} from '../homeScreens';
+import {buildHomeScreens, type SagaNode, type ScreenWork} from '../homeScreens';
 
-const cover = (n: number) => ({featuredImage: {url: `https://x/t${n}.jpg`, altText: `T${n}`}, numeroTome: {value: String(n)}});
+const cover = (url: string, alt: string) => ({featuredImage: {url, altText: alt}});
 
-const sagaNode = () => ({
-  id: 'gid://m/1', handle: 'eau-et-sang',
-  fields: [
-    {key: 'nom', value: "De l'Eau et du Sang", references: null},
-    {key: 'accroche', value: "L'arc fondateur", references: null},
-    {key: 'couleur', value: '#2fb6c4', references: null},
-    {key: 'tomes', value: null, references: {nodes: [cover(2), cover(1)]}},
-  ],
-});
-
-const universe = (overrides: Partial<ScreenCollection> = {}): ScreenCollection => ({
-  id: 'gid://c/1', handle: 'au-nom-des-dieux', title: 'Au Nom des Dieux',
-  estUneOeuvreIndependante: {value: 'false'},
-  lore: {value: 'Quand les dieux se sont tus.'},
-  couleurTheme: {value: '#114b45'},
-  sagas: {references: {nodes: [sagaNode()]}},
-  products: {nodes: [cover(1), cover(2)]},
-  ...overrides,
-});
+function sagaNode(): SagaNode {
+  return {
+    handle: 'de-leau-et-du-sang',
+    fields: [
+      {key: 'nom', value: "De l'eau et du sang"},
+      {
+        key: 'synopsis',
+        value:
+          '{"type":"root","children":[{"type":"paragraph","children":[{"type":"text","value":"Le silence des dieux."}]}]}',
+      },
+      {key: 'ordre_des_tomes', references: {nodes: [cover('https://x/t1.jpg', 'T1'), cover('https://x/t2.jpg', 'T2')]}},
+      {
+        key: 'univers_parent',
+        reference: {
+          handle: 'au-nom-des-dieux',
+          title: 'Au Nom des Dieux',
+          couleurTheme: {value: '#8b6b3a'},
+          illustrationHero: {reference: {image: {url: 'https://x/banner.webp'}}},
+        },
+      },
+      {key: 'illustration_hero_de_la_saga', reference: null},
+    ],
+  };
+}
 
 const work = (overrides: Partial<ScreenWork> = {}): ScreenWork => ({
-  id: 'gid://p/9', handle: 'berserker', title: 'Berserker',
+  id: 'gid://p/9',
+  handle: 'berserker',
+  title: 'Berserker',
   estUneOeuvreIndependante: {value: 'true'},
   featuredImage: {url: 'https://x/b.jpg', altText: 'Berserker'},
-  teaserCourt: {value: 'La rage, et la neige.'},
+  teaserCourt: {value: 'La rage.'},
   statutParution: {value: 'publié'},
   ...overrides,
 });
 
 describe('buildHomeScreens', () => {
-  it('produit un écran par saga (nom, lore, accent saga, couvertures triées, CTA univers)', () => {
-    const [s] = buildHomeScreens([universe()], []);
+  it('construit un écran saga (titre=nom, lore=synopsis, kicker=univers, CTA)', () => {
+    const [s] = buildHomeScreens([sagaNode()], []);
     expect(s.kind).toBe('saga');
-    expect(s.title).toBe("De l'Eau et du Sang");
-    expect(s.accent).toBe('#2fb6c4');
+    expect(s.title).toBe("De l'eau et du sang");
+    expect(s.lore).toBe('Le silence des dieux.');
+    expect(s.kicker).toBe('Au Nom des Dieux — Saga');
     expect(s.covers.map((c) => c.altText)).toEqual(['T1', 'T2']);
-    expect(s.href).toBe('/collections/au-nom-des-dieux#eau-et-sang');
+    expect(s.href).toBe('/collections/au-nom-des-dieux#de-leau-et-du-sang');
     expect(s.ctaLabel).toBe('Entrer dans la saga');
   });
 
-  it("retombe sur 1 écran collection si pas de saga (accent = couleur d'univers)", () => {
-    const u = universe({sagas: null});
-    const [s] = buildHomeScreens([u], []);
-    expect(s.kind).toBe('universe');
-    expect(s.title).toBe('Au Nom des Dieux');
-    expect(s.accent).toBe('#114b45');
-    expect(s.covers).toHaveLength(2);
-    expect(s.href).toBe('/collections/au-nom-des-dieux');
+  it("hérite de la couleur d'accent de l'univers parent", () => {
+    expect(buildHomeScreens([sagaNode()], [])[0].accent).toBe('#8b6b3a');
   });
 
-  it("hérite de la couleur univers si la saga n'a pas de couleur", () => {
-    const node = sagaNode();
-    node.fields = node.fields.filter((f) => f.key !== 'couleur');
-    const u = universe({sagas: {references: {nodes: [node]}}});
-    expect(buildHomeScreens([u], [])[0].accent).toBe('#114b45');
+  it("utilise l'illustration de la saga si dispo, sinon celle de l'univers", () => {
+    expect(buildHomeScreens([sagaNode()], [])[0].background).toBe('https://x/banner.webp');
+    const withHero = sagaNode();
+    withHero.fields.find((f) => f.key === 'illustration_hero_de_la_saga')!.reference = {
+      image: {url: 'https://x/saga-hero.jpg'},
+    };
+    expect(buildHomeScreens([withHero], [])[0].background).toBe('https://x/saga-hero.jpg');
   });
 
-  it('produit un écran one-shot par œuvre indépendante avec couverture', () => {
-    const [s] = buildHomeScreens([], [work()]);
-    expect(s.kind).toBe('oneshot');
-    expect(s.kicker).toBe('Roman indépendant');
-    expect(s.covers).toHaveLength(1);
-    expect(s.href).toBe('/products/berserker');
-    expect(s.ctaLabel).toBe('Découvrir le livre');
+  it("respecte l'ordre explicite des tomes (pas de tri)", () => {
+    const n = sagaNode();
+    n.fields.find((f) => f.key === 'ordre_des_tomes')!.references = {
+      nodes: [cover('u2', 'B'), cover('u1', 'A')],
+    };
+    expect(buildHomeScreens([n], [])[0].covers.map((c) => c.altText)).toEqual(['B', 'A']);
   });
 
-  it('exclut une œuvre indépendante sans couverture et un univers sans couverture', () => {
-    expect(buildHomeScreens([], [work({featuredImage: null})])).toHaveLength(0);
-    const empty = universe({sagas: null, products: {nodes: []}});
+  it('exclut une saga sans couverture', () => {
+    const empty = sagaNode();
+    empty.fields.find((f) => f.key === 'ordre_des_tomes')!.references = {nodes: []};
     expect(buildHomeScreens([empty], [])).toHaveLength(0);
   });
 
-  it('ordonne sagas/univers avant one-shots', () => {
-    const screens = buildHomeScreens([universe()], [work()]);
-    expect(screens.map((s) => s.kind)).toEqual(['saga', 'oneshot']);
+  it('ajoute les one-shots après les sagas', () => {
+    expect(buildHomeScreens([sagaNode()], [work()]).map((s) => s.kind)).toEqual([
+      'saga',
+      'oneshot',
+    ]);
   });
 
-  it('CTA « Précommander » pour une œuvre en précommande', () => {
-    const [s] = buildHomeScreens([], [work({statutParution: {value: 'précommande'}})]);
-    expect(s.ctaLabel).toBe('Précommander');
+  it('CTA Précommander pour un one-shot en précommande', () => {
+    expect(
+      buildHomeScreens([], [work({statutParution: {value: 'précommande'}})])[0].ctaLabel,
+    ).toBe('Précommander');
   });
 
-  it('ordonne les couvertures sans numéro de tome en dernier (tri déterministe)', () => {
-    const node = sagaNode();
-    const tomes = node.fields.find((f) => f.key === 'tomes')!;
-    tomes.references!.nodes = [
-      {featuredImage: {url: 'https://x/sans.jpg', altText: 'sans'}, numeroTome: {value: null}},
-      {featuredImage: {url: 'https://x/t1.jpg', altText: 'T1'}, numeroTome: {value: '1'}},
-    ];
-    const u = universe({sagas: {references: {nodes: [node]}}});
-    expect(buildHomeScreens([u], [])[0].covers.map((c) => c.altText)).toEqual(['T1', 'sans']);
+  it('exclut une œuvre indépendante sans couverture', () => {
+    expect(buildHomeScreens([], [work({featuredImage: null})])).toHaveLength(0);
   });
 });

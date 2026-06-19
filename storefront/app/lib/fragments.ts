@@ -360,39 +360,37 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
   ${TILE_PRODUCT_FRAGMENT}
 ` as const;
 
+/**
+ * Fragment du metaobject `saga` (interrogé directement via `metaobjects(type:"saga")`).
+ * Clés réelles : `nom`, `synopsis` (rich text), `ordre_des_tomes` (liste produits),
+ * `univers_parent` (collection), `illustration_hero_de_la_saga` (image — souvent non
+ * exposée pour l'instant → repli sur l'illustration_hero de l'univers parent).
+ */
 export const HOME_SAGA_FRAGMENT = `#graphql
-  fragment HomeSaga on Collection {
-    id
+  fragment HomeSaga on Metaobject {
     handle
-    title
-    estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
-    lore: metafield(namespace: "custom", key: "lore") { value }
-    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
-    sagas: metafield(namespace: "custom", key: "sagas") {
-      references(first: 10) {
+    fields {
+      key
+      value
+      references(first: 8) {
         nodes {
-          ... on Metaobject {
-            id
-            handle
-            fields { key value
-              references(first: 6) {
-                nodes {
-                  ... on Product {
-                    featuredImage { url altText }
-                    numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
-                  }
-                }
-              }
-            }
+          ... on Product {
+            featuredImage { url altText }
           }
         }
       }
-    }
-    products(first: 6, sortKey: COLLECTION_DEFAULT) {
-      nodes {
-        featuredImage { url altText }
-        numeroTome: metafield(namespace: "custom", key: "numero_tome") { value }
-        statutParution: metafield(namespace: "custom", key: "statut_parution") { value }
+      reference {
+        ... on Collection {
+          handle
+          title
+          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+          illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {
+            reference { ... on MediaImage { image { url } } }
+          }
+        }
+        ... on MediaImage {
+          image { url }
+        }
       }
     }
   }

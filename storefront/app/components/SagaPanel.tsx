@@ -20,6 +20,13 @@ export function SagaPanel({
       style={universeAccentStyle(screen.accent ?? undefined)}
       aria-label={screen.title}
     >
+      {screen.background ? (
+        <div
+          className="bsk-saga-bg"
+          style={{backgroundImage: `url(${screen.background})`}}
+          aria-hidden="true"
+        />
+      ) : null}
       <div className="bsk-saga-halo bsk-halo" aria-hidden="true" />
       <div className="bsk-saga-fan" data-parallax="fan">
         <CoverFan covers={screen.covers} />

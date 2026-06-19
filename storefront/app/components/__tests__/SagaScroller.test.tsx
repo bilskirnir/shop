@@ -7,8 +7,8 @@ import type {HomeScreen} from '~/lib/homeScreens';
 vi.mock('~/components/Footer', () => ({Footer: () => <footer>FOOTER</footer>}));
 
 const screens: HomeScreen[] = [
-  {key: 'a', kind: 'saga', kicker: 'K', title: 'Saga A', lore: null, accent: null, covers: [{url: 'u', altText: 'a'}], href: '/c#a', ctaLabel: 'Entrer dans la saga'},
-  {key: 'b', kind: 'oneshot', kicker: 'Roman indépendant', title: 'Œuvre B', lore: null, accent: null, covers: [{url: 'u', altText: 'b'}], href: '/products/b', ctaLabel: 'Découvrir le livre'},
+  {key: 'a', kind: 'saga', kicker: 'K', title: 'Saga A', lore: null, accent: null, covers: [{url: 'u', altText: 'a'}], background: null, href: '/c#a', ctaLabel: 'Entrer dans la saga'},
+  {key: 'b', kind: 'oneshot', kicker: 'Roman indépendant', title: 'Œuvre B', lore: null, accent: null, covers: [{url: 'u', altText: 'b'}], background: null, href: '/products/b', ctaLabel: 'Découvrir le livre'},
 ];
 
 function renderScroller(s: HomeScreen[]) {

@@ -5,6 +5,7 @@
 .bsk-track-panel{height:100dvh}
 
 .bsk-saga-panel{position:relative;height:100%;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
+.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.45}
 .bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:.42}
 .bsk-saga-mist{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
 .bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:2;will-change:transform,opacity}
