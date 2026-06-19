@@ -19,6 +19,8 @@
   "dependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.2.6",
     "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource/bricolage-grotesque": "^5.2.10",
+    "@fontsource/inter": "^5.2.8",
     "@shopify/hydrogen": "^2026.4.1",
     "graphql": "^16.10.0",
     "graphql-tag": "^2.12.6",
