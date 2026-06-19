@@ -8,7 +8,7 @@ const css = readFileSync(resolve(__dirname, '../tokens.css'), 'utf8');
 
 describe('tokens encre', () => {
   it('définit la palette encre/crème', () => {
-    expect(css).toContain('--bsk-ink: #0b0b0c');
+    expect(css).toContain('--bsk-ink: #14110e');
     expect(css).toContain('--bsk-cream: #f2efe7');
   });
   it('bascule les familles vers Bricolage + Inter', () => {

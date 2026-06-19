@@ -4,14 +4,14 @@
 
 :root {
   /* ── Color: background & surfaces ─────────────────────────────── */
-  --bsk-bg-base: #0b0b0c;          /* encre — body (migré refonte 2) */
-  --bsk-bg-raised: #141416;         /* cartes/panneaux */
-  --bsk-bg-overlay: #1c1c1f;        /* hovers, drawer */
-  --bsk-bg-footer: #0b0b0c;
+  --bsk-bg-base: #14110e;          /* charbon CHAUD (refonte 2.1) — fini le noir pur froid */
+  --bsk-bg-raised: #1f1b17;         /* cartes/panneaux — élévation visible */
+  --bsk-bg-overlay: #26211b;        /* hovers, drawer */
+  --bsk-bg-footer: #14110e;
   --bsk-bg-gradient-warm: radial-gradient(
     ellipse at 50% 0%,
-    #141416 0%,
-    #0b0b0c 60%
+    #1f1b17 0%,
+    #14110e 60%
   );
 
   /* ── Color: foreground ────────────────────────────────────────── */
@@ -28,7 +28,7 @@
   --bsk-accent-bronze: var(--bsk-uni);
 
   /* ── Refonte 2 « encre » ─────────────────────────────────────── */
-  --bsk-ink: #0b0b0c;               /* fond encre (nouveau base) */
+  --bsk-ink: #14110e;               /* charbon chaud (refonte 2.1) */
   --bsk-cream: #f2efe7;             /* texte crème (nouveau primary) */
   --bsk-grain-opacity: 0.35;
 
