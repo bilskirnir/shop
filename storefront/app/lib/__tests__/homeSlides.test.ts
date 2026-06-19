@@ -50,6 +50,17 @@ describe('buildHomeSlides', () => {
     expect(s.primary.href).toBe('/collections/au-nom-des-dieux');
   });
 
+  it('convertit un lore rich-text Shopify en texte simple', () => {
+    const richText = JSON.stringify({
+      type: 'root',
+      children: [
+        {type: 'paragraph', children: [{type: 'text', value: 'Quand les dieux se sont tus.'}]},
+      ],
+    });
+    const u: SlideUniverse = {...universe, lore: {value: richText}};
+    expect(buildHomeSlides([u], [])[0].lore).toBe('Quand les dieux se sont tus.');
+  });
+
   it('exclut un univers sans couverture', () => {
     const empty: SlideUniverse = {...universe, products: {nodes: []}};
     expect(buildHomeSlides([empty], [])).toHaveLength(0);

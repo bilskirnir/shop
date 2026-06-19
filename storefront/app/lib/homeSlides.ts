@@ -1,5 +1,10 @@
 import type {CoverImage} from '~/components/Cover';
-import {parseBool, parseNumeroTome, parseStatutParution} from '~/lib/tomeMetafields';
+import {
+  parseBool,
+  parseNumeroTome,
+  parseStatutParution,
+  richTextToPlain,
+} from '~/lib/tomeMetafields';
 
 interface MetafieldValue {
   value?: string | null;
@@ -107,7 +112,7 @@ function universeToSlide(u: SlideUniverse): HomeSlide | null {
     key: u.id,
     kicker: `${tomeCount} tome${tomeCount > 1 ? 's' : ''}`,
     title: u.title,
-    lore: u.lore?.value?.trim() || null,
+    lore: richTextToPlain(u.lore?.value).trim() || null,
     accent: u.couleurTheme?.value?.trim() || null,
     heroImage,
     covers,
@@ -134,7 +139,7 @@ function workToSlide(w: SlideWork): HomeSlide | null {
     key: w.id,
     kicker: 'Roman indépendant',
     title: w.title,
-    lore: w.teaserCourt?.value?.trim() || null,
+    lore: richTextToPlain(w.teaserCourt?.value).trim() || null,
     accent: null, // couleur par livre différée (pas de metafield produit)
     heroImage: null,
     covers: [cover],
