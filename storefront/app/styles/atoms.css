@@ -1,0 +1,47 @@
+/* app/styles/atoms.css — grammaire de composants « encre ». Importé par les
+   surfaces refondues. L'accent vient de --bsk-uni (crème neutre par défaut). */
+
+/* Boutons */
+.bsk-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--bsk-font-sans);font-size:13px;font-weight:600;letter-spacing:.02em;
+  padding:11px 20px;border-radius:999px;border:1px solid transparent;cursor:pointer;
+  text-decoration:none;transition:transform var(--bsk-duration-fast) var(--bsk-ease),opacity var(--bsk-duration-fast)}
+.bsk-btn:active{transform:translateY(1px)}
+.bsk-btn--cream{background:var(--bsk-cream);color:var(--bsk-ink)}
+.bsk-btn--ghost{background:transparent;color:var(--bsk-cream);border-color:rgba(242,239,231,.35)}
+.bsk-btn--accent{background:var(--bsk-uni);color:var(--bsk-ink)}
+.bsk-btn--disabled,.bsk-btn:disabled{background:rgba(242,239,231,.12);color:rgba(242,239,231,.4);cursor:not-allowed}
+
+/* Badges */
+.bsk-badge{display:inline-flex;align-items:center;font-family:var(--bsk-font-sans);
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid}
+.bsk-badge--accent{color:var(--bsk-uni);border-color:color-mix(in srgb,var(--bsk-uni) 60%,transparent);background:color-mix(in srgb,var(--bsk-uni) 10%,transparent)}
+.bsk-badge--cream{color:var(--bsk-cream);border-color:rgba(242,239,231,.3);background:transparent}
+.bsk-badge--solid{color:var(--bsk-ink);background:var(--bsk-uni);border-color:var(--bsk-uni)}
+
+/* Champs */
+.bsk-field{background:rgba(242,239,231,.05);border:1px solid rgba(242,239,231,.18);
+  border-radius:var(--bsk-radius);padding:11px 14px;font-family:var(--bsk-font-sans);font-size:13px;color:var(--bsk-cream)}
+.bsk-mailrow{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(242,239,231,.4);padding-bottom:7px}
+.bsk-mailrow input{flex:1;background:none;border:0;color:var(--bsk-cream);font-family:var(--bsk-font-sans);font-size:13px;outline:none}
+.bsk-stepper{display:inline-flex;align-items:center;gap:14px;border:1px solid rgba(242,239,231,.22);border-radius:999px;padding:5px 12px;font-size:14px;color:var(--bsk-cream)}
+
+/* Kicker (label + filet) */
+.bsk-kicker{display:inline-block;font-family:var(--bsk-font-sans);font-size:10px;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--bsk-uni);
+  border-top:1px solid color-mix(in srgb,var(--bsk-uni) 55%,transparent);padding-top:8px}
+
+/* Puces de progression */
+.bsk-dots{display:flex;flex-direction:column;gap:8px}
+.bsk-dots button{width:5px;height:5px;padding:0;border:0;border-radius:50%;background:rgba(242,239,231,.28);cursor:pointer;transition:height var(--bsk-duration-fast),background var(--bsk-duration-fast)}
+.bsk-dots button[aria-current="true"]{background:var(--bsk-uni);height:20px;border-radius:3px}
+
+/* Finition : grain + halo (utilitaires) */
+.bsk-grain{position:absolute;inset:0;pointer-events:none;z-index:9;opacity:var(--bsk-grain-opacity);mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.bsk-halo{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,var(--bsk-uni),transparent 62%);opacity:.34;filter:blur(20px)}
+
+@media (prefers-reduced-motion: reduce){
+  .bsk-btn{transition:none}
+}
