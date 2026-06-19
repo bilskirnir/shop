@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import type {CSSProperties} from 'react';
 import {Link} from 'react-router';
+import {Logo} from '~/components/Logo';
 import type {UniverseItem} from '~/components/MegaMenu';
 import {useAside} from '~/components/Aside';
 import {useHideOnScroll} from '~/hooks/useHideOnScroll';
@@ -72,6 +73,7 @@ export function ImmersiveNav({
             <span />
           </button>
           <Link to="/" aria-label="Accueil Bilskirnir" className="bsk-nav-wordmark">
+            <Logo height={26} />
             BILSKIRNIR
           </Link>
         </div>

@@ -138,5 +138,6 @@
 }
 
 /* Encre redesign — wordmark (Task 5) */
-.bsk-nav-wordmark{font-family:var(--bsk-font-display);font-weight:800;font-size:18px;
+.bsk-nav-wordmark{display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--bsk-font-display);font-weight:800;font-size:18px;
   letter-spacing:-.01em;color:var(--bsk-cream);text-decoration:none}
