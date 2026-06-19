@@ -5,10 +5,10 @@ import {resolve} from 'node:path';
 const css = readFileSync(resolve(process.cwd(), 'app/styles/home.css'), 'utf8');
 
 describe('home.css', () => {
-  it('définit le scroller et les panneaux avec scroll-snap', () => {
+  it('définit le scroller et la piste qui glisse (fullpage)', () => {
     expect(css).toContain('.bsk-scroller');
-    expect(css).toContain('.bsk-scroller-panel');
-    expect(css).toContain('scroll-snap-type:y mandatory');
+    expect(css).toContain('.bsk-track');
+    expect(css).toMatch(/\.bsk-track\{[^}]*transition:\s*transform/);
   });
   it("utilise les tokens Refonte 2 (ink, cream, ease)", () => {
     expect(css).toContain('var(--bsk-ink)');
@@ -16,7 +16,7 @@ describe('home.css', () => {
     expect(css).toContain('var(--bsk-ease)');
   });
   it('porte les animations clés', () => {
-    expect(css).toMatch(/@keyframes\s+bsk-rise/);
+    expect(css).toMatch(/@keyframes\s+revealUp/);
   });
   it('neutralise les animations en reduced-motion', () => {
     expect(css).toContain('prefers-reduced-motion: reduce');
