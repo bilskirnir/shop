@@ -177,6 +177,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
             FERMÉE dès le <head>, avant le 1er paint — évite le flash FOUC en dev
             (nav.css/cart.css sont injectés par Vite après le paint). */}
         <style>{
+          'html,body{margin:0;padding:0;overflow-x:hidden}' +
           '.bsk-nav-drawer{transform:translateX(-100%)}' +
           '.bsk-nav-scrim{opacity:0;pointer-events:none}' +
           '.overlay{opacity:0;visibility:hidden}' +

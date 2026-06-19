@@ -97,8 +97,8 @@ export function SagaScroller({screens}: {screens: HomeScreen[]}) {
           </div>
         ))}
         <div
-          className={`bsk-track-panel bsk-track-panel--footer${
-            index === screens.length ? ' is-active' : ''
+          className={`bsk-track-panel bsk-track-panel--footer is-${
+            index === screens.length ? 'active' : 'below'
           }`}
           data-panel
         >

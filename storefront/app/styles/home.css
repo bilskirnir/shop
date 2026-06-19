@@ -44,9 +44,12 @@
 .bsk-saga-halo{animation:haloPulse 9s ease-in-out infinite}
 @keyframes haloPulse{0%,100%{opacity:.34}50%{opacity:.62}}
 
-/* Footer : son contenu monte + apparaît quand on atteint la section */
+/* Footer : monte + apparaît à l'arrivée ; quand on REMONTE, son contenu coule
+   vers le bas (« vers les abysses ») au lieu de disparaître sèchement. */
 .bsk-track-panel--footer .bsk-footer-inner{opacity:0}
 .bsk-track-panel--footer.is-active .bsk-footer-inner{animation:textIn 1.1s var(--bsk-ease) both}
+.bsk-track-panel--footer.is-below .bsk-footer-inner{animation:footerSink .85s var(--bsk-ease) both}
+@keyframes footerSink{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(74px)}}
 
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite, tailles responsives */
 @media (min-width: 860px){
