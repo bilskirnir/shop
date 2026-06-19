@@ -8,14 +8,14 @@ const src = readFileSync(
 );
 
 describe('_index (home slider)', () => {
-  it('utilise HOME_UNIVERSE_FRAGMENT et récupère les œuvres indépendantes', () => {
-    expect(src).toContain('HOME_UNIVERSE_FRAGMENT');
-    expect(src).toContain('...HomeUniverse');
+  it('utilise HOME_SAGA_FRAGMENT et récupère les œuvres indépendantes', () => {
+    expect(src).toContain('HOME_SAGA_FRAGMENT');
+    expect(src).toContain('...HomeSaga');
     expect(src).toContain('TileProduct');
   });
-  it('construit les slides et rend le slider', () => {
-    expect(src).toContain('buildHomeSlides');
-    expect(src).toContain('<UniverseSlider');
+  it('construit les screens et rend le SagaScroller', () => {
+    expect(src).toContain('buildHomeScreens');
+    expect(src).toContain('<SagaScroller');
   });
   it('déclare la route comme immersive', () => {
     expect(src).toMatch(/export const handle\s*=\s*\{[^}]*immersive:\s*true/s);
