@@ -4,18 +4,18 @@
 
 :root {
   /* ── Color: background & surfaces ─────────────────────────────── */
-  --bsk-bg-base: #131419;          /* anthracite — body */
-  --bsk-bg-raised: #191a20;         /* cartes/panneaux */
-  --bsk-bg-overlay: #1d1e26;        /* hovers, drawer */
-  --bsk-bg-footer: #0e0f13;
+  --bsk-bg-base: #0b0b0c;          /* encre — body (migré refonte 2) */
+  --bsk-bg-raised: #141416;         /* cartes/panneaux */
+  --bsk-bg-overlay: #1c1c1f;        /* hovers, drawer */
+  --bsk-bg-footer: #0b0b0c;
   --bsk-bg-gradient-warm: radial-gradient(
     ellipse at 50% 0%,
-    #1a1b22 0%,
-    #131419 60%
+    #141416 0%,
+    #0b0b0c 60%
   );
 
   /* ── Color: foreground ────────────────────────────────────────── */
-  --bsk-fg-primary: #ece4d3;        /* crème chaud — main text */
+  --bsk-fg-primary: #f2efe7;        /* crème (migré refonte 2) — main text */
   --bsk-fg-secondary: #969089;      /* gris chaud — metadata, labels */
   --bsk-fg-muted: #6f6a62;          /* disabled, captions */
 
