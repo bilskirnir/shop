@@ -23,6 +23,26 @@
 /* Fallback sans view-timeline : visible dès le montage */
 @supports not (animation-timeline: view()) {.bsk-saga-text{opacity:1;transform:none}}
 
+/* Parallaxe au scroll : couches à vitesses différentes (profondeur).
+   Le centrage est intégré aux keyframes → au snap (~50% de progression) la
+   couche revient à sa position centrée ; elle dérive en entrant/sortant. */
+@supports (animation-timeline: view()){
+  .bsk-saga-fan{animation:fanPara linear both;animation-timeline:view();animation-range:cover}
+  @keyframes fanPara{
+    from{transform:translateX(-50%) translateY(58px)}
+    to{transform:translateX(-50%) translateY(-58px)}
+  }
+  .bsk-saga-halo{animation:haloPara linear both;animation-timeline:view();animation-range:cover}
+  @keyframes haloPara{
+    from{transform:translateX(-50%) translateY(34px) scale(.85);opacity:.28}
+    50%{opacity:.5}
+    to{transform:translateX(-50%) translateY(-34px) scale(1.15);opacity:.3}
+  }
+  /* le titre/lore monte ET dérive un peu plus longtemps (déjà bsk-rise sur le texte) */
+  .bsk-saga-cue{animation:cueFade linear both;animation-timeline:view();animation-range:cover 40% cover 60%}
+  @keyframes cueFade{from{opacity:0}50%{opacity:.5}to{opacity:0}}
+}
+
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite */
 @media (min-width: 860px){
   .bsk-saga-panel{padding:0 6vw 9vh}
@@ -44,9 +64,22 @@
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
+  /* keyframes parallaxe redéfinies pour le centrage desktop (translateY) — amplitude plus large */
+  @supports (animation-timeline: view()){
+    @keyframes fanPara{
+      from{transform:translateY(calc(-50% + 70px))}
+      to{transform:translateY(calc(-50% - 70px))}
+    }
+    @keyframes haloPara{
+      from{transform:translateY(calc(-50% + 48px)) scale(.85);opacity:.4}
+      50%{opacity:.58}
+      to{transform:translateY(calc(-50% - 48px)) scale(1.15);opacity:.42}
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
   .bsk-scroller{scroll-snap-type:none;scroll-behavior:auto}
   .bsk-saga-text{opacity:1;transform:none;animation:none;transition:none}
+  .bsk-saga-fan,.bsk-saga-halo,.bsk-saga-cue{animation:none}
 }
