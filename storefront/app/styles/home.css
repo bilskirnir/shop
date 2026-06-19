@@ -29,15 +29,17 @@
   /* éventail desktop : largeur de couverture RELATIVE AU VIEWPORT (--cw) — grossit
      avec l'écran (plafonnée), jamais en px fixes. Tous les décalages de l'éventail
      sont exprimés en fraction de --cw → géométrie cohérente à toute résolution. */
+  /* Éventail en FLEX : couvertures côte à côte par construction (jamais empilées
+     verticalement) ; recouvrement contrôlé par marge négative ; --cw responsive. */
   .bsk-saga-fan{--cw:clamp(210px,16vw,400px);left:auto;right:6vw;top:50%;transform:translateY(-50%);width:auto}
-  .bsk-saga-fan .uni-fan{width:calc(var(--cw) * 1.95);height:calc(var(--cw) * 1.72);margin:0}
-  .bsk-saga-fan .uni-fan-cover{width:var(--cw);border-radius:8px}
-  .bsk-saga-fan .uni-fan--1 .uni-fan-cover:nth-child(1){left:calc(var(--cw) * 0.48);transform:rotate(-2deg)}
-  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(1){left:calc(var(--cw) * 0.14);top:calc(var(--cw) * 0.08);transform:rotate(-8deg)}
-  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(2){left:calc(var(--cw) * 0.74);top:0;transform:rotate(7deg)}
-  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){left:0;transform:rotate(-9deg)}
-  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){left:calc(var(--cw) * 0.46);top:0;transform:rotate(2deg)}
-  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){left:calc(var(--cw) * 0.92);transform:rotate(11deg)}
+  .bsk-saga-fan .uni-fan{display:flex;justify-content:center;align-items:flex-start;width:auto;height:auto;margin:0}
+  .bsk-saga-fan .uni-fan-cover{position:static;left:auto;top:auto;width:var(--cw);height:auto;aspect-ratio:2 / 3;border-radius:8px}
+  .bsk-saga-fan .uni-fan--1 .uni-fan-cover{transform:rotate(-3deg)}
+  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(1){transform:rotate(-5deg);margin-top:calc(var(--cw) * 0.05)}
+  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(2){transform:rotate(5deg);margin-left:calc(var(--cw) * -0.2);z-index:2}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){transform:rotate(-7deg);margin-top:calc(var(--cw) * 0.06)}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){margin-left:calc(var(--cw) * -0.2);z-index:3}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){transform:rotate(7deg);margin-top:calc(var(--cw) * 0.06);margin-left:calc(var(--cw) * -0.2);z-index:2}
   .bsk-saga-halo{left:auto;right:2vw;top:50%;width:min(64vw,880px);height:min(64vw,880px);opacity:.52;transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
