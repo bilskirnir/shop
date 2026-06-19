@@ -76,7 +76,7 @@
   .bsk-saga-halo{left:auto;right:-8vw;top:50%;width:min(96vw,1850px);height:min(96vw,1850px);opacity:.55;transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
-  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 0%,var(--bsk-ink) 32%,transparent 74%)}
+  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 0%,transparent 70%)}
   /* éventail desktop centré en translateY(-50%) → on redéfinit l'entrée/sortie qui flottent */
   @keyframes fanIn{from{opacity:0;transform:translateY(calc(-50% + 72px))}to{opacity:1;transform:translateY(-50%)}}
   @keyframes fanOut{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% - 140px))}}
