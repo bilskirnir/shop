@@ -25,11 +25,12 @@
 
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite */
 @media (min-width: 860px){
-  .bsk-saga-panel{padding:0 6vw 8vh}
-  .bsk-saga-fan{left:auto;right:8vw;top:14vh;transform:none;width:340px}
-  .bsk-saga-halo{left:auto;right:10vw;top:8vh;transform:none}
-  .bsk-saga-title{font-size:clamp(48px,5.5vw,72px)}
-  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 20%,transparent 70%)}
+  .bsk-saga-panel{padding:0 6vw 9vh}
+  .bsk-saga-fan{left:auto;right:7vw;top:11vh;transform:scale(1.9);transform-origin:top right;width:340px}
+  .bsk-saga-halo{left:auto;right:1vw;top:0;width:min(74vw,800px);height:min(74vw,800px);opacity:.5;transform:none}
+  .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
+  .bsk-saga-lore{font-size:15px;max-width:42ch}
+  .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
 }
 
 @media (prefers-reduced-motion: reduce){
