@@ -4,10 +4,18 @@ import {universeAccentStyle} from '~/lib/universeAccent';
 import type {HomeScreen} from '~/lib/homeScreens';
 import '~/styles/atoms.css';
 
-export function SagaPanel({screen, index}: {screen: HomeScreen; index: number}) {
+export function SagaPanel({
+  screen,
+  index,
+  active = false,
+}: {
+  screen: HomeScreen;
+  index: number;
+  active?: boolean;
+}) {
   return (
     <section
-      className="bsk-saga-panel"
+      className={`bsk-saga-panel${active ? ' is-active' : ''}`}
       style={universeAccentStyle(screen.accent ?? undefined)}
       aria-label={screen.title}
     >

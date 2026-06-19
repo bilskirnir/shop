@@ -13,10 +13,13 @@ export function SagaScroller({screens}: {screens: HomeScreen[]}) {
     <div className="bsk-scroller" ref={containerRef}>
       {screens.map((s, i) => (
         <div className="bsk-scroller-panel" data-panel key={s.key}>
-          <SagaPanel screen={s} index={i} />
+          <SagaPanel screen={s} index={i} active={i === activeIndex} />
         </div>
       ))}
-      <div className="bsk-scroller-panel bsk-scroller-panel--footer" data-panel>
+      <div
+        className={`bsk-scroller-panel bsk-scroller-panel--footer${activeIndex === screens.length ? ' is-active' : ''}`}
+        data-panel
+      >
         <Footer asPanel />
       </div>
       <nav className="bsk-scroller-dots" aria-label="Navigation des sagas">
