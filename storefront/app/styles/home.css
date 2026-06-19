@@ -26,8 +26,18 @@
 /* Desktop ≥860px — D1 : titre bas-gauche, éventail tilté à droite */
 @media (min-width: 860px){
   .bsk-saga-panel{padding:0 6vw 9vh}
-  .bsk-saga-fan{left:auto;right:7vw;top:11vh;transform:scale(1.9);transform-origin:top right;width:340px}
-  .bsk-saga-halo{left:auto;right:1vw;top:0;width:min(74vw,800px);height:min(74vw,800px);opacity:.5;transform:none}
+  /* éventail desktop : couvertures dimensionnées explicitement (pas de scale),
+     entièrement dans le cadre, calé en haut-droite pour équilibrer le titre. */
+  .bsk-saga-fan{left:auto;right:7vw;top:15vh;transform:none;width:400px}
+  .bsk-saga-fan .uni-fan{width:400px;height:330px;margin:0}
+  .bsk-saga-fan .uni-fan-cover{width:205px;border-radius:8px}
+  .bsk-saga-fan .uni-fan--1 .uni-fan-cover:nth-child(1){left:98px;transform:rotate(-2deg)}
+  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(1){left:28px;top:16px;transform:rotate(-8deg)}
+  .bsk-saga-fan .uni-fan--2 .uni-fan-cover:nth-child(2){left:150px;top:0;transform:rotate(7deg)}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){left:0;transform:rotate(-9deg)}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){left:95px;top:0;transform:rotate(2deg)}
+  .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){left:190px;transform:rotate(11deg)}
+  .bsk-saga-halo{left:auto;right:3vw;top:6vh;width:min(56vw,640px);height:min(56vw,640px);opacity:.5;transform:none}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
