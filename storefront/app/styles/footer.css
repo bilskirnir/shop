@@ -2,6 +2,10 @@
 .bsk-footer{position:relative;overflow:hidden;background:var(--bsk-ink);color:var(--bsk-cream);
   border-top:1px solid color-mix(in srgb,var(--bsk-cream) 12%,transparent)}
 .bsk-footer--panel{min-height:100dvh;display:flex;align-items:center;border-top:0;scroll-snap-align:start}
+/* image de fond optionnelle du footer : déposer le fichier dans
+   storefront/public/footer-bg.jpg (sinon rien ne s'affiche, pas d'erreur). */
+.bsk-footer-bg{position:absolute;inset:0;z-index:0;background:url(/footer-bg.jpg) center/cover no-repeat;opacity:.3}
+.bsk-footer-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bsk-ink),transparent 30%,transparent 70%,var(--bsk-ink))}
 .bsk-footer-halo{left:50%;top:-120px;width:420px;height:300px;transform:translateX(-50%);
   background:radial-gradient(circle,color-mix(in srgb,var(--bsk-cream) 22%,transparent),transparent 65%);opacity:.4}
 .bsk-footer-inner{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:48px 28px;text-align:center;width:100%}
