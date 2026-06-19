@@ -14,7 +14,7 @@
   letter-spacing:-.02em;line-height:1;margin-bottom:16px}
 .bsk-footer-big{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(32px,8vw,52px);
   letter-spacing:-.02em;line-height:1;margin:12px 0 22px;
-  background:linear-gradient(105deg,var(--bsk-cream) 0%,var(--bsk-cream) 28%,#e6bd7a 68%,#cf9a44 100%);
+  background:linear-gradient(105deg,#c23a20 0%,#de7536 40%,#e6bd7a 76%,#cf9a44 100%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .bsk-footer-form{max-width:320px;margin:0 auto 24px}
 .bsk-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-bottom:24px}
