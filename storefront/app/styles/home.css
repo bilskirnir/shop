@@ -70,7 +70,7 @@
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){transform:rotate(-7deg);margin-top:calc(var(--cw) * 0.06)}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){margin-left:calc(var(--cw) * -0.2);z-index:3}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){transform:rotate(7deg);margin-top:calc(var(--cw) * 0.06);margin-left:calc(var(--cw) * -0.2);z-index:2}
-  .bsk-saga-halo{left:auto;right:-4vw;top:50%;width:min(84vw,1320px);height:min(84vw,1320px);opacity:.55;transform:translateY(-50%)}
+  .bsk-saga-halo{left:auto;right:-8vw;top:50%;width:min(96vw,1850px);height:min(96vw,1850px);opacity:.55;transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 22%,transparent 72%)}
