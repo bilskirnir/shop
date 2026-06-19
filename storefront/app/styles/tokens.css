@@ -26,13 +26,13 @@
   --bsk-accent-bronze: #c4912f;     /* secondary accent */
 
   /* ── Refonte 2 « encre » ─────────────────────────────────────── */
-  --bsk-ink: #0b0b0c;               /* fond encre (nuovo base) */
+  --bsk-ink: #0b0b0c;               /* fond encre (nouveau base) */
   --bsk-cream: #f2efe7;             /* texte crème (nouveau primary) */
   --bsk-grain-opacity: 0.35;
 
   /* ── Accent d'univers (ponctuel) — surchargé par page via inline style ── */
   --bsk-uni: var(--bsk-cream);     /* accent univers — crème neutre par défaut */
-  --bsk-uni-soft: rgba(216, 166, 87, 0.16);
+  --bsk-uni-soft: rgba(242, 239, 231, 0.16);
 
   /* ── Color: semantic ──────────────────────────────────────────── */
   --bsk-status-preorder: var(--bsk-accent-gold);

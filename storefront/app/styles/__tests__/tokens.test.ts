@@ -18,4 +18,9 @@ describe('tokens encre', () => {
   it("garde --bsk-uni avec un défaut crème neutre", () => {
     expect(css).toMatch(/--bsk-uni:\s*var\(--bsk-cream\)/);
   });
+  it('préserve les vars legacy (back-compat)', () => {
+    expect(css).toContain('--bsk-bg-base:');
+    expect(css).toContain('--bsk-accent-gold:');
+    expect(css).toContain('--bsk-uni-soft: rgba(242, 239, 231, 0.16)');
+  });
 });
