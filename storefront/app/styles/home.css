@@ -8,7 +8,9 @@
 .bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55}
 /* voile de couleur (couleur de la saga) qui unifie l'image et donne le ton */
 .bsk-saga-bg::after{content:"";position:absolute;inset:0;background:var(--bsk-uni);opacity:.32;mix-blend-mode:soft-light}
-.bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:.21}
+.bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:calc(.21 * var(--halo-mul,1))}
+/* un seul livre → halo encore moitié moins fort (parfait à 2 livres, trop fort à 1) */
+.bsk-saga-panel:has(.uni-fan--1) .bsk-saga-halo{--halo-mul:.5}
 .bsk-saga-mist{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
 .bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:2;will-change:transform,opacity}
 .bsk-saga-text{position:relative;z-index:6;max-width:520px}
@@ -59,7 +61,7 @@
 .bsk-saga-fan .uni-fan-cover:nth-child(3){animation-duration:7.3s;animation-delay:-5s}
 @keyframes coverFloat{0%,100%{translate:0 0;rotate:0deg}50%{translate:0 -13px;rotate:.8deg}}
 .bsk-saga-halo{animation:haloPulse 9s ease-in-out infinite}
-@keyframes haloPulse{0%,100%{opacity:.17}50%{opacity:.31}}
+@keyframes haloPulse{0%,100%{opacity:calc(.17 * var(--halo-mul,1))}50%{opacity:calc(.31 * var(--halo-mul,1))}}
 
 /* Footer : monte + apparaît à l'arrivée ; quand on REMONTE, son contenu coule
    vers le bas (« vers les abysses ») au lieu de disparaître sèchement. */
@@ -83,7 +85,7 @@
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(1){transform:rotate(-7deg);margin-top:calc(var(--cw) * 0.06)}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(2){margin-left:calc(var(--cw) * -0.2);z-index:3}
   .bsk-saga-fan .uni-fan--3 .uni-fan-cover:nth-child(3){transform:rotate(7deg);margin-top:calc(var(--cw) * 0.06);margin-left:calc(var(--cw) * -0.2);z-index:2}
-  .bsk-saga-halo{left:auto;right:-8vw;top:50%;width:min(96vw,1850px);height:min(96vw,1850px);opacity:.28;transform:translateY(-50%)}
+  .bsk-saga-halo{left:auto;right:-8vw;top:50%;width:min(96vw,1850px);height:min(96vw,1850px);opacity:calc(.28 * var(--halo-mul,1));transform:translateY(-50%)}
   .bsk-saga-title{font-size:clamp(52px,6vw,84px)}
   .bsk-saga-lore{font-size:15px;max-width:42ch}
   .bsk-saga-mist{background:linear-gradient(90deg,var(--bsk-ink) 0%,transparent 70%)}
