@@ -4,6 +4,7 @@ import {SagaScroller} from '~/components/SagaScroller';
 import {
   buildHomeScreens,
   buildCuratedScreens,
+  type AccueilSlide,
   type SagaNode,
   type ScreenWork,
 } from '~/lib/homeScreens';
@@ -23,7 +24,7 @@ export const handle = {immersive: true};
 const HOME_QUERY = `#graphql
   query Home($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    accueil: metaobjects(type: "accueil", first: 1) {
+    accueil: metaobjects(type: "accueil", first: 30) {
       nodes { ...HomeAccueil }
     }
     sagas: metaobjects(type: "saga", first: 20) {
@@ -45,15 +46,13 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  // Curaté (metaobject « accueil » : listes `sagas` + `oneshots`) si renseigné, sinon auto.
-  const accueil = data.accueil?.nodes?.[0] as
-    | {sagas?: {references?: {nodes: unknown[]}}; oneshots?: {references?: {nodes: unknown[]}}}
-    | undefined;
-  const curatedSagas = (accueil?.sagas?.references?.nodes ?? []) as unknown as SagaNode[];
-  const curatedWorks = (accueil?.oneshots?.references?.nodes ?? []) as unknown as ScreenWork[];
+  // Curaté : chaque entrée du metaobject « accueil » = une slide (saga ou produit),
+  // dans l'ordre. Si ça donne au moins un écran → curaté, sinon automatique.
+  const slides = (data.accueil?.nodes ?? []) as unknown as AccueilSlide[];
+  const curated = buildCuratedScreens(slides);
   const screens =
-    curatedSagas.length || curatedWorks.length
-      ? buildCuratedScreens(curatedSagas, curatedWorks)
+    curated.length > 0
+      ? curated
       : buildHomeScreens(
           data.sagas.nodes as unknown as SagaNode[],
           data.products.nodes as unknown as ScreenWork[],

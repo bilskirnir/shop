@@ -155,22 +155,27 @@ export function buildHomeScreens(
   return out;
 }
 
+/** Une entrée du metaobject `accueil` = une slide (réf. saga OU réf. produit). */
+export interface AccueilSlide {
+  saga?: {reference?: SagaNode | null} | null;
+  produit?: {reference?: ScreenWork | null} | null;
+}
+
 /**
- * CURATÉ : sagas (dans l'ordre) puis one-shots (dans l'ordre), composés dans l'admin
- * (metaobject `accueil`, champs `sagas` + `oneshots`). Un one-shot curaté est affiché
- * même sans le flag « œuvre indépendante » (l'admin l'a explicitement placé là).
+ * CURATÉ : une slide par entrée du metaobject `accueil`, dans l'ordre des entrées.
+ * Chaque slide pointe vers une saga ou un produit (one-shot affiché même sans le
+ * flag « œuvre indépendante », puisque l'admin l'a explicitement placé là).
  */
 export function buildCuratedScreens(
-  sagas: ReadonlyArray<SagaNode>,
-  works: ReadonlyArray<ScreenWork>,
+  slides: ReadonlyArray<AccueilSlide>,
 ): HomeScreen[] {
   const out: HomeScreen[] = [];
-  for (const s of sagas) {
-    const screen = sagaScreen(s);
-    if (screen) out.push(screen);
-  }
-  for (const w of works) {
-    const screen = workScreen(w, false);
+  for (const slide of slides) {
+    const screen = slide.saga?.reference
+      ? sagaScreen(slide.saga.reference)
+      : slide.produit?.reference
+        ? workScreen(slide.produit.reference, false)
+        : null;
     if (screen) out.push(screen);
   }
   return out;

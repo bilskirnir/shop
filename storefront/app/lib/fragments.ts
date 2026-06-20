@@ -361,22 +361,19 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
 ` as const;
 
 /**
- * Metaobject `accueil` (singleton) : DEUX listes ordonnées — `sagas` (références
- * saga) + `oneshots` (références produit). Contrainte Shopify : une liste ne
- * référence qu'un seul type. Affichage = sagas (dans l'ordre) puis one-shots (dans
- * l'ordre). Si les deux sont vides → automatique. Réutilise HomeSaga + TileProduct.
+ * Metaobject `accueil` = UNE slide par entrée (l'ordre des entrées = l'ordre des
+ * slides). Champs : `saga` (réf. saga) OU `produit` (réf. produit). Pensé pour
+ * accueillir à terme des champs propres à la slide (ex. macaron « nouveauté »).
+ * Si aucune slide ne donne d'écran → automatique. Réutilise HomeSaga + TileProduct.
  */
 export const HOME_ACCUEIL_FRAGMENT = `#graphql
   fragment HomeAccueil on Metaobject {
-    sagas: field(key: "sagas") {
-      references(first: 20) {
-        nodes { ... on Metaobject { ...HomeSaga } }
-      }
+    handle
+    saga: field(key: "saga") {
+      reference { ... on Metaobject { ...HomeSaga } }
     }
-    oneshots: field(key: "oneshots") {
-      references(first: 20) {
-        nodes { ... on Product { ...TileProduct } }
-      }
+    produit: field(key: "produit") {
+      reference { ... on Product { ...TileProduct } }
     }
   }
 ` as const;

@@ -114,16 +114,19 @@ describe('buildHomeScreens', () => {
 });
 
 describe('buildCuratedScreens', () => {
-  it('affiche les sagas (ordre) puis les one-shots (ordre) ; one-shot sans flag accepté', () => {
-    // flag false : en curaté on l'affiche quand même (l'admin l'a placé là)
-    const workN = work({estUneOeuvreIndependante: {value: 'false'}});
-    const screens = buildCuratedScreens([sagaNode()], [workN]);
-    expect(screens.map((s) => s.kind)).toEqual(['saga', 'oneshot']);
-    expect(screens[0].title).toBe("De l'eau et du sang");
-    expect(screens[1].title).toBe('Berserker');
+  it("respecte l'ordre des slides (saga/produit entrelacés) ; one-shot sans flag accepté", () => {
+    const slides = [
+      // flag false : en curaté on l'affiche quand même (l'admin l'a placé là)
+      {produit: {reference: work({estUneOeuvreIndependante: {value: 'false'}})}},
+      {saga: {reference: sagaNode()}},
+    ];
+    const screens = buildCuratedScreens(slides);
+    expect(screens.map((s) => s.kind)).toEqual(['oneshot', 'saga']);
+    expect(screens[0].title).toBe('Berserker');
+    expect(screens[1].title).toBe("De l'eau et du sang");
   });
 
-  it('exclut un one-shot curaté sans couverture', () => {
-    expect(buildCuratedScreens([], [work({featuredImage: null})])).toHaveLength(0);
+  it('ignore une slide vide (ni saga ni produit)', () => {
+    expect(buildCuratedScreens([{}])).toHaveLength(0);
   });
 });
