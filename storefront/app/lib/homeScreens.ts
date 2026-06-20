@@ -41,6 +41,8 @@ export interface ScreenWork {
   featuredImage?: {url: string; altText?: string | null} | null;
   teaserCourt?: MV | null;
   statutParution?: MV | null;
+  /** Univers du produit (`custom.univers`) → couleur du halo (couleur_theme). */
+  univers?: {reference?: {couleurTheme?: MV | null} | null} | null;
 }
 
 export interface HomeScreen {
@@ -130,7 +132,8 @@ function workScreen(w: ScreenWork, requireFlag = true): HomeScreen | null {
     title: w.title,
     lore: richTextToPlain(w.teaserCourt?.value).trim() || null,
     author: null,
-    accent: null,
+    // halo = couleur de l'univers du produit (comme la saga hérite du sien)
+    accent: resolveAccentColor(null, w.univers?.reference?.couleurTheme?.value),
     covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],
     background: null,
     href: `/products/${w.handle}`,

@@ -111,6 +111,15 @@ describe('buildHomeScreens', () => {
   it('exclut une œuvre indépendante sans couverture', () => {
     expect(buildHomeScreens([], [work({featuredImage: null})])).toHaveLength(0);
   });
+
+  it("hérite la couleur du halo de l'univers du produit", () => {
+    const w = work({univers: {reference: {couleurTheme: {value: '#7a3b2e'}}}});
+    expect(buildHomeScreens([], [w])[0].accent).toBe('#7a3b2e');
+  });
+
+  it('accent null si le produit (ou son univers) n\'a pas de couleur', () => {
+    expect(buildHomeScreens([], [work()])[0].accent).toBeNull();
+  });
 });
 
 describe('buildCuratedScreens', () => {

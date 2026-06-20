@@ -272,6 +272,7 @@ export const TOME_METAFIELDS_FRAGMENT = `#graphql
       reference {
         ... on Collection {
           id handle title
+          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
         }
       }
     }
