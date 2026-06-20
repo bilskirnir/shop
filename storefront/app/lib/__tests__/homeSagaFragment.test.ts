@@ -18,7 +18,7 @@ describe('HOME_SAGA_FRAGMENT', () => {
     expect(HOME_SAGA_FRAGMENT).toContain('references(first: 8)');
     expect(HOME_SAGA_FRAGMENT).toContain('... on Product');
     expect(HOME_SAGA_FRAGMENT).toContain('... on Collection');
-    expect(HOME_SAGA_FRAGMENT).toContain('key: "couleur_theme"');
+    expect(HOME_SAGA_FRAGMENT).toContain('key: "couleur"');
     expect(HOME_SAGA_FRAGMENT).toContain('key: "illustration_hero"');
     expect(HOME_SAGA_FRAGMENT).toContain('... on MediaImage');
     expect(HOME_SAGA_FRAGMENT).toContain('featuredImage { url altText }');

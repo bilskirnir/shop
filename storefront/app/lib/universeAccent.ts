@@ -3,7 +3,7 @@ import type {CSSProperties} from 'react';
 const HEX = /^#([0-9a-f]{6})$/i;
 
 /**
- * Convertit une couleur maîtresse d'univers (metafield `couleur_theme`, hex)
+ * Convertit une couleur maîtresse d'univers (metafield `custom.couleur`, hex)
  * en style inline portant les CSS vars d'accent, à poser sur le conteneur de
  * page. Retourne `{}` (donc défaut neutre doré des tokens) si absent/invalide.
  */

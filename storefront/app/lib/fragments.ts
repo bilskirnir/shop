@@ -272,7 +272,7 @@ export const TOME_METAFIELDS_FRAGMENT = `#graphql
       reference {
         ... on Collection {
           id handle title
-          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+          couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
         }
       }
     }
@@ -316,7 +316,7 @@ export const UNIVERSE_RAIL_FRAGMENT = `#graphql
     id
     handle
     title
-    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
     estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
   }
 ` as const;
@@ -326,7 +326,7 @@ export const UNIVERSE_INDEX_FRAGMENT = `#graphql
     id
     handle
     title
-    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
     genre: metafield(namespace: "custom", key: "genre") { value }
     lore: metafield(namespace: "custom", key: "lore") { value }
     estUneOeuvreIndependante: metafield(namespace: "custom", key: "est_une_oeuvre_independante") { value }
@@ -349,7 +349,7 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
     }
     lore: metafield(namespace: "custom", key: "lore") { value }
     genre: metafield(namespace: "custom", key: "genre") { value }
-    couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+    couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
     sagas: metafield(namespace: "custom", key: "sagas") {
       references(first: 10) {
         nodes {
@@ -421,7 +421,7 @@ export const HOME_SAGA_FRAGMENT = `#graphql
         ... on Collection {
           handle
           title
-          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+          couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
           illustrationHero: metafield(namespace: "custom", key: "illustration_hero") {
             reference { ... on MediaImage { image { url } } }
           }

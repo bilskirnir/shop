@@ -64,7 +64,7 @@ const PRODUCT_FRAGMENT = `#graphql
         ... on Collection {
           handle
           title
-          couleurTheme: metafield(namespace: "custom", key: "couleur_theme") { value }
+          couleurTheme: metafield(namespace: "custom", key: "couleur") { value }
           genre: metafield(namespace: "custom", key: "genre") { value }
           products(first: 8) {
             nodes {

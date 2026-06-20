@@ -41,7 +41,7 @@ export interface ScreenWork {
   featuredImage?: {url: string; altText?: string | null} | null;
   teaserCourt?: MV | null;
   statutParution?: MV | null;
-  /** Univers du produit (`custom.univers`) → couleur du halo (couleur_theme). */
+  /** Univers du produit (`custom.univers`) → couleur du halo (`custom.couleur`). */
   univers?: {reference?: {couleurTheme?: MV | null} | null} | null;
   /** Auteur du produit (metaobject `custom.auteur` → champ `nom`), affiché « Par … ». */
   auteur?: {reference?: {nom?: MV | null} | null} | null;
