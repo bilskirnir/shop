@@ -1,6 +1,8 @@
 export interface FanCover {
   url: string;
   altText: string;
+  /** Lien vers la fiche produit (couverture cliquable). Absent = couverture décorative. */
+  href?: string | null;
 }
 
 export interface FanProduct {

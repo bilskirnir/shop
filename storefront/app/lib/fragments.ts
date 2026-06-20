@@ -409,6 +409,7 @@ export const HOME_SAGA_FRAGMENT = `#graphql
       references(first: 8) {
         nodes {
           ... on Product {
+            handle
             featuredImage { url altText }
             auteur: metafield(namespace: "custom", key: "auteur") {
               reference {

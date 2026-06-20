@@ -9,6 +9,7 @@ import type {FanCover} from '~/lib/universeFan';
 
 interface MV {value?: string | null}
 interface ProductCover {
+  handle?: string | null;
   featuredImage?: {url: string; altText?: string | null} | null;
   /** Lien produit → metaobject Auteur (`custom.auteur`) ; nom via le champ `nom`. */
   auteur?: {reference?: {nom?: MV | null} | null} | null;
@@ -103,7 +104,11 @@ function coversInOrder(nodes: ProductCover[]): FanCover[] {
   return nodes
     .map((p) =>
       p.featuredImage?.url
-        ? {url: p.featuredImage.url, altText: p.featuredImage.altText ?? ''}
+        ? {
+            url: p.featuredImage.url,
+            altText: p.featuredImage.altText ?? '',
+            href: p.handle ? `/products/${p.handle}` : null,
+          }
         : null,
     )
     .filter((c): c is FanCover => c !== null)
@@ -163,7 +168,13 @@ function workScreen(w: ScreenWork, requireFlag = true): HomeScreen | null {
     author: w.auteur?.reference?.nom?.value?.trim() || null,
     // halo = couleur de l'univers du produit (comme la saga hérite du sien)
     accent: resolveAccentColor(null, w.univers?.reference?.couleurTheme?.value),
-    covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],
+    covers: [
+      {
+        url: w.featuredImage.url,
+        altText: w.featuredImage.altText ?? w.title,
+        href: `/products/${w.handle}`,
+      },
+    ],
     background: null,
     rating: null,
     href: `/products/${w.handle}`,
