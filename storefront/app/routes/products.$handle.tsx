@@ -204,7 +204,15 @@ export default function ProductRoute() {
   );
 
   if (isStandalone) {
-    const productColor = product.couleurTheme?.value ?? null;
+    // Accent : couleur propre du produit si elle existe, sinon couleur de son
+    // univers (collection `custom.univers` → `custom.couleur`). Pour un one-shot,
+    // la teinte vit en général sur l'univers (comme sur la home).
+    const standaloneUniverseRef = product.relatedUniverse?.reference;
+    const standaloneUniverseColor =
+      standaloneUniverseRef && 'couleurTheme' in standaloneUniverseRef
+        ? standaloneUniverseRef.couleurTheme?.value ?? null
+        : null;
+    const productColor = product.couleurTheme?.value ?? standaloneUniverseColor;
     const relatedItems: RelatedItem[] = (standalone?.nodes ?? [])
       .filter((p) => parseBool(p.estUneOeuvreIndependante?.value) && p.handle !== product.handle)
       .slice(0, 8)
