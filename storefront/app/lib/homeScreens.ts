@@ -155,24 +155,22 @@ export function buildHomeScreens(
   return out;
 }
 
-/** Un slide curaté = soit une saga (Metaobject), soit un produit one-shot. */
-export type CuratedNode =
-  | ({__typename: 'Metaobject'} & SagaNode)
-  | ({__typename: 'Product'} & ScreenWork);
-
 /**
- * CURATÉ : liste ordonnée de slides composée dans l'admin (metaobject `accueil`,
- * champ `slides` = références mixtes sagas + produits). L'ordre est respecté tel quel.
+ * CURATÉ : sagas (dans l'ordre) puis one-shots (dans l'ordre), composés dans l'admin
+ * (metaobject `accueil`, champs `sagas` + `oneshots`). Un one-shot curaté est affiché
+ * même sans le flag « œuvre indépendante » (l'admin l'a explicitement placé là).
  */
 export function buildCuratedScreens(
-  nodes: ReadonlyArray<CuratedNode>,
+  sagas: ReadonlyArray<SagaNode>,
+  works: ReadonlyArray<ScreenWork>,
 ): HomeScreen[] {
   const out: HomeScreen[] = [];
-  for (const n of nodes) {
-    const screen =
-      n.__typename === 'Product'
-        ? workScreen(n, false) // curaté → on n'exige pas le flag
-        : sagaScreen(n);
+  for (const s of sagas) {
+    const screen = sagaScreen(s);
+    if (screen) out.push(screen);
+  }
+  for (const w of works) {
+    const screen = workScreen(w, false);
     if (screen) out.push(screen);
   }
   return out;

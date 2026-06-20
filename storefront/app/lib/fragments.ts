@@ -361,20 +361,21 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
 ` as const;
 
 /**
- * Metaobject `accueil` (singleton) : champ `slides` = liste de références MIXTES
- * (sagas + produits one-shots), dans l'ordre choisi par l'admin. Si présent et non
- * vide → pilote l'accueil ; sinon on retombe sur l'automatique (toutes les sagas +
- * one-shots flaggés). Réutilise HomeSaga (saga) et TileProduct (one-shot).
+ * Metaobject `accueil` (singleton) : DEUX listes ordonnées — `sagas` (références
+ * saga) + `oneshots` (références produit). Contrainte Shopify : une liste ne
+ * référence qu'un seul type. Affichage = sagas (dans l'ordre) puis one-shots (dans
+ * l'ordre). Si les deux sont vides → automatique. Réutilise HomeSaga + TileProduct.
  */
 export const HOME_ACCUEIL_FRAGMENT = `#graphql
   fragment HomeAccueil on Metaobject {
-    slides: field(key: "slides") {
-      references(first: 30) {
-        nodes {
-          __typename
-          ... on Metaobject { ...HomeSaga }
-          ... on Product { ...TileProduct }
-        }
+    sagas: field(key: "sagas") {
+      references(first: 20) {
+        nodes { ... on Metaobject { ...HomeSaga } }
+      }
+    }
+    oneshots: field(key: "oneshots") {
+      references(first: 20) {
+        nodes { ... on Product { ...TileProduct } }
       }
     }
   }

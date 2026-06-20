@@ -4,7 +4,6 @@ import {SagaScroller} from '~/components/SagaScroller';
 import {
   buildHomeScreens,
   buildCuratedScreens,
-  type CuratedNode,
   type SagaNode,
   type ScreenWork,
 } from '~/lib/homeScreens';
@@ -46,12 +45,15 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  // Curaté (metaobject « accueil ») si renseigné, sinon automatique.
-  const curated = (data.accueil?.nodes?.[0] as {slides?: {references?: {nodes: unknown[]}}} | undefined)
-    ?.slides?.references?.nodes as unknown as CuratedNode[] | undefined;
+  // Curaté (metaobject « accueil » : listes `sagas` + `oneshots`) si renseigné, sinon auto.
+  const accueil = data.accueil?.nodes?.[0] as
+    | {sagas?: {references?: {nodes: unknown[]}}; oneshots?: {references?: {nodes: unknown[]}}}
+    | undefined;
+  const curatedSagas = (accueil?.sagas?.references?.nodes ?? []) as unknown as SagaNode[];
+  const curatedWorks = (accueil?.oneshots?.references?.nodes ?? []) as unknown as ScreenWork[];
   const screens =
-    curated && curated.length > 0
-      ? buildCuratedScreens(curated)
+    curatedSagas.length || curatedWorks.length
+      ? buildCuratedScreens(curatedSagas, curatedWorks)
       : buildHomeScreens(
           data.sagas.nodes as unknown as SagaNode[],
           data.products.nodes as unknown as ScreenWork[],
