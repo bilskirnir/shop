@@ -15,8 +15,8 @@
 .bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:calc(.21 * var(--halo-mul,1))}
 /* un seul livre → halo encore moitié moins fort (parfait à 2 livres, trop fort à 1) */
 .bsk-saga-panel:has(.uni-fan--1) .bsk-saga-halo{--halo-mul:.5}
-.bsk-saga-mist{position:absolute;inset:0;z-index:5;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
-.bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:2;will-change:transform,opacity}
+.bsk-saga-mist{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(180deg,transparent 40%,var(--bsk-ink) 90%)}
+.bsk-saga-fan{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:260px;z-index:6;will-change:transform,opacity}
 .bsk-saga-text{position:relative;z-index:6;max-width:520px}
 .bsk-saga-title{font-family:var(--bsk-font-display);font-weight:800;font-size:clamp(34px,11vw,44px);line-height:.9;letter-spacing:-.02em;margin:10px 0 12px}
 .bsk-saga-author{font-family:var(--bsk-font-sans);font-size:13px;letter-spacing:.04em;color:var(--bsk-uni);opacity:.9;margin:0 0 12px}
