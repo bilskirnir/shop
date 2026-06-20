@@ -29,17 +29,7 @@ export function TomeCard({
   coverFixed = false,
 }: TomeCardProps) {
   return (
-    <Link
-      className="tome-card"
-      to={`/products/${handle}`}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        textDecoration: 'none',
-        color: 'inherit',
-        textAlign: 'center',
-      }}
-    >
+    <Link className="tome-card" to={`/products/${handle}`}>
       <div className="cat-cover-wrap" style={{position: 'relative'}}>
         {halo ? (
           <span
@@ -64,49 +54,13 @@ export function TomeCard({
           <Cover image={cover} bleed />
         )}
       </div>
-      <div
-        style={{
-          marginTop: 'var(--bsk-space-4)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--bsk-space-1)',
-        }}
-      >
+      <div className="tome-card-meta">
         {tomeNumber != null ? (
-          <span
-            style={{
-              fontFamily: 'var(--bsk-font-sans)',
-              fontSize: 'var(--bsk-text-xs)',
-              letterSpacing: 'var(--bsk-tracking-widest)',
-              textTransform: 'uppercase',
-              color: 'var(--bsk-fg-secondary)',
-            }}
-          >
-            TOME {tomeNumber}
-          </span>
+          <span className="tome-card-tome">TOME {tomeNumber}</span>
         ) : null}
-        <span
-          style={{
-            fontFamily: 'var(--bsk-font-display)',
-            fontWeight: 'var(--bsk-weight-medium)',
-            fontSize: 'var(--bsk-text-lg)',
-            color: 'var(--bsk-fg-primary)',
-            letterSpacing: 'var(--bsk-tracking-tight)',
-            lineHeight: 1.15,
-          }}
-        >
-          {title}
-        </span>
+        <span className="tome-card-title">{title}</span>
         {status === 'publié' && priceFormatted ? (
-          <span
-            style={{
-              fontFamily: 'var(--bsk-font-sans)',
-              fontSize: 'var(--bsk-text-base)',
-              color: 'var(--bsk-accent-gold)',
-            }}
-          >
-            {priceFormatted}
-          </span>
+          <span className="tome-card-price">{priceFormatted}</span>
         ) : null}
       </div>
     </Link>

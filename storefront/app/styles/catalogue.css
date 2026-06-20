@@ -60,7 +60,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  --tome-cover-h: 240px;
 }
 
 .cat-cover-wrap {
@@ -76,10 +75,11 @@
   pointer-events: none;
 }
 
-/* Couverture à hauteur fixe (object-fit: cover) + hover */
+/* Couverture plein cadre 2:3 (remplit la largeur de colonne) + hover */
 .tome-card-cover-box {
-  height: var(--tome-cover-h, 240px);
-  border-radius: 6px;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
   transition: transform 0.35s var(--bsk-ease), box-shadow 0.35s var(--bsk-ease);
@@ -99,11 +99,49 @@
   transform: scale(1.05);
 }
 
+/* Carte : couverture + méta centrée */
+.tome-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+}
+.tome-card-meta {
+  margin-top: var(--bsk-space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.tome-card-tome {
+  font-family: var(--bsk-font-sans);
+  font-size: var(--bsk-text-xs);
+  letter-spacing: var(--bsk-tracking-widest);
+  text-transform: uppercase;
+  color: var(--bsk-fg-secondary);
+}
+.tome-card-title {
+  font-family: var(--bsk-font-display);
+  font-weight: var(--bsk-weight-medium);
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--bsk-fg-primary);
+}
+.tome-card-price {
+  font-family: var(--bsk-font-sans);
+  font-size: var(--bsk-text-sm);
+  font-weight: var(--bsk-weight-semibold);
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--bsk-uni);
+}
+
 @media (min-width: 860px) {
   .cat-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--bsk-space-8) var(--bsk-space-6);
-    --tome-cover-h: 320px;
   }
   .cat-h1 {
     font-size: var(--bsk-text-3xl);
