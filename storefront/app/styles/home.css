@@ -5,7 +5,10 @@
 .bsk-track-panel{height:100dvh}
 
 .bsk-saga-panel{position:relative;height:100%;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
-.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55}
+.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55;will-change:transform;transform-origin:center;animation:kenBurns 26s ease-in-out infinite alternate}
+/* Ken Burns : zoom + léger pan continu. On démarre à scale>1 pour ne jamais
+   dévoiler les bords (le voile ::after suit, car porté par le même élément). */
+@keyframes kenBurns{0%{transform:scale(1.06) translate(0,0)}100%{transform:scale(1.16) translate(-2%,-1.5%)}}
 /* voile de couleur (couleur de la saga) qui unifie l'image et donne le ton */
 .bsk-saga-bg::after{content:"";position:absolute;inset:0;background:var(--bsk-uni);opacity:.32;mix-blend-mode:soft-light}
 .bsk-saga-halo{left:50%;top:60px;width:380px;height:380px;transform:translateX(-50%);opacity:calc(.21 * var(--halo-mul,1))}
@@ -109,5 +112,5 @@
 @media (prefers-reduced-motion: reduce){
   .bsk-track{transition:none}
   .bsk-saga-text > *,.bsk-saga-fan,.bsk-track-panel--footer .bsk-footer-inner{opacity:1 !important;transform:none !important;animation:none !important}
-  .bsk-saga-fan .uni-fan-cover,.bsk-saga-halo,.bsk-saga-cue,.bsk-rating,.bsk-rating-star{animation:none}
+  .bsk-saga-fan .uni-fan-cover,.bsk-saga-halo,.bsk-saga-cue,.bsk-rating,.bsk-rating-star,.bsk-saga-bg{animation:none;transform:none}
 }
