@@ -42,11 +42,18 @@ export function SagaPanel({
               screen.rating.readers ? `, ${screen.rating.readers} lecteurs` : ''
             }`}
           >
-            <span className="bsk-rating-star" aria-hidden="true">★</span>
-            <span className="bsk-rating-note">{fmtNote(screen.rating.note)}</span>
-            {screen.rating.readers ? (
-              <span className="bsk-rating-readers">sur {fmtInt(screen.rating.readers)} lecteurs</span>
-            ) : null}
+            <svg className="bsk-rating-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2.2l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.27l-5.9 3.1 1.13-6.57L2.46 9.14l6.6-.96L12 2.2z" />
+            </svg>
+            <span className="bsk-rating-body">
+              <span className="bsk-rating-top">
+                <span className="bsk-rating-note">{fmtNote(screen.rating.note)}</span>
+                <span className="bsk-rating-max">/5</span>
+              </span>
+              {screen.rating.readers ? (
+                <span className="bsk-rating-readers">{fmtInt(screen.rating.readers)} lecteurs</span>
+              ) : null}
+            </span>
           </div>
         ) : null}
       </div>
