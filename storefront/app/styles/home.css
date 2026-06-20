@@ -39,10 +39,16 @@
    par-dessus la section (parallaxe : ils montent plus vite que la piste). */
 .bsk-saga-panel.is-above .bsk-saga-text > *{animation:textOut .85s var(--bsk-ease) both}
 .bsk-saga-panel.is-above .bsk-saga-fan{animation:fanOut .85s var(--bsk-ease) both}
+/* Sortie (en-dessous = on REMONTE au-dessus d'elle) : tout descend + se fond (vers le bas),
+   au lieu de disparaître sèchement. */
+.bsk-saga-panel.is-below .bsk-saga-text > *{animation:textDown .85s var(--bsk-ease) both}
+.bsk-saga-panel.is-below .bsk-saga-fan{animation:fanDown .85s var(--bsk-ease) both}
 @keyframes textIn{from{opacity:0;transform:translateY(54px)}to{opacity:1;transform:translateY(0)}}
 @keyframes textOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-84px)}}
+@keyframes textDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(84px)}}
 @keyframes fanIn{from{opacity:0;transform:translateX(-50%) translateY(64px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes fanOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-120px)}}
+@keyframes fanDown{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(120px)}}
 /* Ambiance (boucles). Flottement DÉCORRÉLÉ : chaque couverture respire à son propre
    rythme (durées + déphasages différents). On anime les propriétés indépendantes
    `translate`/`rotate` → elles composent avec la rotation de l'éventail et le centrage
@@ -82,6 +88,7 @@
   /* éventail desktop centré en translateY(-50%) → on redéfinit l'entrée/sortie qui flottent */
   @keyframes fanIn{from{opacity:0;transform:translateY(calc(-50% + 72px))}to{opacity:1;transform:translateY(-50%)}}
   @keyframes fanOut{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% - 140px))}}
+  @keyframes fanDown{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% + 160px))}}
 }
 
 @media (prefers-reduced-motion: reduce){
