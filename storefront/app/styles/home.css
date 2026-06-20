@@ -5,7 +5,7 @@
 .bsk-track-panel{height:100dvh}
 
 .bsk-saga-panel{position:relative;height:100%;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 40px}
-.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55;will-change:transform;transform-origin:center;animation:bgPan 24s ease-in-out infinite alternate}
+.bsk-saga-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.55;will-change:transform;transform-origin:center;animation:bgPan 44s ease-in-out infinite alternate}
 /* Pan gauche-droite : scale FIXE (1.14) appliqué une fois → on n'anime que le
    translateX (déplacement de calque, fluide même sur GPU modeste). Le scale donne
    ~7% de marge de chaque côté ; on translate ±3% → jamais de bord visible. */
