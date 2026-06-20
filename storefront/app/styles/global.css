@@ -35,7 +35,7 @@ body::after {
   inset: 0;
   z-index: 9998;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.18;
   mix-blend-mode: soft-light;
   background: url("/grain.png");
   background-size: 128px 128px;
