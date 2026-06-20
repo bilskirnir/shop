@@ -138,4 +138,16 @@ describe('buildCuratedScreens', () => {
   it('ignore une slide vide (ni saga ni produit)', () => {
     expect(buildCuratedScreens([{}])).toHaveLength(0);
   });
+
+  it('le fond de la slide prime sur l\'image de la saga', () => {
+    const screens = buildCuratedScreens([
+      {saga: {reference: sagaNode()}, fond: {reference: {image: {url: 'https://x/slide-bg.jpg'}}}},
+    ]);
+    expect(screens[0].background).toBe('https://x/slide-bg.jpg');
+  });
+
+  it('sans fond de slide, on garde l\'image de la saga (repli)', () => {
+    const screens = buildCuratedScreens([{saga: {reference: sagaNode()}}]);
+    expect(screens[0].background).toBe('https://x/banner.webp');
+  });
 });

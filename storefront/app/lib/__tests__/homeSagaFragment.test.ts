@@ -6,6 +6,7 @@ describe('HOME_ACCUEIL_FRAGMENT', () => {
     expect(HOME_ACCUEIL_FRAGMENT).toContain('fragment HomeAccueil on Metaobject');
     expect(HOME_ACCUEIL_FRAGMENT).toContain('field(key: "saga")');
     expect(HOME_ACCUEIL_FRAGMENT).toContain('field(key: "produit")');
+    expect(HOME_ACCUEIL_FRAGMENT).toContain('field(key: "image_de_fond")');
     expect(HOME_ACCUEIL_FRAGMENT).toContain('... on Metaobject { ...HomeSaga }');
     expect(HOME_ACCUEIL_FRAGMENT).toContain('... on Product { ...TileProduct }');
   });

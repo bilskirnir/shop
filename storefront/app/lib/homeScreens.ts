@@ -162,6 +162,8 @@ export function buildHomeScreens(
 export interface AccueilSlide {
   saga?: {reference?: SagaNode | null} | null;
   produit?: {reference?: ScreenWork | null} | null;
+  /** Fond optionnel de la slide (`image_de_fond`) : prime sur l'image saga/produit. */
+  fond?: {reference?: {image?: {url?: string | null} | null} | null} | null;
 }
 
 /**
@@ -179,7 +181,11 @@ export function buildCuratedScreens(
       : slide.produit?.reference
         ? workScreen(slide.produit.reference, false)
         : null;
-    if (screen) out.push(screen);
+    if (!screen) continue;
+    // Le fond posé sur la slide prime ; sinon on garde l'image saga/produit.
+    const slideBg = slide.fond?.reference?.image?.url ?? null;
+    if (slideBg) screen.background = slideBg;
+    out.push(screen);
   }
   return out;
 }
