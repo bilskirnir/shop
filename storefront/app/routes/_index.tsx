@@ -3,10 +3,16 @@ import type {Route} from './+types/_index';
 import {SagaScroller} from '~/components/SagaScroller';
 import {
   buildHomeScreens,
+  buildCuratedScreens,
+  type CuratedNode,
   type SagaNode,
   type ScreenWork,
 } from '~/lib/homeScreens';
-import {HOME_SAGA_FRAGMENT, TILE_PRODUCT_FRAGMENT} from '~/lib/fragments';
+import {
+  HOME_ACCUEIL_FRAGMENT,
+  HOME_SAGA_FRAGMENT,
+  TILE_PRODUCT_FRAGMENT,
+} from '~/lib/fragments';
 
 export const meta: Route.MetaFunction = () => [
   {title: 'Bilskirnir — Des récits héroïques, sans compromis'},
@@ -18,6 +24,9 @@ export const handle = {immersive: true};
 const HOME_QUERY = `#graphql
   query Home($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
+    accueil: metaobjects(type: "accueil", first: 1) {
+      nodes { ...HomeAccueil }
+    }
     sagas: metaobjects(type: "saga", first: 20) {
       nodes { ...HomeSaga }
     }
@@ -25,6 +34,7 @@ const HOME_QUERY = `#graphql
       nodes { ...TileProduct }
     }
   }
+  ${HOME_ACCUEIL_FRAGMENT}
   ${HOME_SAGA_FRAGMENT}
   ${TILE_PRODUCT_FRAGMENT}
 ` as const;
@@ -36,8 +46,15 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  const sagas = data.sagas.nodes as unknown as SagaNode[];
-  const works = data.products.nodes as unknown as ScreenWork[];
-  const screens = buildHomeScreens(sagas, works);
+  // Curaté (metaobject « accueil ») si renseigné, sinon automatique.
+  const curated = (data.accueil?.nodes?.[0] as {slides?: {references?: {nodes: unknown[]}}} | undefined)
+    ?.slides?.references?.nodes as unknown as CuratedNode[] | undefined;
+  const screens =
+    curated && curated.length > 0
+      ? buildCuratedScreens(curated)
+      : buildHomeScreens(
+          data.sagas.nodes as unknown as SagaNode[],
+          data.products.nodes as unknown as ScreenWork[],
+        );
   return <SagaScroller screens={screens} />;
 }

@@ -361,6 +361,26 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
 ` as const;
 
 /**
+ * Metaobject `accueil` (singleton) : champ `slides` = liste de références MIXTES
+ * (sagas + produits one-shots), dans l'ordre choisi par l'admin. Si présent et non
+ * vide → pilote l'accueil ; sinon on retombe sur l'automatique (toutes les sagas +
+ * one-shots flaggés). Réutilise HomeSaga (saga) et TileProduct (one-shot).
+ */
+export const HOME_ACCUEIL_FRAGMENT = `#graphql
+  fragment HomeAccueil on Metaobject {
+    slides: field(key: "slides") {
+      references(first: 30) {
+        nodes {
+          __typename
+          ... on Metaobject { ...HomeSaga }
+          ... on Product { ...TileProduct }
+        }
+      }
+    }
+  }
+` as const;
+
+/**
  * Fragment du metaobject `saga` (interrogé directement via `metaobjects(type:"saga")`).
  * Clés réelles : `nom`, `synopsis` (rich text), `ordre_des_tomes` (liste produits),
  * `univers_parent` (collection), `illustration_hero_de_la_saga` (image — souvent non

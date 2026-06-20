@@ -117,8 +117,10 @@ function sagaScreen(node: SagaNode): HomeScreen | null {
   };
 }
 
-function workScreen(w: ScreenWork): HomeScreen | null {
-  if (!parseBool(w.estUneOeuvreIndependante?.value)) return null;
+function workScreen(w: ScreenWork, requireFlag = true): HomeScreen | null {
+  // En mode AUTO on exige le flag « œuvre indépendante » ; en mode CURATÉ (l'admin
+  // l'a explicitement ajouté à l'accueil) on l'affiche quoi qu'il arrive.
+  if (requireFlag && !parseBool(w.estUneOeuvreIndependante?.value)) return null;
   if (!w.featuredImage?.url) return null;
   const status = parseStatutParution(w.statutParution?.value);
   return {
@@ -136,7 +138,7 @@ function workScreen(w: ScreenWork): HomeScreen | null {
   };
 }
 
-/** Sagas (metaobjects) d'abord, puis one-shots (œuvres indépendantes). */
+/** AUTO : sagas (metaobjects) d'abord, puis one-shots (œuvres indépendantes flaggées). */
 export function buildHomeScreens(
   sagas: ReadonlyArray<SagaNode>,
   works: ReadonlyArray<ScreenWork>,
@@ -148,6 +150,29 @@ export function buildHomeScreens(
   }
   for (const w of works) {
     const screen = workScreen(w);
+    if (screen) out.push(screen);
+  }
+  return out;
+}
+
+/** Un slide curaté = soit une saga (Metaobject), soit un produit one-shot. */
+export type CuratedNode =
+  | ({__typename: 'Metaobject'} & SagaNode)
+  | ({__typename: 'Product'} & ScreenWork);
+
+/**
+ * CURATÉ : liste ordonnée de slides composée dans l'admin (metaobject `accueil`,
+ * champ `slides` = références mixtes sagas + produits). L'ordre est respecté tel quel.
+ */
+export function buildCuratedScreens(
+  nodes: ReadonlyArray<CuratedNode>,
+): HomeScreen[] {
+  const out: HomeScreen[] = [];
+  for (const n of nodes) {
+    const screen =
+      n.__typename === 'Product'
+        ? workScreen(n, false) // curaté → on n'exige pas le flag
+        : sagaScreen(n);
     if (screen) out.push(screen);
   }
   return out;

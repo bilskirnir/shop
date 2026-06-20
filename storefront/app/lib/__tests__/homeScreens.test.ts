@@ -1,5 +1,10 @@
 import {describe, it, expect} from 'vitest';
-import {buildHomeScreens, type SagaNode, type ScreenWork} from '../homeScreens';
+import {
+  buildHomeScreens,
+  buildCuratedScreens,
+  type SagaNode,
+  type ScreenWork,
+} from '../homeScreens';
 
 const cover = (url: string, alt: string) => ({featuredImage: {url, altText: alt}});
 
@@ -105,5 +110,25 @@ describe('buildHomeScreens', () => {
 
   it('exclut une œuvre indépendante sans couverture', () => {
     expect(buildHomeScreens([], [work({featuredImage: null})])).toHaveLength(0);
+  });
+});
+
+describe('buildCuratedScreens', () => {
+  it("respecte l'ordre et mélange sagas + one-shots (one-shot affiché même sans flag)", () => {
+    const sagaN = {__typename: 'Metaobject' as const, ...sagaNode()};
+    // flag à false : en mode curaté on l'affiche quand même (l'admin l'a placé là)
+    const workN = {
+      __typename: 'Product' as const,
+      ...work({estUneOeuvreIndependante: {value: 'false'}}),
+    };
+    const screens = buildCuratedScreens([workN, sagaN]);
+    expect(screens.map((s) => s.kind)).toEqual(['oneshot', 'saga']);
+    expect(screens[0].title).toBe('Berserker');
+    expect(screens[1].title).toBe("De l'eau et du sang");
+  });
+
+  it('exclut un one-shot curaté sans couverture', () => {
+    const workN = {__typename: 'Product' as const, ...work({featuredImage: null})};
+    expect(buildCuratedScreens([workN])).toHaveLength(0);
   });
 });

@@ -1,5 +1,14 @@
 import {describe, it, expect} from 'vitest';
-import {HOME_SAGA_FRAGMENT} from '../fragments';
+import {HOME_SAGA_FRAGMENT, HOME_ACCUEIL_FRAGMENT} from '../fragments';
+
+describe('HOME_ACCUEIL_FRAGMENT', () => {
+  it('cible le metaobject accueil et résout des slides mixtes (saga + produit)', () => {
+    expect(HOME_ACCUEIL_FRAGMENT).toContain('fragment HomeAccueil on Metaobject');
+    expect(HOME_ACCUEIL_FRAGMENT).toContain('field(key: "slides")');
+    expect(HOME_ACCUEIL_FRAGMENT).toContain('... on Metaobject { ...HomeSaga }');
+    expect(HOME_ACCUEIL_FRAGMENT).toContain('... on Product { ...TileProduct }');
+  });
+});
 
 describe('HOME_SAGA_FRAGMENT', () => {
   it('cible le metaobject saga et résout tomes + univers + hero', () => {
