@@ -1,6 +1,5 @@
 /* app/styles/footer.css — footer F3 « encre » (panneau final + global). */
-.bsk-footer{position:relative;overflow:hidden;background:var(--bsk-ink);color:var(--bsk-cream);
-  border-top:1px solid color-mix(in srgb,var(--bsk-cream) 12%,transparent)}
+.bsk-footer{position:relative;overflow:hidden;background:var(--bsk-ink);color:var(--bsk-cream)}
 .bsk-footer--panel{min-height:100dvh;display:flex;align-items:center;border-top:0;scroll-snap-align:start}
 /* image de fond optionnelle du footer : déposer le fichier dans
    storefront/public/footer-bg.jpg (sinon rien ne s'affiche, pas d'erreur). */
