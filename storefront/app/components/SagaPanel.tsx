@@ -51,7 +51,7 @@ export function SagaPanel({
                 <span className="bsk-rating-max">/5</span>
               </span>
               {screen.rating.readers ? (
-                <span className="bsk-rating-readers">{fmtInt(screen.rating.readers)} lecteurs</span>
+                <span className="bsk-rating-readers">{fmtInt(screen.rating.readers)}+ lecteurs</span>
               ) : null}
             </span>
           </div>

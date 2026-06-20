@@ -21,11 +21,11 @@
 .bsk-saga-cue{position:absolute;left:50%;bottom:14px;z-index:6;font-family:var(--bsk-font-sans);font-size:9px;letter-spacing:.2em;text-transform:uppercase;animation:cueBob 1.8s ease-in-out infinite}
 @keyframes cueBob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.3}50%{transform:translateX(-50%) translateY(6px);opacity:.65}}
 /* Cartouche d'avis lecteurs, flottant sous l'éventail (suit aussi les animations du fan) */
-.bsk-rating{display:flex;align-items:center;gap:14px;width:max-content;max-width:96%;margin:26px auto 0;padding:14px 24px 14px 18px;border-radius:18px;color:var(--bsk-cream);background:linear-gradient(135deg,rgba(20,16,12,.66),rgba(20,16,12,.34));border:1px solid color-mix(in srgb,var(--bsk-uni) 45%,transparent);backdrop-filter:blur(10px);box-shadow:0 18px 48px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06),0 0 40px -12px var(--bsk-uni);animation:ratingFloat 5.6s ease-in-out infinite;white-space:nowrap}
+.bsk-rating{display:flex;align-items:center;gap:14px;width:max-content;max-width:96%;margin:66px auto 0;padding:14px 24px 14px 18px;border-radius:18px;color:var(--bsk-cream);background:linear-gradient(135deg,rgba(20,16,12,.66),rgba(20,16,12,.34));border:1px solid color-mix(in srgb,var(--bsk-uni) 45%,transparent);backdrop-filter:blur(10px);box-shadow:0 18px 48px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06),0 0 40px -12px var(--bsk-uni);animation:ratingFloat 5.6s ease-in-out infinite;white-space:nowrap}
 .bsk-rating-star{width:36px;height:36px;flex:none;color:var(--bsk-uni);filter:drop-shadow(0 0 11px color-mix(in srgb,var(--bsk-uni) 75%,transparent));animation:ratingStar 5.6s ease-in-out infinite}
 .bsk-rating-body{display:flex;flex-direction:column;gap:4px;line-height:1}
 .bsk-rating-top{display:flex;align-items:baseline;gap:3px}
-.bsk-rating-note{font-family:var(--bsk-font-display);font-weight:800;font-size:32px;letter-spacing:-.01em}
+.bsk-rating-note{font-family:var(--bsk-font-display);font-weight:800;font-size:27px;letter-spacing:-.01em}
 .bsk-rating-max{font-family:var(--bsk-font-sans);font-size:15px;font-weight:600;opacity:.5}
 .bsk-rating-readers{font-family:var(--bsk-font-sans);font-size:12px;font-weight:500;letter-spacing:.03em;opacity:.7}
 @keyframes ratingFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
