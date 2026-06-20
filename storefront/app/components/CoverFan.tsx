@@ -31,7 +31,14 @@ export function CoverFan({
           >
             <img className="uni-fan-img" src={c.url} alt={c.altText} loading="lazy" />
             <span className="uni-fan-veil" aria-hidden="true">
-              <span className="uni-fan-cta">{ctaLabel}</span>
+              <span className="uni-fan-cta">
+                <span className="uni-fan-cta-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+                {ctaLabel}
+              </span>
             </span>
           </Link>
         ) : (
