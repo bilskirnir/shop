@@ -266,18 +266,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--bsk-space-10);
+    gap: var(--bsk-space-12);
   }
   .fiche-hero-cover {
     flex: 0 0 auto;
     transform: rotate(-2.5deg);
   }
   .fiche-hero-cover .fiche-cover {
-    height: 460px;
+    height: 560px;
   }
   .fiche-buy {
     flex: 1;
-    max-width: 420px;
+    max-width: 600px;
     text-align: left;
   }
   .fiche-title {
