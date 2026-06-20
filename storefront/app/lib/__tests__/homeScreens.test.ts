@@ -112,6 +112,11 @@ describe('buildHomeScreens', () => {
     expect(buildHomeScreens([], [work({featuredImage: null})])).toHaveLength(0);
   });
 
+  it("expose l'auteur d'un produit indépendant (metaobject custom.auteur)", () => {
+    const w = work({auteur: {reference: {nom: {value: 'Gautier Durieux de Madron'}}}});
+    expect(buildHomeScreens([], [w])[0].author).toBe('Gautier Durieux de Madron');
+  });
+
   it("hérite la couleur du halo de l'univers du produit", () => {
     const w = work({univers: {reference: {couleurTheme: {value: '#7a3b2e'}}}});
     expect(buildHomeScreens([], [w])[0].accent).toBe('#7a3b2e');

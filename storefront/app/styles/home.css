@@ -73,6 +73,8 @@
   .bsk-saga-panel{padding:0 6vw 9vh}
   /* couvertures relatives au viewport (--cw) + éventail en FLEX (côte à côte) */
   .bsk-saga-fan{--cw:clamp(294px,22vw,560px);left:auto;right:6vw;top:50%;transform:translateY(-50%);width:auto}
+  /* un seul livre : on l'éloigne du bord droit (sinon trop collé) */
+  .bsk-saga-fan:has(.uni-fan--1){right:12vw}
   .bsk-saga-fan .uni-fan{display:flex;justify-content:center;align-items:flex-start;width:auto;height:auto;margin:0}
   .bsk-saga-fan .uni-fan-cover{position:static;left:auto;top:auto;width:var(--cw);height:auto;aspect-ratio:2 / 3;border-radius:8px}
   .bsk-saga-fan .uni-fan--1 .uni-fan-cover{transform:rotate(-3deg)}

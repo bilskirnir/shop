@@ -43,6 +43,8 @@ export interface ScreenWork {
   statutParution?: MV | null;
   /** Univers du produit (`custom.univers`) → couleur du halo (couleur_theme). */
   univers?: {reference?: {couleurTheme?: MV | null} | null} | null;
+  /** Auteur du produit (metaobject `custom.auteur` → champ `nom`), affiché « Par … ». */
+  auteur?: {reference?: {nom?: MV | null} | null} | null;
 }
 
 export interface HomeScreen {
@@ -131,7 +133,7 @@ function workScreen(w: ScreenWork, requireFlag = true): HomeScreen | null {
     kicker: 'Roman indépendant',
     title: w.title,
     lore: richTextToPlain(w.teaserCourt?.value).trim() || null,
-    author: null,
+    author: w.auteur?.reference?.nom?.value?.trim() || null,
     // halo = couleur de l'univers du produit (comme la saga hérite du sien)
     accent: resolveAccentColor(null, w.univers?.reference?.couleurTheme?.value),
     covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],

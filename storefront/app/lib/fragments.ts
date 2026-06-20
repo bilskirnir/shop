@@ -299,6 +299,13 @@ export const TILE_PRODUCT_FRAGMENT = `#graphql
     title
     featuredImage { url altText width height }
     priceRange { minVariantPrice { amount currencyCode } }
+    auteur: metafield(namespace: "custom", key: "auteur") {
+      reference {
+        ... on Metaobject {
+          nom: field(key: "nom") { value }
+        }
+      }
+    }
     ...TomeMetafields
   }
   ${TOME_METAFIELDS_FRAGMENT}
