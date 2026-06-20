@@ -9,7 +9,6 @@ export function Footer({asPanel = false}: {asPanel?: boolean}) {
   return (
     <footer className={`bsk-footer${asPanel ? ' bsk-footer--panel' : ''}`}>
       <div className="bsk-footer-bg" aria-hidden="true" />
-      <div className="bsk-footer-halo bsk-halo" aria-hidden="true" />
       <div className="bsk-footer-inner">
         <div className="bsk-footer-emblem">
           <Logo height={68} />
