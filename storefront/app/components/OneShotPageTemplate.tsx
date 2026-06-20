@@ -39,7 +39,7 @@ export function OneShotPageTemplate({
         <span className="fiche-emblem" aria-hidden="true">
           ✦
         </span>
-        <Container width="content">
+        <Container width="full">
           <div className="fiche-hero-inner">
             <div className="fiche-hero-cover">
               <ProductGallery images={images} alt={cover.altText ?? title} />
@@ -60,19 +60,19 @@ export function OneShotPageTemplate({
       </section>
 
       <div className="fiche-values-band">
-        <Container width="content">
+        <Container width="full">
           <ValuesBadges />
         </Container>
       </div>
 
-      <Container width="content">
+      <Container width="full">
         <section className="fiche-section fiche-section--read">
           <div className="fiche-k">Le récit</div>
           <div className="fiche-recit-body">{description}</div>
         </section>
       </Container>
 
-      <Container width="content">
+      <Container width="full">
         <section className="fiche-univ-band">
           <span className="fiche-univ-bg" aria-hidden="true" />
           <span className="fiche-univ-scrim" aria-hidden="true" />
@@ -83,14 +83,14 @@ export function OneShotPageTemplate({
         </section>
       </Container>
 
-      <Container width="content">
+      <Container width="full">
         <section className="fiche-section fiche-section--tech">
           <TechSpecs rows={techRows} />
         </section>
       </Container>
 
       {relatedSlot ? (
-        <Container width="content">
+        <Container width="full">
           <div className="fiche-related">{relatedSlot}</div>
         </Container>
       ) : null}
