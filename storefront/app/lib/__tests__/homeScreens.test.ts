@@ -2,6 +2,7 @@ import {describe, it, expect} from 'vitest';
 import {
   buildHomeScreens,
   buildCuratedScreens,
+  parseRating,
   type SagaNode,
   type ScreenWork,
 } from '../homeScreens';
@@ -154,5 +155,32 @@ describe('buildCuratedScreens', () => {
   it('sans fond de slide, on garde l\'image de la saga (repli)', () => {
     const screens = buildCuratedScreens([{saga: {reference: sagaNode()}}]);
     expect(screens[0].background).toBe('https://x/banner.webp');
+  });
+
+  it('attache la note + le nombre de lecteurs portés par la slide', () => {
+    const screens = buildCuratedScreens([
+      {saga: {reference: sagaNode()}, note: {value: '4.7'}, lecteurs: {value: '128'}},
+    ]);
+    expect(screens[0].rating).toEqual({note: 4.7, readers: 128});
+  });
+
+  it('rating null si la slide ne porte pas de note', () => {
+    expect(buildCuratedScreens([{saga: {reference: sagaNode()}}])[0].rating).toBeNull();
+  });
+});
+
+describe('parseRating', () => {
+  it('parse note (point ou virgule) + lecteurs', () => {
+    expect(parseRating('4.7', '128')).toEqual({note: 4.7, readers: 128});
+    expect(parseRating('4,5', '1280')).toEqual({note: 4.5, readers: 1280});
+  });
+  it('lecteurs optionnel (null si absent ou ≤ 0)', () => {
+    expect(parseRating('4.5', null)).toEqual({note: 4.5, readers: null});
+    expect(parseRating('4.5', '0')).toEqual({note: 4.5, readers: null});
+  });
+  it('null si note absente ou invalide (≤ 0)', () => {
+    expect(parseRating(null, '10')).toBeNull();
+    expect(parseRating('0', '5')).toBeNull();
+    expect(parseRating('abc', '5')).toBeNull();
   });
 });

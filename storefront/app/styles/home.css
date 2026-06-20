@@ -20,6 +20,12 @@
 .bsk-saga-cta{margin-top:14px}
 .bsk-saga-cue{position:absolute;left:50%;bottom:14px;z-index:6;font-family:var(--bsk-font-sans);font-size:9px;letter-spacing:.2em;text-transform:uppercase;animation:cueBob 1.8s ease-in-out infinite}
 @keyframes cueBob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.3}50%{transform:translateX(-50%) translateY(6px);opacity:.65}}
+/* Pastille d'avis lecteurs, flottant sous l'éventail (suit les animations du fan) */
+.bsk-rating{display:flex;align-items:center;gap:.45em;width:max-content;max-width:96%;margin:16px auto 0;padding:7px 13px;border-radius:999px;font-family:var(--bsk-font-sans);font-size:12.5px;font-weight:600;line-height:1;color:var(--bsk-cream);background:rgba(10,8,6,.42);border:1px solid color-mix(in srgb,var(--bsk-uni) 38%,transparent);backdrop-filter:blur(7px);box-shadow:0 10px 26px rgba(0,0,0,.4);white-space:nowrap}
+.bsk-rating-star{color:var(--bsk-uni);font-size:13px;line-height:1}
+.bsk-rating-note{font-weight:800;letter-spacing:.01em}
+.bsk-rating-readers{opacity:.66;font-weight:500;letter-spacing:.02em}
+
 .bsk-scroller-dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40}
 
 /* ===================== VIE & ANIMATIONS (fiables) =====================

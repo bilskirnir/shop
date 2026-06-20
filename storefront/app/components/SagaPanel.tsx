@@ -4,6 +4,11 @@ import {universeAccentStyle} from '~/lib/universeAccent';
 import type {HomeScreen} from '~/lib/homeScreens';
 import '~/styles/atoms.css';
 
+/** Note FR (4.7 → « 4,7 »). */
+const fmtNote = (n: number) => String(n).replace('.', ',');
+/** Entier FR avec séparateur de milliers (espace fine), déterministe SSR/client. */
+const fmtInt = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
 export function SagaPanel({
   screen,
   index,
@@ -30,6 +35,20 @@ export function SagaPanel({
       <div className="bsk-saga-halo bsk-halo" aria-hidden="true" />
       <div className="bsk-saga-fan" data-parallax="fan">
         <CoverFan covers={screen.covers} />
+        {screen.rating ? (
+          <div
+            className="bsk-rating"
+            aria-label={`Note moyenne ${fmtNote(screen.rating.note)} sur 5${
+              screen.rating.readers ? `, ${screen.rating.readers} lecteurs` : ''
+            }`}
+          >
+            <span className="bsk-rating-star" aria-hidden="true">★</span>
+            <span className="bsk-rating-note">{fmtNote(screen.rating.note)}</span>
+            {screen.rating.readers ? (
+              <span className="bsk-rating-readers">sur {fmtInt(screen.rating.readers)} lecteurs</span>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       <div className="bsk-grain" aria-hidden="true" />
       <div className="bsk-saga-mist" aria-hidden="true" />

@@ -372,9 +372,10 @@ export const UNIVERSE_DETAIL_FRAGMENT = `#graphql
  * Metaobject `accueil` = UNE slide par entrée (l'ordre des entrées = l'ordre des
  * slides). Champs : `saga` (réf. saga) OU `produit` (réf. produit), plus
  * `image_de_fond` (réf. MediaImage) optionnelle qui prime sur l'image de la
- * saga/du produit. Pensé pour accueillir à terme d'autres champs propres à la
- * slide (ex. macaron « nouveauté »). Si aucune slide ne donne d'écran →
- * automatique. Réutilise HomeSaga + TileProduct.
+ * saga/du produit, et `note_moyenne` (décimal /5) + `nombre_lecteurs` (entier)
+ * pour la pastille d'avis saisie à la main. Pensé pour accueillir à terme
+ * d'autres champs propres à la slide (ex. macaron « nouveauté »). Si aucune
+ * slide ne donne d'écran → automatique. Réutilise HomeSaga + TileProduct.
  */
 export const HOME_ACCUEIL_FRAGMENT = `#graphql
   fragment HomeAccueil on Metaobject {
@@ -382,6 +383,8 @@ export const HOME_ACCUEIL_FRAGMENT = `#graphql
     fond: field(key: "image_de_fond") {
       reference { ... on MediaImage { image { url } } }
     }
+    note: field(key: "note_moyenne") { value }
+    lecteurs: field(key: "nombre_lecteurs") { value }
     saga: field(key: "saga") {
       reference { ... on Metaobject { ...HomeSaga } }
     }

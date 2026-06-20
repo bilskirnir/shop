@@ -47,6 +47,14 @@ export interface ScreenWork {
   auteur?: {reference?: {nom?: MV | null} | null} | null;
 }
 
+/** Avis lecteurs saisis à la main (pastille sous l'éventail). */
+export interface RatingInfo {
+  /** Note moyenne /5 (ex. 4.7). */
+  note: number;
+  /** Nombre de lecteurs/avis, ou null si non renseigné. */
+  readers: number | null;
+}
+
 export interface HomeScreen {
   key: string;
   kind: 'saga' | 'oneshot';
@@ -59,8 +67,26 @@ export interface HomeScreen {
   covers: FanCover[];
   /** Image de fond optionnelle (illustration hero de la saga, sinon de l'univers). */
   background: string | null;
+  /** Avis lecteurs (pastille), posé par la slide accueil. null si absent. */
+  rating: RatingInfo | null;
   href: string;
   ctaLabel: string;
+}
+
+/**
+ * Parse la note + le nombre de lecteurs (chaînes du metaobject). Accepte la
+ * virgule ou le point pour la note. Retourne null si la note est absente/invalide
+ * (≤ 0) ; le nombre de lecteurs reste optionnel (null si absent/invalide).
+ */
+export function parseRating(
+  noteRaw?: string | null,
+  readersRaw?: string | null,
+): RatingInfo | null {
+  if (!noteRaw) return null;
+  const note = parseFloat(String(noteRaw).replace(',', '.'));
+  if (!Number.isFinite(note) || note <= 0) return null;
+  const readers = readersRaw != null ? parseInt(String(readersRaw), 10) : NaN;
+  return {note, readers: Number.isFinite(readers) && readers > 0 ? readers : null};
 }
 
 /** Clés réelles du metaobject `saga` (confirmées sur le store live, 2026-06-19). */
@@ -114,6 +140,7 @@ function sagaScreen(node: SagaNode): HomeScreen | null {
     accent: resolveAccentColor(null, univers?.couleurTheme?.value),
     covers,
     background: sagaHero ?? universHero,
+    rating: null,
     href: univers?.handle
       ? `/collections/${univers.handle}#${node.handle}`
       : '/collections/all',
@@ -138,6 +165,7 @@ function workScreen(w: ScreenWork, requireFlag = true): HomeScreen | null {
     accent: resolveAccentColor(null, w.univers?.reference?.couleurTheme?.value),
     covers: [{url: w.featuredImage.url, altText: w.featuredImage.altText ?? w.title}],
     background: null,
+    rating: null,
     href: `/products/${w.handle}`,
     ctaLabel: status === 'précommande' ? 'Précommander' : 'Découvrir le livre',
   };
@@ -166,6 +194,9 @@ export interface AccueilSlide {
   produit?: {reference?: ScreenWork | null} | null;
   /** Fond optionnel de la slide (`image_de_fond`) : prime sur l'image saga/produit. */
   fond?: {reference?: {image?: {url?: string | null} | null} | null} | null;
+  /** Note moyenne (`note_moyenne`) et nombre de lecteurs (`nombre_lecteurs`). */
+  note?: MV | null;
+  lecteurs?: MV | null;
 }
 
 /**
@@ -187,6 +218,8 @@ export function buildCuratedScreens(
     // Le fond posé sur la slide prime ; sinon on garde l'image saga/produit.
     const slideBg = slide.fond?.reference?.image?.url ?? null;
     if (slideBg) screen.background = slideBg;
+    // Avis lecteurs : portés par la slide (saisis à la main).
+    screen.rating = parseRating(slide.note?.value, slide.lecteurs?.value);
     out.push(screen);
   }
   return out;
