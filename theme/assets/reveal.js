@@ -24,7 +24,9 @@ const fondu = new IntersectionObserver(
     }
   },
   // La « vue » est réduite à sa ligne du milieu : un seul écran à la fois la traverse, quelle que soit sa hauteur.
-  { rootMargin: '-50% 0px -50% 0px' }
+  // root: document est explicite, sinon le navigateur ignore rootMargin dans un cadre d'un autre domaine
+  // (l'aperçu de l'éditeur de thème) et chaque fond déborde sur les écrans voisins.
+  { root: document, rootMargin: '-50% 0px -50% 0px' }
 );
 
 function observer(racine) {
