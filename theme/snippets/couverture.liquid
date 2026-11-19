@@ -11,8 +11,8 @@
   <div class="couverture couverture--{{ taille }} couverture--{{ position | default: 1 }}">
     {{-
       produit.featured_image
-      | image_url: width: 640
-      | image_tag: widths: '320, 480, 640', sizes: '(min-width: 1024px) 300px, 210px', alt: texte_alt, loading: 'lazy'
+      | image_url: width: 900
+      | image_tag: widths: '320, 480, 640, 900', sizes: '(min-width: 1024px) 420px, 210px', alt: texte_alt, loading: 'lazy'
     -}}
   </div>
 {%- endif -%}

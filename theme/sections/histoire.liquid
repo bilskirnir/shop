@@ -88,8 +88,6 @@
     class="ecran histoire"
     style="--halo: {{ halo }}; --halo-fort: {{ halo_fort }}; --halo-doux: {{ halo_doux }};{% if teinte %} --teinte: {{ teinte }};{% endif %}"
   >
-    <div class="histoire__halo" aria-hidden="true"></div>
-
     <div class="histoire__texte" data-reveal>
       {% render 'badge-nouveaute', date: date_recente %}
       {%- if surtitre != blank -%}
@@ -105,6 +103,7 @@
     </div>
 
     <div class="histoire__couvertures">
+      <div class="histoire__halo" aria-hidden="true"></div>
       {%- if saga != blank -%}
         {%- if tome_2 -%}
           {% render 'couverture', produit: tome_1, taille: 'eventail', position: 1 %}
@@ -133,12 +132,14 @@
     overflow: hidden;
   }
 
+  /* Le halo est centré sur les couvertures, quelle que soit leur taille. */
   .histoire__halo {
     position: absolute;
-    left: -40%;
-    top: 40px;
-    width: 180%;
+    left: 50%;
+    top: 50%;
+    width: 180vw;
     height: 560px;
+    transform: translate(-50%, -50%);
     background: radial-gradient(closest-side, var(--halo), transparent 72%);
     pointer-events: none;
   }
@@ -178,22 +179,18 @@
   }
 
   @media (min-width: 1024px) {
+    /* Texte et couvertures resserrés au centre (1100 px au plus), au lieu de coller aux bords. */
     .histoire {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       align-items: center;
       gap: 64px;
-      padding-top: 96px;
-      padding-bottom: 40px;
+      padding: 96px var(--marge-centre) 40px;
     }
 
     .histoire__halo {
-      left: auto;
-      right: -80px;
-      top: 50%;
-      width: 860px;
-      height: 860px;
-      margin-top: -430px;
+      width: 900px;
+      height: 900px;
       background: radial-gradient(closest-side, var(--halo-fort), var(--halo-doux) 45%, transparent 75%);
     }
 

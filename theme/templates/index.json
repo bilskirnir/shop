@@ -2,7 +2,9 @@
   "sections": {
     "ouverture": {
       "type": "ouverture",
-      "settings": {}
+      "settings": {
+        "fondateur_avatar": "shopify://shop_images/avatar-gautier.jpg"
+      }
     },
     "histoire-eau-et-sang": {
       "type": "histoire",
@@ -47,6 +49,7 @@
         "gautier": {
           "type": "personne",
           "settings": {
+            "photo": "shopify://shop_images/avatar-gautier.jpg",
             "nom": "Gautier Durrieu de Madron",
             "role": "Fondateur et auteur"
           }
@@ -54,6 +57,7 @@
         "uriel": {
           "type": "personne",
           "settings": {
+            "photo": "shopify://shop_images/avatar-uriel.jpg",
             "nom": "Uriel Lahoussaye",
             "role": "Direction artistique et couvertures"
           }
