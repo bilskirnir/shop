@@ -1,0 +1,43 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Bilskirnir",
+    "theme_version": "1.0.0",
+    "theme_author": "Uriel Lahoussaye",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Bilskirnir",
+    "settings": [
+      {
+        "type": "number",
+        "id": "nombre_lecteurs",
+        "label": "Nombre de lecteurs",
+        "info": "Affiché à côté de la note sur l'accueil. Laisser vide pour le masquer."
+      },
+      {
+        "type": "number",
+        "id": "nouveaute_jours",
+        "label": "Durée du badge Nouveauté (jours)",
+        "info": "Un livre est « Nouveauté » pendant ce nombre de jours après sa date de parution.",
+        "default": 90
+      }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      }
+    ]
+  }
+]

@@ -1,0 +1,434 @@
+/* Bilskirnir — styles communs à toutes les pages.
+   Référence visuelle : docs/maquette-2026-11-19/ (mobile 390 px, ordinateur 1440 px). */
+
+/* ---------- Couleurs et polices ---------- */
+:root {
+  --encre: #0b0c0e;
+  --ivoire: #ece5d6;
+  --gris-1: #c9c7c2;
+  --gris-2: #a7a6a2;
+  --gris-3: #8d8b86;
+  --or: #d2b06a;
+  --or-fonce: #b08a45;
+  --rond: #17110a;
+  --titre: Buenard, Georgia, serif;
+  --texte: 'Source Sans 3', system-ui, sans-serif;
+  --gouttiere: clamp(24px, 8vw, 120px);
+}
+
+/* ---------- Remise à zéro (reprise du Skeleton) ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+p,
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+/* ---------- Page ---------- */
+html {
+  background: var(--encre);
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* L'accueil défile écran par écran ; pas dans l'éditeur, où il faut pouvoir cliquer chaque section. */
+html.page-index:not(.design-mode) {
+  scroll-snap-type: y mandatory;
+}
+
+body {
+  min-height: 100svh;
+  font-family: var(--texte);
+  color: var(--ivoire);
+  background: transparent;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--ivoire);
+}
+
+a:hover {
+  color: #f5efe2;
+}
+
+h1,
+h2 {
+  font-family: var(--titre);
+  font-weight: 700;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+/* ---------- Utilitaires ---------- */
+
+/* Un écran plein de l'accueil. min-height, jamais height : le contenu doit rester atteignable sur un petit téléphone. */
+.ecran {
+  position: relative;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  padding: 72px var(--gouttiere) 24px;
+}
+
+/* Panneau en verre : fond translucide + flou. */
+.verre {
+  background: #14161ab3;
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid #ece5d614;
+}
+
+/* Petite ligne en capitales au-dessus d'un titre. */
+.surtitre {
+  font-size: clamp(12px, 0.9vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Bouton pilule (snippets/bouton.liquid) ---------- */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bouton--contour {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid #ece5d6b3;
+  color: var(--ivoire);
+}
+
+.bouton--or {
+  position: relative;
+  overflow: hidden;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 56px;
+  padding: 0 8px 0 28px;
+  background: linear-gradient(180deg, var(--or), var(--or-fonce));
+  color: var(--rond);
+  font-weight: 600;
+  font-size: 17px;
+  transition: filter 0.25s;
+}
+
+.bouton--or:hover {
+  color: var(--rond);
+  filter: brightness(1.08);
+}
+
+/* Le reflet qui traverse le bouton de temps en temps. */
+.bouton--or::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 42%, #ece5d61f 50%, transparent 58%);
+  background-size: 250% 100%;
+  animation: reflet 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bouton__fleche {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--rond);
+  color: var(--or);
+}
+
+@media (min-width: 1024px) {
+  .bouton--contour {
+    min-height: 52px;
+    padding: 0 28px;
+    font-size: 16px;
+  }
+
+  .bouton--or {
+    min-height: 60px;
+    padding: 0 9px 0 30px;
+    font-size: 18px;
+  }
+}
+
+/* ---------- Couverture (snippets/couverture.liquid) ---------- */
+.couverture img {
+  width: 100%;
+  border-radius: 3px;
+  box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614;
+}
+
+.couverture--eventail {
+  width: 160px;
+}
+
+.couverture--seule {
+  width: 210px;
+}
+
+.couverture--1 {
+  position: relative;
+  z-index: 1;
+  animation: flotte 6s ease-in-out infinite;
+}
+
+.couverture--2 {
+  animation: flotte2 7s ease-in-out infinite;
+}
+
+/* En éventail, la première couverture chevauche la seconde, posée un peu plus bas. */
+.couverture--eventail.couverture--1 {
+  margin-right: -44px;
+}
+
+.couverture--eventail.couverture--2 {
+  margin-top: 26px;
+}
+
+/* ---------- Badge Nouveauté (snippets/badge-nouveaute.liquid) ---------- */
+.badge-nouveaute {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--or), var(--or-fonce));
+  color: var(--rond);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+  .couverture img {
+    border-radius: 4px;
+    box-shadow: 0 30px 60px -20px #000000e6, 0 0 0 1px #ece5d614;
+  }
+
+  .couverture--eventail {
+    width: 260px;
+  }
+
+  .couverture--seule {
+    width: 300px;
+  }
+
+  .couverture--eventail.couverture--1 {
+    margin-right: -70px;
+  }
+
+  .couverture--eventail.couverture--2 {
+    margin-top: 50px;
+  }
+
+  .badge-nouveaute {
+    padding: 6px 14px;
+  }
+}
+
+/* ---------- Décor fixe (snippets/decor.liquid) ---------- */
+.decor {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--encre);
+}
+
+.decor > * {
+  position: absolute;
+  pointer-events: none;
+}
+
+.decor__foret {
+  inset: 0;
+  background: url('fond-foret.jpg') center bottom / cover no-repeat;
+  opacity: 0.42;
+  filter: saturate(0.7);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
+}
+
+.decor__cretes {
+  left: 0;
+  top: clamp(170px, 30vh, 300px);
+  width: 100%;
+  height: clamp(300px, 45vh, 420px);
+  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+  mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+}
+
+.decor__brume {
+  left: -30%;
+  width: 160%;
+  height: 200px;
+  background: radial-gradient(closest-side, #a4abb52b, transparent);
+  filter: blur(24px);
+  animation: brume 16s ease-in-out infinite alternate;
+}
+
+.decor__brume--haute {
+  top: 180px;
+}
+
+.decor__brume--basse {
+  top: 360px;
+  animation-duration: 22s;
+  animation-direction: alternate-reverse;
+}
+
+.decor__braises {
+  left: -30%;
+  right: -30%;
+  bottom: -160px;
+  height: 320px;
+  background: radial-gradient(50% 60% at 50% 100%, #c2411d4d, #7a1f0e26 45%, transparent 70%);
+  filter: blur(10px);
+  animation: souffle 5s ease-in-out infinite;
+}
+
+.decor__etincelles {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 260px;
+  overflow: hidden;
+}
+
+.etincelle {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: #ffb070;
+  box-shadow: 0 0 6px 2px #ff7a2c, 0 0 16px 4px #e2461e88;
+  opacity: 0;
+}
+
+.decor__grain {
+  inset: 0;
+  background: url('grain.png');
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+}
+
+/* ---------- Apparitions (assets/reveal.js) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-pret [data-reveal] {
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .reveal-pret [data-reveal]:not(.is-active) {
+    opacity: 0.2;
+    transform: translateY(48px) scale(0.96);
+  }
+}
+
+/* ---------- Boucles d'animation ---------- */
+@keyframes brume {
+  from { transform: translateX(-14%); }
+  to { transform: translateX(14%); }
+}
+
+@keyframes souffle {
+  0%, 100% { opacity: 0.7; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.1); }
+}
+
+@keyframes scintille {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.6); }
+}
+
+/* Six trajectoires d'étincelles, reprises de la maquette. */
+@keyframes monte0 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(-35px, -130px); } 85% { opacity: 0.85; } 100% { transform: translate(-50px, -260px); opacity: 0; } }
+@keyframes monte1 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(30px, -115px); } 85% { opacity: 0.85; } 100% { transform: translate(40px, -230px); opacity: 0; } }
+@keyframes monte2 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(-20px, -145px); } 85% { opacity: 0.85; } 100% { transform: translate(-20px, -290px); opacity: 0; } }
+@keyframes monte3 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(42px, -125px); } 85% { opacity: 0.85; } 100% { transform: translate(65px, -250px); opacity: 0; } }
+@keyframes monte4 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(-45px, -107px); } 85% { opacity: 0.85; } 100% { transform: translate(-70px, -215px); opacity: 0; } }
+@keyframes monte5 { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(17px, -135px); } 85% { opacity: 0.85; } 100% { transform: translate(15px, -270px); opacity: 0; } }
+
+@keyframes flotte {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-12px) rotate(-4deg); }
+}
+
+@keyframes flotte2 {
+  0%, 100% { transform: translateY(0) rotate(6deg); }
+  50% { transform: translateY(-16px) rotate(4deg); }
+}
+
+@keyframes lueur {
+  0%, 100% { filter: drop-shadow(0 0 0 #ece5d600); }
+  50% { filter: drop-shadow(0 0 20px #ece5d659); }
+}
+
+@keyframes reflet {
+  0%, 40% { background-position: 130% 0; }
+  100% { background-position: -60% 0; }
+}
+
+@keyframes indice {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* Mouvement réduit : tout s'arrête (les étincelles, invisibles au repos, disparaissent). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

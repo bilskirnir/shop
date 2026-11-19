@@ -1,0 +1,23 @@
+{% comment %}
+  Le décor fixe derrière la page : forêt, crêtes, brume, braises, étincelles, grain.
+  Purement décoratif, il ne bouge pas quand on défile. Styles : assets/base.css (« Décor fixe »).
+{% endcomment %}
+<div class="decor" aria-hidden="true">
+  <div class="decor__brume decor__brume--haute"></div>
+  <div class="decor__brume decor__brume--basse"></div>
+  <div class="decor__foret"></div>
+  <svg class="decor__cretes" viewBox="0 0 390 300" preserveAspectRatio="none">
+    <path d="M0 170 L40 120 L70 140 L120 70 L150 100 L190 40 L235 110 L265 85 L310 135 L350 95 L390 130 L390 300 L0 300 Z" fill="#24262c" opacity="0.5"/>
+    <path d="M0 215 L55 165 L95 190 L140 140 L185 185 L230 150 L280 195 L330 160 L390 200 L390 300 L0 300 Z" fill="#16171b" opacity="0.65"/>
+  </svg>
+  <div class="decor__braises"></div>
+  <div class="decor__etincelles">
+    {%- comment -%} position | largeur | hauteur | trajectoire | durée | décalage | scintillement — valeurs de la maquette {%- endcomment -%}
+    {%- assign etincelles = '60,2.1,3.0,5,5.5,-3.2,0.2|22,3.1,4.3,5,6.2,-2.9,0.5|18,2.4,4.1,4,4.9,-1.9,0.2|58,2.7,2.8,2,7.0,-5.5,0.4|70,2.5,3.9,3,7.5,-3.0,0.5|7,3.1,3.4,3,5.5,-1.2,0.5|81,2.9,4.9,4,5.7,-2.0,0.5|89,2.6,4.5,2,6.7,-6.7,0.3|57,2.8,3.5,0,6.2,-4.4,0.3|15,2.7,4.8,3,5.1,-4.3,0.5|18,1.9,3.1,2,5.6,-2.4,0.5|8,3.0,3.1,5,6.5,-3.8,0.4' | split: '|' -%}
+    {%- for e in etincelles -%}
+      {%- assign v = e | split: ',' -%}
+      <span class="etincelle" style="left: {{ v[0] }}%; width: {{ v[1] }}px; height: {{ v[2] }}px; animation: monte{{ v[3] }} {{ v[4] }}s linear {{ v[5] }}s infinite, scintille {{ v[6] }}s ease-in-out infinite alternate;"></span>
+    {%- endfor -%}
+  </div>
+  <div class="decor__grain"></div>
+</div>
