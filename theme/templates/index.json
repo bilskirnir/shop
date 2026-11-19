@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "ouverture": {
+      "type": "ouverture",
+      "settings": {}
+    },
+    "histoire-eau-et-sang": {
+      "type": "histoire",
+      "settings": {
+        "saga": "saga.de-leau-et-du-sang"
+      }
+    },
+    "histoire-fracture": {
+      "type": "histoire",
+      "settings": {
+        "saga": "saga.fracture"
+      }
+    },
+    "histoire-salvation": {
+      "type": "histoire",
+      "settings": {
+        "livre": "salvation"
+      }
+    },
+    "histoire-crepuscule": {
+      "type": "histoire",
+      "settings": {
+        "saga": "saga.crepuscule-dun-monde",
+        "libelle_bouton": "Voir l'arc final"
+      }
+    },
+    "histoire-berserker": {
+      "type": "histoire",
+      "settings": {
+        "livre": "berserker"
+      }
+    },
+    "histoire-parmi": {
+      "type": "histoire",
+      "settings": {
+        "livre": "parmi-ces-mondes-ici-bas"
+      }
+    },
+    "maison": {
+      "type": "maison",
+      "blocks": {
+        "gautier": {
+          "type": "personne",
+          "settings": {
+            "nom": "Gautier Durrieu de Madron",
+            "role": "Fondateur et auteur"
+          }
+        },
+        "uriel": {
+          "type": "personne",
+          "settings": {
+            "nom": "Uriel Lahoussaye",
+            "role": "Direction artistique et couvertures"
+          }
+        }
+      },
+      "block_order": ["gautier", "uriel"],
+      "settings": {}
+    }
+  },
+  "order": [
+    "ouverture",
+    "histoire-eau-et-sang",
+    "histoire-fracture",
+    "histoire-salvation",
+    "histoire-crepuscule",
+    "histoire-berserker",
+    "histoire-parmi",
+    "maison"
+  ]
+}

@@ -1,0 +1,20 @@
+{% comment %}
+  Pastille « Nouveauté » : visible si `date` (date de parution) est passée depuis moins de
+  `settings.nouveaute_jours` jours. Une date future (livre annoncé) ou absente ne montre rien.
+
+  Usage : {% render 'badge-nouveaute', date: livre.metafields.custom.date_parution.value %}
+{% endcomment %}
+{%- if date != blank -%}
+  {%- liquid
+    assign maintenant = 'now' | date: '%s' | plus: 0
+    assign parution = date | date: '%s' | plus: 0
+    assign age_jours = maintenant | minus: parution | divided_by: 86400
+    assign duree = settings.nouveaute_jours | default: 90
+  -%}
+  {%- if maintenant >= parution and age_jours < duree -%}
+    <span class="badge-nouveaute">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.6 7.4H22l-6 4.6 2.3 7.5L12 17l-6.3 4.5L8 14 2 9.4h7.4z"/></svg>
+      Nouveauté
+    </span>
+  {%- endif -%}
+{%- endif -%}

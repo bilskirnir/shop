@@ -1,0 +1,244 @@
+{% comment %}
+  Un écran de l'accueil pour une histoire : une saga (l'arc entier) ou un livre seul.
+  Gautier choisit l'une ou l'autre ; tout le reste vient des données Shopify :
+
+  | Élément        | Saga                                      | Livre seul                                  |
+  | Couvertures    | 2 premiers tomes en éventail (1 → grande) | l'image du produit, en grand                |
+  | Surtitre       | « N livres · mention_de_lecture »         | « type de produit · mention_de_lecture »    |
+  | Titre, accroche| nom, teaser_court                         | titre, teaser_court                         |
+  | Couleur        | couleur_halo                              | couleur_halo, sinon la couleur de l'univers |
+  | Nouveauté      | la parution la plus récente des tomes     | sa date_parution                            |
+  | Lien           | page de la saga, sinon le 1er tome        | la fiche produit                            |
+
+  Un champ vide ne casse rien : l'élément disparaît, la couleur retombe sur un halo ivoire neutre.
+{% endcomment %}
+{%- liquid
+  assign saga = section.settings.saga
+  assign livre = section.settings.livre
+
+  if saga != blank
+    assign tomes = saga.ordre_des_tomes.value
+    assign nombre = tomes.size | default: 0
+    if nombre > 1
+      assign surtitre_gauche = nombre | append: ' livres'
+    elsif nombre == 1
+      assign surtitre_gauche = '1 livre'
+    endif
+    assign mention = saga.mention_de_lecture.value
+    assign titre = saga.nom.value
+    assign accroche = saga.teaser_court.value
+    assign couleur = saga.couleur_halo.value
+    assign lien = saga.system.url | default: tomes.first.url
+    assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
+
+    # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
+    assign maintenant = 'now' | date: '%s' | plus: 0
+    assign date_recente = nil
+    assign secondes_recentes = 0
+    for tome in tomes
+      assign d = tome.metafields.custom.date_parution.value
+      if d != blank
+        assign s = d | date: '%s' | plus: 0
+        if s <= maintenant and s > secondes_recentes
+          assign secondes_recentes = s
+          assign date_recente = d
+        endif
+      endif
+    endfor
+  elsif livre != blank
+    assign surtitre_gauche = livre.type
+    assign mention = livre.metafields.custom.mention_de_lecture.value
+    assign titre = livre.title
+    assign accroche = livre.metafields.custom.teaser_court.value
+    assign couleur = livre.metafields.custom.couleur_halo.value | default: livre.metafields.custom.univers.value.metafields.custom.couleur.value
+    assign lien = livre.url
+    assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
+    assign date_recente = livre.metafields.custom.date_parution.value
+  endif
+
+  if surtitre_gauche != blank and mention != blank
+    assign surtitre = surtitre_gauche | append: ' · ' | append: mention
+  else
+    assign surtitre = surtitre_gauche | default: mention
+  endif
+
+  if couleur != blank
+    assign halo = couleur | color_modify: 'alpha', 0.25
+    assign halo_fort = couleur | color_modify: 'alpha', 0.4
+    assign halo_doux = couleur | color_modify: 'alpha', 0.14
+    assign teinte = couleur | color_lighten: 20
+  else
+    assign halo = '#ece5d61a'
+    assign halo_fort = '#ece5d626'
+    assign halo_doux = '#ece5d60d'
+  endif
+-%}
+
+{%- if titre != blank -%}
+  <section
+    class="ecran histoire"
+    style="--halo: {{ halo }}; --halo-fort: {{ halo_fort }}; --halo-doux: {{ halo_doux }};{% if teinte %} --teinte: {{ teinte }};{% endif %}"
+  >
+    <div class="histoire__halo" aria-hidden="true"></div>
+
+    <div class="histoire__texte" data-reveal>
+      {% render 'badge-nouveaute', date: date_recente %}
+      {%- if surtitre != blank -%}
+        <p class="surtitre histoire__surtitre">{{ surtitre }}</p>
+      {%- endif -%}
+      <h2>{{ titre }}</h2>
+      {%- if accroche != blank -%}
+        <p class="histoire__accroche">{{ accroche }}</p>
+      {%- endif -%}
+      {%- if lien != blank -%}
+        {% render 'bouton', libelle: libelle, url: lien, variante: 'contour' %}
+      {%- endif -%}
+    </div>
+
+    <div class="histoire__couvertures">
+      {%- if saga != blank -%}
+        {%- if tomes.size > 1 -%}
+          {% render 'couverture', produit: tomes[0], taille: 'eventail', position: 1 %}
+          {% render 'couverture', produit: tomes[1], taille: 'eventail', position: 2 %}
+        {%- elsif tomes.size == 1 -%}
+          {% render 'couverture', produit: tomes[0], taille: 'seule' %}
+        {%- endif -%}
+      {%- else -%}
+        {% render 'couverture', produit: livre, taille: 'seule' %}
+      {%- endif -%}
+    </div>
+  </section>
+{%- elsif request.design_mode -%}
+  <section class="ecran histoire histoire--vide">
+    <p>Choisis une saga ou un livre dans les réglages de cette section.</p>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .histoire {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 36px;
+    padding-top: 64px;
+    overflow: hidden;
+  }
+
+  .histoire__halo {
+    position: absolute;
+    left: -40%;
+    top: 40px;
+    width: 180%;
+    height: 560px;
+    background: radial-gradient(closest-side, var(--halo), transparent 72%);
+    pointer-events: none;
+  }
+
+  .histoire__couvertures {
+    position: relative;
+    order: -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .histoire__texte {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .histoire__surtitre {
+    color: var(--teinte, var(--gris-1));
+  }
+
+  .histoire h2 {
+    font-size: clamp(40px, 5vw, 72px);
+  }
+
+  .histoire__accroche {
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.45;
+    color: var(--gris-1);
+  }
+
+  .histoire--vide {
+    align-items: center;
+    color: var(--gris-2);
+  }
+
+  @media (min-width: 1024px) {
+    .histoire {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 64px;
+      padding-top: 96px;
+      padding-bottom: 40px;
+    }
+
+    .histoire__halo {
+      left: auto;
+      right: -80px;
+      top: 50%;
+      width: 860px;
+      height: 860px;
+      margin-top: -430px;
+      background: radial-gradient(closest-side, var(--halo-fort), var(--halo-doux) 45%, transparent 75%);
+    }
+
+    .histoire__couvertures {
+      order: 0;
+      align-items: center;
+    }
+
+    .histoire__texte {
+      gap: 18px;
+      max-width: 520px;
+    }
+
+    .histoire__accroche {
+      line-height: 1.5;
+    }
+
+    .histoire .bouton {
+      margin-top: 8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Histoire",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Choisis une saga pour présenter un arc entier, ou un livre pour un roman seul. Couvertures, textes et couleur viennent de la fiche Shopify."
+    },
+    {
+      "type": "metaobject",
+      "id": "saga",
+      "label": "Saga",
+      "metaobject_type": "saga"
+    },
+    {
+      "type": "product",
+      "id": "livre",
+      "label": "Livre seul",
+      "info": "Utilisé seulement si aucune saga n'est choisie."
+    },
+    {
+      "type": "text",
+      "id": "libelle_bouton",
+      "label": "Texte du bouton",
+      "info": "Vide : « Entrer dans l'arc » pour une saga, « Voir le livre » pour un livre."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Histoire"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,18 @@
+{% comment %}
+  La couverture d'un livre, qui flotte doucement.
+  - taille 'eventail' : deux couvertures qui se chevauchent (position 1 devant, position 2 derrière).
+  - taille 'seule' : une grande couverture.
+  Un produit sans image ne rend rien. Styles : assets/base.css (« Couverture »).
+
+  Usage : {% render 'couverture', produit: livre, taille: 'eventail', position: 1 %}
+{% endcomment %}
+{%- if produit.featured_image -%}
+  {%- assign texte_alt = 'Couverture : ' | append: produit.title -%}
+  <div class="couverture couverture--{{ taille }} couverture--{{ position | default: 1 }}">
+    {{-
+      produit.featured_image
+      | image_url: width: 640
+      | image_tag: widths: '320, 480, 640', sizes: '(min-width: 1024px) 300px, 210px', alt: texte_alt, loading: 'lazy'
+    -}}
+  </div>
+{%- endif -%}
