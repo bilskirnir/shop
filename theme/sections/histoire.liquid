@@ -224,6 +224,11 @@
       align-items: center;
     }
 
+    /* Une paire de couvertures part du début de sa colonne et déborde à droite, dans la marge. */
+    .histoire__couvertures:has(.couverture--eventail) {
+      justify-content: flex-start;
+    }
+
     .histoire__texte {
       gap: 18px;
       max-width: 640px;

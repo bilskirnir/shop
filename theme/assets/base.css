@@ -211,7 +211,7 @@ h2 {
 
 /* Sur un écran bas, les couvertures rétrécissent pour laisser la place au texte. */
 .couverture--eventail {
-  width: min(160px, 24svh);
+  width: min(180px, 26svh);
 }
 
 .couverture--seule {
@@ -260,8 +260,11 @@ h2 {
   }
 
   /* Grandes sur PC, sans dépasser la hauteur de l'écran. */
+  /* En éventail, chaque couverture suit la largeur de l'écran (240 à 400 px) et ne rétrécit pas
+     avec sa colonne : la paire déborde à droite dans la marge (voir .histoire__couvertures). */
   .couverture--eventail {
-    width: min(340px, 40svh);
+    flex-shrink: 0;
+    width: min(clamp(240px, 22vw, 400px), 47svh);
   }
 
   .couverture--seule {
@@ -269,7 +272,7 @@ h2 {
   }
 
   .couverture--eventail.couverture--1 {
-    margin-right: -90px;
+    margin-right: -110px;
   }
 
   .couverture--eventail.couverture--2 {
