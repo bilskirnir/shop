@@ -202,12 +202,13 @@ h2 {
   box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614;
 }
 
+/* Sur un écran bas, les couvertures rétrécissent pour laisser la place au texte. */
 .couverture--eventail {
-  width: 160px;
+  width: min(160px, 24svh);
 }
 
 .couverture--seule {
-  width: 210px;
+  width: min(210px, 30svh);
 }
 
 .couverture--1 {
@@ -289,11 +290,18 @@ h2 {
 
 .decor__foret {
   inset: 0;
-  background: url('fond-foret.jpg') center bottom / cover no-repeat;
-  opacity: 0.42;
-  filter: saturate(0.7);
+  /* Fond HD (« Fond du site », ressources graphiques), en deux tailles : 1200 px sur mobile, 2560 px sur grand écran. */
+  background: url('fond-site-1200.webp') center bottom / cover no-repeat;
+  /* Le fond HD est déjà sombre : moins atténué que dans la maquette (0.42), sinon il disparaît. */
+  opacity: 0.75;
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
   mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
+}
+
+@media (min-width: 1024px) {
+  .decor__foret {
+    background-image: url('fond-site-2560.webp');
+  }
 }
 
 .decor__cretes {

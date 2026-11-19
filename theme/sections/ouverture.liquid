@@ -84,8 +84,9 @@
     text-align: center;
   }
 
+  /* Le logo rapetisse sur les écrans bas pour que tout tienne. */
   .ouverture__logo {
-    width: 180px;
+    width: min(180px, 22svh);
     margin-bottom: 18px;
     animation: lueur 5s ease-in-out infinite;
   }
@@ -172,6 +173,7 @@
     flex: 1;
     padding-left: 42px;
     text-align: center;
+    white-space: nowrap;
   }
 
   .ouverture__indice {
@@ -185,6 +187,12 @@
     letter-spacing: 0.08em;
     color: var(--gris-1);
     animation: indice 2s ease-in-out infinite;
+  }
+
+  @media (max-height: 700px) {
+    .ouverture__indice {
+      display: none;
+    }
   }
 
   .ouverture__fin {

@@ -19,6 +19,15 @@
   if saga != blank
     assign tomes = saga.ordre_des_tomes.value
     assign nombre = tomes.size | default: 0
+
+    # La liste des tomes se parcourt mais ne s'indexe pas (tomes[0] et tomes.first sont vides) : on prend les deux premiers en boucle.
+    for tome in tomes limit: 2
+      if forloop.first
+        assign tome_1 = tome
+      else
+        assign tome_2 = tome
+      endif
+    endfor
     if nombre > 1
       assign surtitre_gauche = nombre | append: ' livres'
     elsif nombre == 1
@@ -28,7 +37,7 @@
     assign titre = saga.nom.value
     assign accroche = saga.teaser_court.value
     assign couleur = saga.couleur_halo.value
-    assign lien = saga.system.url | default: tomes.first.url
+    assign lien = saga.system.url | default: tome_1.url
     assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
@@ -97,11 +106,11 @@
 
     <div class="histoire__couvertures">
       {%- if saga != blank -%}
-        {%- if tomes.size > 1 -%}
-          {% render 'couverture', produit: tomes[0], taille: 'eventail', position: 1 %}
-          {% render 'couverture', produit: tomes[1], taille: 'eventail', position: 2 %}
-        {%- elsif tomes.size == 1 -%}
-          {% render 'couverture', produit: tomes[0], taille: 'seule' %}
+        {%- if tome_2 -%}
+          {% render 'couverture', produit: tome_1, taille: 'eventail', position: 1 %}
+          {% render 'couverture', produit: tome_2, taille: 'eventail', position: 2 %}
+        {%- elsif tome_1 -%}
+          {% render 'couverture', produit: tome_1, taille: 'seule' %}
         {%- endif -%}
       {%- else -%}
         {% render 'couverture', produit: livre, taille: 'seule' %}

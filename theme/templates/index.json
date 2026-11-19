@@ -7,13 +7,13 @@
     "histoire-eau-et-sang": {
       "type": "histoire",
       "settings": {
-        "saga": "saga.de-leau-et-du-sang"
+        "saga": "de-leau-et-du-sang"
       }
     },
     "histoire-fracture": {
       "type": "histoire",
       "settings": {
-        "saga": "saga.fracture"
+        "saga": "fracture"
       }
     },
     "histoire-salvation": {
@@ -25,7 +25,7 @@
     "histoire-crepuscule": {
       "type": "histoire",
       "settings": {
-        "saga": "saga.crepuscule-dun-monde",
+        "saga": "crepuscule-dun-monde",
         "libelle_bouton": "Voir l'arc final"
       }
     },
