@@ -23,7 +23,9 @@
 </footer>
 
 {% stylesheet %}
+  /* Dernier point d'arrêt du défilement : sur un petit écran, le bas du pied reste atteignable. */
   .pied {
+    scroll-snap-align: end;
     position: relative;
     display: flex;
     flex-direction: column;
