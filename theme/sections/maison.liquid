@@ -1,0 +1,483 @@
+{% comment %}
+  Dernier écran de l'accueil : la maison d'édition, le prochain salon, les personnes,
+  le lien « à la française », et l'inscription aux sorties (formulaire client natif, tag « newsletter »).
+  Le pied de page suit juste dessous et partage l'écran.
+{% endcomment %}
+<section class="ecran maison" id="maison">
+  <div class="maison__braises" aria-hidden="true"></div>
+
+  <div class="maison__grille" data-reveal>
+    <div class="maison__gauche">
+      <img class="maison__logo" src="{{ 'logo-ivoire.svg' | asset_url }}" alt="" width="90" height="90" loading="lazy">
+
+      {%- if section.settings.surtitre != blank -%}
+        <p class="surtitre maison__surtitre">{{ section.settings.surtitre }}</p>
+      {%- endif -%}
+
+      <div class="maison__presentation">{{ section.settings.presentation }}</div>
+
+      {%- if section.settings.salon != blank -%}
+        {%- capture salon -%}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span>Prochain salon : <strong>{{ section.settings.salon }}</strong>{% if section.settings.salon_lien != blank %} →{% endif %}</span>
+        {%- endcapture -%}
+        {%- if section.settings.salon_lien != blank -%}
+          <a class="maison__salon" href="{{ section.settings.salon_lien }}">{{ salon }}</a>
+        {%- else -%}
+          <p class="maison__salon">{{ salon }}</p>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="maison__personnes">
+          {%- for block in section.blocks -%}
+            <div class="maison__personne verre" {{ block.shopify_attributes }}>
+              {%- if block.settings.photo != blank -%}
+                {{ block.settings.photo | image_url: width: 112, height: 112, crop: 'center' | image_tag: alt: block.settings.nom, width: 56, height: 56, loading: 'lazy' }}
+              {%- endif -%}
+              <span>
+                <strong>{{ block.settings.nom }}</strong>
+                {{ block.settings.role }}
+              </span>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="maison__droite">
+      {%- if section.settings.page_valeurs != blank -%}
+        <a class="maison__valeurs verre" href="{{ section.settings.page_valeurs.url }}">
+          {{ section.settings.libelle_valeurs | default: section.settings.page_valeurs.title }}
+          <span class="maison__valeurs-fleche" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      {%- endif -%}
+
+      {%- form 'customer', id: 'inscription-sorties', class: 'maison__inscription' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label for="inscription-email">{{ section.settings.titre_inscription }}</label>
+
+        {%- if form.posted_successfully? -%}
+          <p class="maison__message" role="status">C'est noté, tu recevras les sorties.</p>
+        {%- else -%}
+          <div class="maison__champ verre">
+            <input
+              id="inscription-email"
+              type="email"
+              name="contact[email]"
+              placeholder="ton@email.fr"
+              autocomplete="email"
+              required
+              {% if form.errors %}aria-invalid="true" aria-describedby="inscription-erreur"{% endif %}
+            >
+            <button type="submit" aria-label="S'inscrire">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p class="maison__message maison__message--erreur" id="inscription-erreur" role="alert">
+              {%- if form.errors contains 'email' -%}
+                Cette adresse ne semble pas valide, ou elle est déjà inscrite.
+              {%- else -%}
+                L'inscription n'a pas fonctionné. Réessaie dans un instant.
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* L'écran laisse la place au pied de page dessous (≈ sa hauteur), pour que les deux tiennent ensemble. */
+  .maison {
+    --pied: 100px;
+    min-height: calc(100svh - var(--pied));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 84px;
+    overflow: hidden;
+  }
+
+  .maison__braises {
+    position: absolute;
+    left: -30%;
+    right: -30%;
+    bottom: -140px;
+    height: 440px;
+    background: radial-gradient(50% 60% at 50% 100%, #ece5d673, #b8643c26 45%, transparent 70%);
+    filter: blur(8px);
+    animation: souffle 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .maison__grille,
+  .maison__gauche,
+  .maison__droite {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .maison__grille {
+    gap: 22px;
+  }
+
+  .maison__logo {
+    width: 72px;
+    opacity: 0.4;
+    margin-bottom: 4px;
+  }
+
+  .maison__surtitre {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--gris-2);
+  }
+
+  .maison__presentation {
+    font-size: clamp(17px, 1.6vw, 22px);
+    line-height: 1.5;
+    color: var(--gris-1);
+    max-width: 620px;
+  }
+
+  .maison__presentation strong {
+    color: var(--ivoire);
+    font-weight: 600;
+  }
+
+  .maison__salon {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(13px, 1vw, 15px);
+    color: var(--gris-2);
+    text-decoration: none;
+  }
+
+  .maison__salon svg {
+    color: var(--or);
+  }
+
+  .maison__salon strong {
+    color: var(--ivoire);
+    font-weight: 600;
+  }
+
+  .maison__personnes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .maison__personne {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .maison__personne img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ece5d640;
+  }
+
+  .maison__personne span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--gris-2);
+  }
+
+  .maison__personne strong {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ivoire);
+  }
+
+  .maison__valeurs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 8px 0 16px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .maison__valeurs-fleche {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ece5d614;
+    color: var(--or);
+  }
+
+  .maison__inscription {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .maison__inscription label {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .maison__champ {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 6px 0 18px;
+    border-radius: 999px;
+  }
+
+  .maison__champ input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ivoire);
+    font-size: 16px;
+    outline: none;
+  }
+
+  .maison__champ:focus-within {
+    border-color: #ece5d659;
+  }
+
+  .maison__champ button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(180deg, var(--or), var(--or-fonce));
+    color: var(--rond);
+    cursor: pointer;
+  }
+
+  .maison__message {
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .maison__message--erreur {
+    color: #e0a27e;
+  }
+
+  @media (min-width: 1024px) {
+    .maison {
+      --pied: 70px;
+      justify-content: center;
+      padding-top: 120px;
+      padding-bottom: 40px;
+    }
+
+    .maison__grille {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 80px;
+    }
+
+    .maison__gauche,
+    .maison__droite {
+      gap: 18px;
+    }
+
+    .maison__logo {
+      width: 90px;
+    }
+
+    .maison__surtitre {
+      font-size: 12px;
+    }
+
+    .maison__personnes {
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .maison__personne {
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .maison__personne img {
+      width: 56px;
+      height: 56px;
+    }
+
+    .maison__personne span {
+      font-size: 13px;
+    }
+
+    .maison__personne strong {
+      font-size: 16px;
+    }
+
+    .maison__valeurs {
+      min-height: 60px;
+      padding: 0 10px 0 22px;
+      font-size: 17px;
+    }
+
+    .maison__valeurs-fleche {
+      width: 40px;
+      height: 40px;
+    }
+
+    .maison__inscription {
+      gap: 10px;
+    }
+
+    .maison__inscription label {
+      font-size: 17px;
+    }
+
+    .maison__champ {
+      min-height: 60px;
+      padding: 0 8px 0 22px;
+    }
+
+    .maison__champ input {
+      font-size: 17px;
+    }
+
+    .maison__champ button {
+      width: 44px;
+      height: 44px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "La maison",
+  "max_blocks": 2,
+  "settings": [
+    {
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "La maison"
+    },
+    {
+      "type": "richtext",
+      "id": "presentation",
+      "label": "Présentation",
+      "default": "<p>Une maison d'édition de romans épiques, fondée par <strong>Gautier Durrieu de Madron</strong> : romancier, expert en mythologie, conférencier et vulgarisateur en ligne.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Prochain salon"
+    },
+    {
+      "type": "text",
+      "id": "salon",
+      "label": "Salon",
+      "info": "Ex. : Avignon Geek Expo · 14 mars · Avignon. Vide : la ligne disparaît."
+    },
+    {
+      "type": "url",
+      "id": "salon_lien",
+      "label": "Lien du salon"
+    },
+    {
+      "type": "header",
+      "content": "Page « à la française »"
+    },
+    {
+      "type": "page",
+      "id": "page_valeurs",
+      "label": "Page"
+    },
+    {
+      "type": "text",
+      "id": "libelle_valeurs",
+      "label": "Texte du lien",
+      "default": "Pourquoi « à la française » ?"
+    },
+    {
+      "type": "header",
+      "content": "Inscription aux sorties"
+    },
+    {
+      "type": "text",
+      "id": "titre_inscription",
+      "label": "Titre",
+      "default": "Reçois les sorties"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "personne",
+      "name": "Personne",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "nom",
+          "label": "Nom"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Rôle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "La maison",
+      "blocks": [
+        {
+          "type": "personne",
+          "settings": {
+            "nom": "Gautier Durrieu de Madron",
+            "role": "Fondateur et auteur"
+          }
+        },
+        {
+          "type": "personne",
+          "settings": {
+            "nom": "Uriel Lahoussaye",
+            "role": "Direction artistique et couvertures"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

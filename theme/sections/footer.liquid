@@ -1,0 +1,91 @@
+{% comment %}
+  Pied de page : TikTok et Instagram (les seuls liens qui sortent de la boutique), puis le menu légal.
+  Les adresses des réseaux se règlent dans Paramètres du thème › Réseaux sociaux.
+{% endcomment %}
+<footer class="pied">
+  {%- if settings.social_tiktok_link != blank or settings.social_instagram_link != blank -%}
+    <div class="pied__reseaux">
+      {%- if settings.social_tiktok_link != blank -%}
+        <a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a>
+      {%- endif -%}
+      {%- if settings.social_instagram_link != blank -%}
+        <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="pied__liens">
+    {%- for lien in section.settings.menu.links -%}
+      <a href="{{ lien.url }}">{{ lien.title }}</a>
+    {%- endfor -%}
+    <span>© {{ shop.name }}</span>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .pied {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 var(--gouttiere);
+    padding: 16px 0 28px;
+    border-top: 1px solid #ece5d61a;
+  }
+
+  .pied a {
+    text-decoration: none;
+  }
+
+  .pied__reseaux {
+    display: flex;
+    gap: 18px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .pied__liens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 12px;
+    color: #6f6d69;
+  }
+
+  .pied__liens a {
+    color: var(--gris-3);
+  }
+
+  @media (min-width: 1024px) {
+    .pied {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 40px;
+    }
+
+    .pied__reseaux {
+      gap: 22px;
+      font-size: 15px;
+    }
+
+    .pied__liens {
+      gap: 20px;
+      font-size: 13px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pied de page",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "footer"
+    }
+  ]
+}
+{% endschema %}
