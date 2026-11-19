@@ -1,0 +1,213 @@
+{% comment %}
+  En-tête : barre en verre posée par-dessus la page.
+  Mobile : burger | BILSKIRNIR | panier. Le burger ouvre le menu en plein écran (popover natif : Échap et clic dehors le ferment).
+  Ordinateur : BILSKIRNIR | liens du menu | panier.
+{% endcomment %}
+{%- assign liens = section.settings.menu.links -%}
+
+<header class="entete verre">
+  {%- if liens.size > 0 -%}
+    <button class="entete__burger" type="button" popovertarget="menu-panneau" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  {%- endif -%}
+
+  <a class="entete__marque" href="{{ routes.root_url }}">BILSKIRNIR</a>
+
+  {%- if liens.size > 0 -%}
+    <nav class="entete__liens" aria-label="Menu principal">
+      {%- for lien in liens -%}
+        <a href="{{ lien.url }}"{% if lien.current %} aria-current="page"{% endif %}>{{ lien.title }}</a>
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+
+  <a class="entete__panier" href="{{ routes.cart_url }}">
+    <span class="visually-hidden">Panier, {{ cart.item_count }} article{% if cart.item_count > 1 %}s{% endif %}</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+    {%- if cart.item_count > 0 -%}
+      <span class="entete__compteur" aria-hidden="true">{{ cart.item_count }}</span>
+    {%- endif -%}
+  </a>
+</header>
+
+{%- if liens.size > 0 -%}
+  <div id="menu-panneau" class="menu-panneau verre" popover>
+    <button class="menu-panneau__fermer" type="button" popovertarget="menu-panneau" popovertargetaction="hide" aria-label="Fermer le menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Menu principal">
+      {%- for lien in liens -%}
+        <a href="{{ lien.url }}">{{ lien.title }}</a>
+      {%- endfor -%}
+    </nav>
+  </div>
+{%- endif -%}
+
+{% javascript %}
+  // Un lien du menu vers une ancre de la même page (« /#histoires ») ne recharge rien : on referme le panneau à la main.
+  document.getElementById('menu-panneau')?.addEventListener('click', (event) => {
+    if (event.target.closest('a')) event.currentTarget.hidePopover();
+  });
+{% endjavascript %}
+
+{% stylesheet %}
+  /* Le groupe d'en-tête flotte au-dessus des écrans au lieu de les pousser. */
+  .shopify-section-group-header-group {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 10;
+  }
+
+  .entete {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    height: 52px;
+    margin: 10px 12px;
+    padding: 0 6px;
+    border-radius: 8px;
+  }
+
+  .entete a,
+  .entete button {
+    color: var(--ivoire);
+    text-decoration: none;
+  }
+
+  .entete__burger,
+  .entete__panier,
+  .menu-panneau__fermer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .entete__marque {
+    padding-left: 10px;
+    font-family: var(--titre);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+  }
+
+  .entete__liens {
+    display: none;
+  }
+
+  .entete__panier {
+    grid-column: 3;
+  }
+
+  .entete__compteur {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--or), var(--or-fonce));
+    color: var(--rond);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  /* Panneau du menu, plein écran sur mobile. */
+  .menu-panneau {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 72px 24px 24px;
+    color: var(--ivoire);
+  }
+
+  .menu-panneau::backdrop {
+    background: #0b0c0eb3;
+  }
+
+  .menu-panneau__fermer {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    color: var(--ivoire);
+  }
+
+  .menu-panneau nav {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .menu-panneau nav a {
+    font-family: var(--titre);
+    font-weight: 700;
+    font-size: 34px;
+    text-decoration: none;
+  }
+
+  @media (min-width: 1024px) {
+    .entete {
+      grid-template-columns: 1fr auto 1fr;
+      height: 60px;
+      margin: 16px 40px;
+      padding: 0 10px 0 28px;
+      border-radius: 999px;
+    }
+
+    .entete__burger {
+      display: none;
+    }
+
+    .entete__marque {
+      padding-left: 0;
+      font-size: 16px;
+    }
+
+    .entete__liens {
+      display: flex;
+      gap: 36px;
+    }
+
+    .entete .entete__liens a {
+      color: var(--gris-1);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .entete .entete__liens a:hover,
+    .entete .entete__liens a[aria-current] {
+      color: var(--ivoire);
+    }
+
+    .entete__panier {
+      justify-self: end;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "En-tête",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}
