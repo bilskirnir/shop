@@ -29,7 +29,11 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Synopsis | `synopsis` | Rich text | — | |
 | Ordre des tomes | `ordre_des_tomes` | List of products | — | |
 | Univers parent | `univers_parent` | Collection | ✅ | |
-| Illustration hero de la saga | `illustration_hero_saga` | File (image) | — | |
+| Illustration hero de la saga | `illustration_hero_de_la_saga` | File (image) | — | clé confirmée par sonde le 19/11/2026 |
+| Accroche | `teaser_court` | Multi-line text | — | **à créer** (thème Liquid, accueil) |
+| Couleur du halo | `couleur_halo` | Color | — | **à créer** |
+| Mention de lecture | `mention_de_lecture` | Single line text | — | **à créer** |
+| Particules | `style_particules` | Single line text (choix : `braises`) | — | **à créer** (page arc) |
 
 ---
 
@@ -41,7 +45,7 @@ Namespace : `custom`
 |---|---|---|
 | Illustration hero | `illustration_hero` | File (image) |
 | Lore | `lore` | Rich text |
-| Couleur thème | `couleur_theme` | Single line text (hex) |
+| Couleur thème | `couleur` | Single line text (hex) — clé confirmée par sonde le 19/11/2026 (pas `couleur_theme`) |
 | Sagas | `sagas` | List of metaobject → Saga |
 | Est une œuvre indépendante | `est_une_oeuvre_independante` | Boolean |
 
@@ -66,6 +70,10 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Teaser court | `teaser_court` | Multi-line text | — |
 | Type de goodie | `type_goodie` | Single line text | Choix : `ex-libris` · `illustration` · `marque-page` · `coffret` |
 | Univers associé | `univers_associe` | Collection | — |
+| Couleur du halo | `couleur_halo` | Color | créée le 19/11/2026 (remplace `couleur_theme`, jamais défini) |
+| Nombre de pages | `nombre_pages` | Integer | **à créer** (jamais défini, le code Hydrogen le lisait dans le vide) |
+| Mention de lecture | `mention_de_lecture` | Single line text | **à créer** (thème Liquid, accueil) |
+| Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
 
 ---
 
@@ -127,3 +135,4 @@ query Tome($handle: String!) {
 ## Historique des décisions
 
 - **2026-04-23** : définitions initiales créées. Namespace `custom` unique pour cohérence avec Shopify default. Keys en français snake_case, labels en français avec accents. Synopsis long = `product.description` natif plutôt que metafield. Ordre homepage reporté en Plan 2 via metaobject dédié.
+- **2026-11-19** : clés corrigées d'après une sonde Storefront (`illustration_hero_de_la_saga`, collection `couleur`). Champs à créer pour le thème Liquid ajoutés (voir `docs/superpowers/specs/2026-11-19-theme-liquid-accueil.md`). L'ordre de l'accueil se règle désormais dans l'éditeur de thème (une section par histoire).
