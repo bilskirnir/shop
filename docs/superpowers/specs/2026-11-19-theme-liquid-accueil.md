@@ -52,6 +52,7 @@ Un réglage de **source**, deux pickers, un seul rendu :
 |---|---|---|
 | Saga | metaobject (`saga`) | si rempli, l'écran présente l'arc |
 | Livre | product | sinon, l'écran présente un livre seul |
+| Image de fond | image_picker, facultatif | plein écran, en fondu tant que l'écran est au milieu de la vue, entre la forêt et les particules ; vide → `illustration_hero_de_la_saga` de la saga, sinon rien (ajout du 20/11/2026) |
 | Libellé du bouton | text, facultatif | remplace « Entrer dans l'arc » / « Voir le livre » (ex. « Voir l'arc final ») |
 
 Tout le reste vient des données, pour que Gautier n'écrive rien deux fois :

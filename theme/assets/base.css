@@ -14,8 +14,8 @@
   --titre: Buenard, Georgia, serif;
   --texte: 'Source Sans 3', system-ui, sans-serif;
   --gouttiere: clamp(24px, 8vw, 120px);
-  /* Marge qui garde le contenu des écrans dans une colonne centrée de 1100 px sur grand écran. */
-  --marge-centre: max(var(--gouttiere), (100% - 1100px) / 2);
+  /* Marge qui garde le contenu des écrans dans une colonne centrée de 1280 px sur grand écran. */
+  --marge-centre: max(var(--gouttiere), (100% - 1280px) / 2);
 }
 
 /* ---------- Remise à zéro (reprise du Skeleton) ---------- */
@@ -282,13 +282,21 @@ h2 {
 }
 
 /* ---------- Décor fixe (snippets/decor.liquid) ---------- */
+/* Empilement, du fond vers l'avant : fond (-3) → image d'une histoire (-2) → particules (-1) → contenu. */
 .decor {
   position: fixed;
   inset: 0;
-  z-index: -1;
   overflow: hidden;
   pointer-events: none;
+}
+
+.decor--fond {
+  z-index: -3;
   background: var(--encre);
+}
+
+.decor--particules {
+  z-index: -1;
 }
 
 .decor > * {
