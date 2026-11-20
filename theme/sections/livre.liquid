@@ -55,7 +55,20 @@
         {%- endif -%}
       </p>
       <h1>{% render 'livre-titre', livre: product %}</h1>
-      {%- if product.description != blank -%}
+      {%- comment -%}
+        En haut, l'accroche du livre (custom.teaser_court) pour que le bloc d'achat reste au premier écran ;
+        le résumé complet se déplie dessous. Sans accroche, le résumé s'affiche directement.
+      {%- endcomment -%}
+      {%- assign accroche = product.metafields.custom.teaser_court.value -%}
+      {%- if accroche != blank -%}
+        <p class="arc__synopsis">{{ accroche }}</p>
+        {%- if product.description != blank -%}
+          <details class="livre__resume">
+            <summary>{{ section.settings.libelle_resume }}</summary>
+            <div class="arc__synopsis">{{ product.description }}</div>
+          </details>
+        {%- endif -%}
+      {%- elsif product.description != blank -%}
         <div class="arc__synopsis">{{ product.description }}</div>
       {%- endif -%}
 
@@ -204,6 +217,42 @@
     color: var(--ivoire);
   }
 
+  /* « Lire tout le résumé » : le résumé complet se déplie sous l'accroche. */
+  .livre__resume summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--or);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .livre__resume summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .livre__resume summary::after {
+    content: '+';
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+
+  .livre__resume[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .livre__resume[open] .arc__synopsis {
+    margin-top: 4px;
+    animation: resume-ouvre 0.3s ease-out;
+  }
+
+  @keyframes resume-ouvre {
+    from { opacity: 0; transform: translateY(-4px); }
+  }
+
   .livre__achat {
     display: flex;
     flex-direction: column;
@@ -330,7 +379,7 @@
     }
 
     .livre .arc__couvertures .couverture--seule {
-      width: 340px;
+      width: 400px;
     }
 
     /* Le bloc d'achat de la fiche reste en colonne (prix et bouton sur une ligne, puis le reste). */
@@ -360,6 +409,7 @@
   "name": "Livre — haut",
   "settings": [
     { "type": "text", "id": "ariane_accueil", "label": "Fil d'Ariane : premier lien", "default": "Nos histoires" },
+    { "type": "text", "id": "libelle_resume", "label": "Lien du résumé complet", "default": "Lire tout le résumé" },
     { "type": "text", "id": "libelle_panier", "label": "Bouton d'achat", "default": "Ajouter au panier" },
     { "type": "text", "id": "libelle_indisponible", "label": "Texte si le livre n'est pas en vente", "default": "À paraître" },
     { "type": "header", "content": "Dédicace" },
