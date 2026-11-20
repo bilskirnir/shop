@@ -1,5 +1,5 @@
 {% comment %}
-  Page d'un arc — l'appel final : une question, le prix de l'arc complet, l'offre et le bouton.
+  Page d'un arc — l'appel final : une question, l'offre, et le bouton qui porte le prix de l'arc complet.
   Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
 {% endcomment %}
 {%- liquid
@@ -19,11 +19,12 @@
   <section class="arc-bloc arc-appel" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
     <h2>{{ section.settings.titre }}</h2>
-    <p class="arc-appel__prix">{% render 'arc-total', saga: saga %}</p>
     {%- if section.settings.offre != blank -%}
       <p class="arc-appel__offre">{{ section.settings.offre }}</p>
     {%- endif -%}
-    {% render 'arc-achat', saga: saga, libelle: section.settings.libelle_bouton %}
+    {%- capture total %}{% render 'arc-total', saga: saga %}{% endcapture -%}
+    {%- assign libelle = section.settings.libelle_bouton | append: ' · ' | append: total -%}
+    {% render 'arc-achat', saga: saga, libelle: libelle %}
     <a class="arc-appel__seul" href="{{ tome_1.url }}">ou Livre 1 · {{ tome_1.price | money_without_trailing_zeros }}</a>
   </section>
 {%- endif -%}
@@ -51,13 +52,6 @@
 
   .arc-appel h2 {
     font-size: clamp(30px, 3vw, 44px);
-  }
-
-  .arc-appel__prix {
-    font-family: var(--titre);
-    font-size: clamp(40px, 3.4vw, 48px);
-    font-weight: 700;
-    line-height: 1;
   }
 
   .arc-appel__offre {
