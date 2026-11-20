@@ -1,37 +1,39 @@
 {% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+  La page /cart : le même contenu que le tiroir (snippets/panier-contenu.liquid), en page centrée.
+  Elle sert sans JavaScript, et quand on arrive par un lien direct. Styles : sections/panier.liquid.
 {% endcomment %}
+<div class="panier-page verre">
+  {% render 'panier-contenu', textes: section.settings %}
+  {%- if additional_checkout_buttons and cart.item_count > 0 -%}
+    <div class="panier__express">{{ content_for_additional_checkout_buttons }}</div>
+  {%- endif -%}
+</div>
 
-<h1>{{ 'cart.title' | t }}</h1>
+{% stylesheet %}
+  .panier-page {
+    max-width: 520px;
+    margin: 120px auto 80px;
+    border-radius: 22px;
+    color: var(--ivoire);
+  }
 
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
-
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
+  @media (max-width: 600px) {
+    .panier-page {
+      margin: 88px 12px 40px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.cart",
-  "settings": []
+  "name": "Panier (page)",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Ton panier" },
+    { "type": "text", "id": "livraison_offerte", "label": "Message livraison atteinte", "default": "Livraison en point relais offerte" },
+    { "type": "text", "id": "surtitre_arc", "label": "Surtitre du tome proposé", "default": "Termine l'arc" },
+    { "type": "text", "id": "libelle_payer", "label": "Bouton de paiement", "default": "Payer" },
+    { "type": "text", "id": "texte_vide", "label": "Panier vide : texte", "default": "Ton panier est vide." },
+    { "type": "text", "id": "libelle_vide", "label": "Panier vide : bouton", "default": "Découvrir nos histoires" }
+  ]
 }
 {% endschema %}

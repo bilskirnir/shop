@@ -1,0 +1,162 @@
+{% comment %}
+  Le contenu du panier, partagé par le tiroir (sections/panier.liquid) et la page /cart (sections/cart.liquid).
+  Jauge vers la livraison offerte (réglage du thème « Livraison offerte dès »), lignes avec couverture,
+  « Saga · Livre n », prénom de la dédicace et badge « Arc complet », bloc « Termine l'arc » qui propose
+  le premier tome manquant d'une saga entamée, puis livraison, total et paiement.
+  Les formulaires marchent sans JavaScript ; assets/panier.js les fait passer par l'API Ajax.
+
+  Usage : {% render 'panier-contenu', textes: section.settings, tiroir: true %}
+{% endcomment %}
+{%- liquid
+  assign seuil = settings.livraison_seuil | default: 40 | times: 100
+  assign offerte = false
+  if cart.total_price >= seuil
+    assign offerte = true
+  endif
+  assign reste = seuil | minus: cart.total_price
+  assign pourcent = cart.total_price | times: 100 | divided_by: seuil
+  if pourcent > 100
+    assign pourcent = 100
+  endif
+
+  # Les produits du panier, en « ,id,id, » : une saga est complète si chacun de ses tomes y figure.
+  assign ids = cart.items | map: 'product_id' | join: ','
+  assign ids = ',' | append: ids | append: ','
+
+  # « Termine l'arc » : le premier tome manquant (et en vente) de la première saga entamée.
+  assign propose = nil
+  assign propose_rang = 0
+  for item in cart.items
+    assign saga = item.product.metafields.custom.saga.value
+    for tome in saga.ordre_des_tomes.value
+      assign cle = ',' | append: tome.id | append: ','
+      unless ids contains cle
+        if tome.available
+          assign propose = tome
+          assign propose_rang = forloop.index
+          break
+        endif
+      endunless
+    endfor
+    if propose
+      break
+    endif
+  endfor
+-%}
+<div class="panier__contenu" data-compte="{{ cart.item_count }}">
+  <div class="panier__tete">
+    <h2 class="panier__titre">{{ textes.titre }}</h2>
+    {%- if tiroir -%}
+      <form method="dialog">
+        <button class="panier__fermer" aria-label="Fermer le panier">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </form>
+    {%- endif -%}
+  </div>
+
+  {%- if cart.item_count == 0 -%}
+    <div class="panier__vide">
+      <p>{{ textes.texte_vide }}</p>
+      {% render 'bouton', libelle: textes.libelle_vide, url: '/#histoires', variante: 'contour' %}
+    </div>
+  {%- else -%}
+    <div class="panier__jauge{% if offerte %} panier__jauge--offerte{% endif %}">
+      <p>
+        <strong>
+          {%- if offerte -%}
+            {{ textes.livraison_offerte }}
+          {%- else -%}
+            Plus que {{ reste | money_without_trailing_zeros }} pour la livraison offerte
+          {%- endif -%}
+        </strong>
+        <span>{{ seuil | money_without_trailing_zeros }}</span>
+      </p>
+      <div class="panier__barre"><div style="width: {{ pourcent }}%"></div></div>
+    </div>
+
+    <div class="panier__lignes">
+      {%- for item in cart.items -%}
+        {%- liquid
+          assign saga = item.product.metafields.custom.saga.value
+          assign rang = 0
+          assign complet = true
+          for tome in saga.ordre_des_tomes.value
+            if tome.id == item.product_id
+              assign rang = forloop.index
+            endif
+            assign cle = ',' | append: tome.id | append: ','
+            unless ids contains cle
+              assign complet = false
+            endunless
+          endfor
+          if saga.ordre_des_tomes.value.size < 2
+            assign complet = false
+          endif
+        -%}
+        <div class="panier__ligne">
+          {%- if item.product.featured_image -%}
+            <a href="{{ item.url }}">
+              {{- item.product.featured_image | image_url: width: 160 | image_tag: alt: '', width: 64, loading: 'lazy' -}}
+            </a>
+          {%- endif -%}
+          <div class="panier__ligne-texte">
+            <a class="panier__ligne-titre" href="{{ item.url }}">{% render 'livre-titre', livre: item.product %}</a>
+            {%- if saga -%}
+              <span>{{ saga.nom.value }}{% if rang > 0 and saga.ordre_des_tomes.value.size > 1 %} · Livre {{ rang }}{% endif %}</span>
+            {%- endif -%}
+            {%- if item.properties['Dédicace pour'] != blank -%}
+              <span>Dédicacé pour {{ item.properties['Dédicace pour'] }}</span>
+            {%- elsif item.properties['Dédicace'] != blank -%}
+              <span>Dédicacé par l'auteur</span>
+            {%- endif -%}
+            {%- if complet -%}
+              <span class="panier__badge">Arc complet</span>
+            {%- endif -%}
+            <form class="panier__quantite" action="{{ routes.cart_change_url }}" method="post">
+              <input type="hidden" name="line" value="{{ forloop.index }}">
+              <button name="quantity" value="{{ item.quantity | minus: 1 }}" aria-label="Retirer un exemplaire">−</button>
+              <span aria-label="Quantité">{{ item.quantity }}</span>
+              <button name="quantity" value="{{ item.quantity | plus: 1 }}" aria-label="Ajouter un exemplaire">+</button>
+            </form>
+          </div>
+          <span class="panier__prix">{{ item.final_line_price | money_without_trailing_zeros }}</span>
+        </div>
+      {%- endfor -%}
+
+      {%- if propose -%}
+        {%- assign apres = cart.total_price | plus: propose.price -%}
+        <div class="panier__arc">
+          <p class="surtitre">{{ textes.surtitre_arc }}</p>
+          <div class="panier__arc-livre">
+            {%- if propose.featured_image -%}
+              {{- propose.featured_image | image_url: width: 160 | image_tag: alt: '', width: 64, loading: 'lazy' -}}
+            {%- endif -%}
+            <p>
+              Ajoute le Livre {{ propose_rang }} ({{ propose.price | money_without_trailing_zeros }}) : l'arc complet
+              {%- if offerte == false and apres >= seuil %} et la livraison en point relais offerte{% endif %}.
+            </p>
+          </div>
+          <form action="{{ routes.cart_add_url }}" method="post">
+            <input type="hidden" name="id" value="{{ propose.selected_or_first_available_variant.id }}">
+            {%- capture libelle %}Ajouter le Livre {{ propose_rang }} · {{ propose.price | money_without_trailing_zeros }}{% endcapture -%}
+            {% render 'bouton', libelle: libelle, variante: 'or' %}
+          </form>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="panier__pied">
+      <p class="panier__livraison">
+        <span>Livraison</span>
+        <span>{% if offerte %}Offerte · point relais{% else %}Calculée à l'étape suivante{% endif %}</span>
+      </p>
+      <p class="panier__total">
+        <span>Total</span>
+        <strong>{{ cart.total_price | money_without_trailing_zeros }}</strong>
+      </p>
+      {%- capture payer %}{{ textes.libelle_payer }} {{ cart.total_price | money_without_trailing_zeros }}{% endcapture -%}
+      {% render 'bouton', libelle: payer, url: '/checkout', variante: 'or' %}
+    </div>
+  {%- endif -%}
+</div>

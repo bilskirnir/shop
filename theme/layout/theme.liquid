@@ -33,5 +33,10 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {%- unless template.name == 'cart' -%}
+      {% section 'panier' %}
+      <script src="{{ 'panier.js' | asset_url }}" defer></script>
+    {%- endunless -%}
   </body>
 </html>

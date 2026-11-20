@@ -1,0 +1,336 @@
+{% comment %}
+  Le panier en tiroir, sur toutes les pages sauf /cart (layout/theme.liquid) : à droite sur ordinateur,
+  monte du bas sur mobile. Contenu : snippets/panier-contenu.liquid. assets/panier.js l'ouvre (icône du
+  panier, ajout d'un livre) et le redessine après chaque changement, via le rendu de section de Shopify.
+  Les styles valent aussi pour la page /cart (sections/cart.liquid).
+{% endcomment %}
+<dialog class="panier verre" id="panier" aria-label="{{ section.settings.titre }}">
+  {% render 'panier-contenu', textes: section.settings, tiroir: true %}
+  {%- comment -%} Hors du contenu redessiné : les boutons Shop Pay / Apple Pay se chargent une fois. {%- endcomment -%}
+  {%- if additional_checkout_buttons -%}
+    <div class="panier__express">{{ content_for_additional_checkout_buttons }}</div>
+  {%- endif -%}
+</dialog>
+
+{% stylesheet %}
+  /* ---------- Le tiroir ---------- */
+  .panier {
+    width: 100%;
+    max-width: 100%;
+    height: 88svh;
+    max-height: 100%;
+    margin: auto 0 0;
+    padding: 0;
+    border-radius: 22px 22px 0 0;
+    color: var(--ivoire);
+    overflow: hidden;
+  }
+
+  .panier[open] {
+    display: flex;
+    flex-direction: column;
+    animation: panier-monte 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .panier::backdrop {
+    background: #00000099;
+    animation: panier-fondu 0.4s ease;
+  }
+
+  .panier .panier__contenu {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .panier__express {
+    padding: 0 24px 24px;
+  }
+
+  .panier:has(.panier__vide) .panier__express {
+    display: none;
+  }
+
+  @keyframes panier-monte {
+    from { transform: translateY(60px); opacity: 0; }
+  }
+
+  @keyframes panier-fondu {
+    from { opacity: 0; }
+  }
+
+  @media (min-width: 768px) {
+    .panier {
+      width: 440px;
+      height: 100%;
+      margin: 0 0 0 auto;
+      border-radius: 0;
+      border-width: 0 0 0 1px;
+    }
+
+    .panier[open] {
+      animation-name: panier-glisse;
+    }
+
+    @keyframes panier-glisse {
+      from { transform: translateX(100%); }
+    }
+  }
+
+  /* ---------- Le contenu (tiroir et page /cart) ---------- */
+  .panier__contenu {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panier__tete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 12px 8px 24px;
+  }
+
+  .panier__titre {
+    margin: 0;
+    font-size: 30px;
+  }
+
+  .panier__fermer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    color: var(--ivoire);
+    cursor: pointer;
+  }
+
+  .panier__vide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px;
+    color: var(--gris-1);
+  }
+
+  .panier__jauge {
+    padding: 4px 24px 18px;
+  }
+
+  .panier__jauge p {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 0 10px;
+  }
+
+  .panier__jauge strong {
+    font-size: 15px;
+  }
+
+  .panier__jauge--offerte strong {
+    color: var(--or);
+  }
+
+  .panier__jauge span {
+    font-size: 13px;
+    color: var(--gris-2);
+  }
+
+  .panier__barre {
+    height: 6px;
+    border-radius: 999px;
+    background: #ece5d61a;
+  }
+
+  .panier__barre div {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--or-fonce), var(--or));
+    box-shadow: 0 0 12px #d2b06a66;
+    animation: panier-barre 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  @keyframes panier-barre {
+    from { width: 0; }
+  }
+
+  .panier__lignes {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 24px 16px;
+    overscroll-behavior: contain;
+  }
+
+  .panier__ligne {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid #ece5d61f;
+    animation: panier-apparait 0.45s ease-out;
+  }
+
+  .panier__ligne img,
+  .panier__arc-livre img {
+    display: block;
+    width: 64px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614;
+  }
+
+  .panier__ligne-texte {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .panier__ligne-titre {
+    font-family: var(--titre);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ivoire);
+    text-decoration: none;
+  }
+
+  .panier__badge {
+    font-weight: 700;
+    color: var(--or);
+  }
+
+  .panier__prix {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ivoire);
+  }
+
+  .panier__quantite {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    border: 1px solid #ece5d626;
+    border-radius: 999px;
+  }
+
+  .panier__quantite button {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    background: none;
+    font-size: 16px;
+    color: var(--ivoire);
+    cursor: pointer;
+  }
+
+  .panier__quantite span {
+    min-width: 16px;
+    text-align: center;
+    color: var(--ivoire);
+  }
+
+  /* « Termine l'arc » : la carte dorée qui propose le tome manquant. */
+  .panier__arc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 16px;
+    border: 1px solid #d2b06a4d;
+    border-radius: 16px;
+    background: radial-gradient(circle at 90% 0%, #d2b06a26, transparent 60%), #d2b06a14;
+    animation: panier-apparait 0.45s ease-out;
+  }
+
+  .panier__arc .surtitre {
+    margin: 0;
+    color: var(--or);
+  }
+
+  .panier__arc-livre {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .panier__arc-livre p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .panier__arc .bouton {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .panier__pied {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 24px 16px;
+    border-top: 1px solid #ece5d61f;
+  }
+
+  .panier__pied p {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0;
+  }
+
+  .panier__livraison {
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .panier__total {
+    font-size: 17px;
+  }
+
+  .panier__total strong {
+    font-family: var(--titre);
+    font-size: 30px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .panier__pied .bouton {
+    justify-content: space-between;
+  }
+
+  @keyframes panier-apparait {
+    from { opacity: 0; transform: scale(0.97); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panier[open],
+    .panier::backdrop,
+    .panier__barre div,
+    .panier__ligne,
+    .panier__arc {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Panier (tiroir)",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Ton panier" },
+    { "type": "text", "id": "livraison_offerte", "label": "Message livraison atteinte", "default": "Livraison en point relais offerte" },
+    { "type": "text", "id": "surtitre_arc", "label": "Surtitre du tome proposé", "default": "Termine l'arc" },
+    { "type": "text", "id": "libelle_payer", "label": "Bouton de paiement", "default": "Payer" },
+    { "type": "text", "id": "texte_vide", "label": "Panier vide : texte", "default": "Ton panier est vide." },
+    { "type": "text", "id": "libelle_vide", "label": "Panier vide : bouton", "default": "Découvrir nos histoires" }
+  ]
+}
+{% endschema %}

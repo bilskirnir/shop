@@ -45,6 +45,13 @@
         "default": 90
       },
       {
+        "type": "number",
+        "id": "livraison_seuil",
+        "label": "Livraison offerte dès (€)",
+        "default": 40,
+        "info": "Jauge du panier. Doit correspondre au tarif d'expédition réglé dans Paramètres › Expédition."
+      },
+      {
         "type": "metaobject_list",
         "id": "engagements",
         "label": "Engagements (esprit français)",
