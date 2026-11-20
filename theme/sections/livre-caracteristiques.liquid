@@ -1,11 +1,15 @@
 {% comment %}
   Fiche d'un livre — les caractéristiques, sur une ligne sobre : nombre de pages (custom.nombre_pages),
-  format (custom.format, texte : « Broché · 15 × 23 cm »), ISBN (code-barres de la variante), garantie sans IA (réglage), couverture (champ produit custom.couverture,
+  format (custom.format, texte : « Broché · 15 × 23 cm »), date de parution (custom.date_parution), ISBN (code-barres de la variante), garantie sans IA (réglage), couverture (champ produit custom.couverture,
   texte). Une valeur vide disparaît.
 {% endcomment %}
 {%- liquid
   assign pages = product.metafields.custom.nombre_pages
   assign format = product.metafields.custom.format.value
+  assign parution = product.metafields.custom.date_parution.value
+  # Le filtre date écrit les mois en anglais : on les prend dans cette liste.
+  assign mois = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre' | split: ','
+  assign rang_mois = parution | date: '%m' | minus: 1
   assign isbn = product.selected_or_first_available_variant.barcode
   assign couverture = product.metafields.custom.couverture.value
 -%}
@@ -16,6 +20,9 @@
     {%- endif -%}
     {%- if format != blank -%}
       <div><dt>{{ section.settings.libelle_format }}</dt><dd>{{ format }}</dd></div>
+    {%- endif -%}
+    {%- if parution != blank -%}
+      <div><dt>{{ section.settings.libelle_parution }}</dt><dd>{{ mois[rang_mois] | capitalize }} {{ parution | date: '%Y' }}</dd></div>
     {%- endif -%}
     {%- if isbn != blank -%}
       <div><dt>ISBN</dt><dd>{{ isbn }}</dd></div>
@@ -80,6 +87,7 @@
   "settings": [
     { "type": "text", "id": "libelle_pages", "label": "Libellé du nombre de pages", "default": "Longueur" },
     { "type": "text", "id": "libelle_format", "label": "Libellé du format", "default": "Format" },
+    { "type": "text", "id": "libelle_parution", "label": "Libellé de la date de parution", "default": "Parution" },
     { "type": "text", "id": "libelle_garantie", "label": "Libellé de la garantie", "default": "Création" },
     { "type": "text", "id": "garantie", "label": "Garantie", "default": "Garanti sans IA" },
     { "type": "text", "id": "libelle_couverture", "label": "Libellé de la couverture", "default": "Couverture" }
