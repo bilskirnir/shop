@@ -62,8 +62,10 @@
   }
 
   @media (min-width: 1024px) {
+    /* Une rangée centrée, quel que soit le nombre de garanties. */
     .arc-reassurance {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      display: flex;
+      justify-content: space-evenly;
       gap: 24px;
       margin-top: 56px;
       padding: 28px 32px;
