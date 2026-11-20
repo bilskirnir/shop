@@ -16,7 +16,7 @@
   endif
 -%}
 
-<section class="ecran ouverture">
+<section class="ecran ouverture" data-nom="{{ shop.name | escape }}">
   <div class="ouverture__coeur">
     {%- if section.settings.logo != blank -%}
       {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'ouverture__logo', alt: shop.name }}

@@ -13,6 +13,9 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
     <script src="{{ 'reveal.js' | asset_url }}" defer></script>
+    {%- if template.name == 'index' %}
+      <script src="{{ 'indicateur.js' | asset_url }}" defer></script>
+    {%- endif %}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}

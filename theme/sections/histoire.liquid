@@ -107,6 +107,7 @@
 {%- if titre != blank -%}
   <section
     class="ecran histoire"
+    data-nom="{{ titre | escape }}"
     style="--halo: {{ halo }}; --halo-fort: {{ halo_fort }}; --halo-doux: {{ halo_doux }};{% if teinte %} --teinte: {{ teinte }};{% endif %}"
   >
     {%- if fond != blank -%}

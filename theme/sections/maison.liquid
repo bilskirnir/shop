@@ -4,7 +4,7 @@
   Dessous, « La lettre de la maison » : inscription par le formulaire client natif, tag « newsletter ».
   Le pied de page suit juste dessous et partage l'écran.
 {% endcomment %}
-<section class="ecran maison" id="maison">
+<section class="ecran maison" id="maison" data-nom="{{ section.settings.surtitre | default: 'La maison' | escape }}">
   <div class="maison__braises" aria-hidden="true"></div>
 
   <div class="maison__grille" data-reveal>
