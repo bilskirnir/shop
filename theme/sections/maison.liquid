@@ -1,6 +1,7 @@
 {% comment %}
   Dernier écran de l'accueil : la maison d'édition, le prochain salon, les personnes,
-  le lien « à la française », et l'inscription aux sorties (formulaire client natif, tag « newsletter »).
+  et à droite l'esprit français (engagements en blocs, lien vers sa page).
+  Dessous, « La lettre de la maison » : inscription par le formulaire client natif, tag « newsletter ».
   Le pied de page suit juste dessous et partage l'écran.
 {% endcomment %}
 <section class="ecran maison" id="maison">
@@ -28,9 +29,10 @@
         {%- endif -%}
       {%- endif -%}
 
-      {%- if section.blocks.size > 0 -%}
+      {%- assign personnes = section.blocks | where: 'type', 'personne' -%}
+      {%- if personnes.size > 0 -%}
         <div class="maison__personnes">
-          {%- for block in section.blocks -%}
+          {%- for block in personnes -%}
             <div class="maison__personne verre" {{ block.shopify_attributes }}>
               {%- if block.settings.photo != blank -%}
                 {{ block.settings.photo | image_url: width: 112, height: 112, crop: 'center' | image_tag: alt: block.settings.nom, width: 56, height: 56, loading: 'lazy' }}
@@ -45,23 +47,48 @@
       {%- endif -%}
     </div>
 
-    <div class="maison__droite">
-      {%- if section.settings.page_valeurs != blank -%}
-        <a class="maison__valeurs verre" href="{{ section.settings.page_valeurs.url }}">
-          {{ section.settings.libelle_valeurs | default: section.settings.page_valeurs.title }}
-          <span class="maison__valeurs-fleche" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
+    {%- assign engagements = section.blocks | where: 'type', 'engagement' -%}
+    {%- if engagements.size > 0 or section.settings.page_valeurs != blank -%}
+      <div class="maison__droite">
+        <p class="surtitre maison__surtitre">{{ section.settings.esprit_surtitre }}</p>
+        <h2 class="maison__esprit-titre">{{ section.settings.esprit_titre }}</h2>
+
+        {%- if engagements.size > 0 -%}
+          <ul class="maison__engagements">
+            {%- for block in engagements -%}
+              <li {{ block.shopify_attributes }}>
+                <strong>{{ block.settings.titre }}</strong>
+                {{ block.settings.texte }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.page_valeurs != blank -%}
+          <a class="maison__valeurs" href="{{ section.settings.page_valeurs.url }}">
+            {{- section.settings.libelle_valeurs | default: section.settings.page_valeurs.title }} →</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="maison__lettre verre" data-reveal>
+    <div class="maison__lettre-texte">
+      <p class="surtitre maison__surtitre">{{ section.settings.surtitre_inscription }}</p>
+      <h2 class="maison__lettre-titre">{{ section.settings.titre_inscription }}</h2>
+      {%- if section.settings.texte_inscription != blank -%}
+        <p>{{ section.settings.texte_inscription }}</p>
       {%- endif -%}
+    </div>
 
-      {%- form 'customer', id: 'inscription-sorties', class: 'maison__inscription' -%}
-        <input type="hidden" name="contact[tags]" value="newsletter">
-        <label for="inscription-email">{{ section.settings.titre_inscription }}</label>
+    {%- form 'customer', id: 'inscription-sorties', class: 'maison__inscription' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
 
-        {%- if form.posted_successfully? -%}
-          <p class="maison__message" role="status">C'est noté, tu recevras les sorties.</p>
-        {%- else -%}
+      {%- if form.posted_successfully? -%}
+        <p class="maison__message" role="status">C'est noté, tu recevras les sorties.</p>
+      {%- else -%}
+        <div class="maison__ligne">
+          <label class="visually-hidden" for="inscription-email">Ton adresse email</label>
           <div class="maison__champ verre">
             <input
               id="inscription-email"
@@ -72,22 +99,20 @@
               required
               {% if form.errors %}aria-invalid="true" aria-describedby="inscription-erreur"{% endif %}
             >
-            <button type="submit" aria-label="S'inscrire">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </button>
           </div>
-          {%- if form.errors -%}
-            <p class="maison__message maison__message--erreur" id="inscription-erreur" role="alert">
-              {%- if form.errors contains 'email' -%}
-                Cette adresse ne semble pas valide, ou elle est déjà inscrite.
-              {%- else -%}
-                L'inscription n'a pas fonctionné. Réessaie dans un instant.
-              {%- endif -%}
-            </p>
-          {%- endif -%}
+          {% render 'bouton', libelle: section.settings.libelle_inscription, variante: 'or' %}
+        </div>
+        {%- if form.errors -%}
+          <p class="maison__message maison__message--erreur" id="inscription-erreur" role="alert">
+            {%- if form.errors contains 'email' -%}
+              Cette adresse ne semble pas valide, ou elle est déjà inscrite.
+            {%- else -%}
+              L'inscription n'a pas fonctionné. Réessaie dans un instant.
+            {%- endif -%}
+          </p>
         {%- endif -%}
-      {%- endform -%}
-    </div>
+      {%- endif -%}
+    {%- endform -%}
   </div>
 </section>
 
@@ -211,27 +236,69 @@
     color: var(--ivoire);
   }
 
-  .maison__valeurs {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 52px;
-    padding: 0 8px 0 16px;
-    border-radius: 999px;
+  /* L'esprit français : les engagements de la maison, puis le lien vers sa page. */
+  .maison__esprit-titre {
+    font-family: var(--titre);
+    font-size: clamp(28px, 2.6vw, 38px);
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .maison__engagements {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .maison__engagements li {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--gris-2);
+  }
+
+  .maison__engagements strong {
+    display: block;
     font-size: 15px;
     font-weight: 600;
+    color: var(--ivoire);
+  }
+
+  .maison__valeurs {
+    align-self: flex-start;
+    font-weight: 600;
+    color: var(--or);
     text-decoration: none;
   }
 
-  .maison__valeurs-fleche {
+  /* La lettre de la maison : bandeau d'inscription sous la grille. */
+  .maison__lettre {
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #ece5d614;
-    color: var(--or);
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 28px;
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .maison__lettre-texte {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .maison__lettre-titre {
+    font-family: var(--titre);
+    font-size: clamp(24px, 2.2vw, 30px);
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .maison__lettre-texte p:last-child {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--gris-2);
   }
 
   .maison__inscription {
@@ -240,16 +307,17 @@
     gap: 8px;
   }
 
-  .maison__inscription label {
-    font-size: 15px;
-    font-weight: 600;
+  .maison__ligne {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .maison__champ {
     display: flex;
     align-items: center;
-    min-height: 52px;
-    padding: 0 6px 0 18px;
+    min-height: 56px;
+    padding: 0 22px;
     border-radius: 999px;
   }
 
@@ -266,19 +334,6 @@
   .maison__champ:focus-within {
     outline: 2px solid var(--or);
     outline-offset: 2px;
-  }
-
-  .maison__champ button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 50%;
-    background: linear-gradient(180deg, var(--or), var(--or-fonce));
-    color: var(--rond);
-    cursor: pointer;
   }
 
   .maison__message {
@@ -300,7 +355,7 @@
     .maison__grille {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      align-items: center;
+      align-items: end;
       gap: 80px;
     }
 
@@ -342,37 +397,51 @@
       font-size: 16px;
     }
 
-    .maison__valeurs {
-      min-height: 60px;
-      padding: 0 10px 0 22px;
-      font-size: 17px;
+    .maison__droite {
+      padding-left: 40px;
+      border-left: 1px solid #d2b06a55;
     }
 
-    .maison__valeurs-fleche {
-      width: 40px;
-      height: 40px;
+    .maison__engagements {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 24px;
+    }
+
+    .maison__engagements li {
+      font-size: 15px;
+    }
+
+    .maison__engagements strong {
+      font-size: 16px;
+    }
+
+    .maison__lettre {
+      flex-direction: row;
+      align-items: center;
+      gap: 40px;
+      margin-top: 40px;
+      padding: 26px 30px 26px 36px;
+    }
+
+    .maison__lettre-texte {
+      flex: 1.1;
     }
 
     .maison__inscription {
-      gap: 10px;
+      flex: 1;
     }
 
-    .maison__inscription label {
-      font-size: 17px;
+    .maison__ligne {
+      flex-direction: row;
     }
 
     .maison__champ {
+      flex: 1;
       min-height: 60px;
-      padding: 0 8px 0 22px;
     }
 
     .maison__champ input {
       font-size: 17px;
-    }
-
-    .maison__champ button {
-      width: 44px;
-      height: 44px;
     }
   }
 {% endstylesheet %}
@@ -380,7 +449,6 @@
 {% schema %}
 {
   "name": "La maison",
-  "max_blocks": 2,
   "settings": [
     {
       "type": "text",
@@ -411,7 +479,19 @@
     },
     {
       "type": "header",
-      "content": "Page « à la française »"
+      "content": "L'esprit français"
+    },
+    {
+      "type": "text",
+      "id": "esprit_surtitre",
+      "label": "Surtitre",
+      "default": "L'esprit français"
+    },
+    {
+      "type": "text",
+      "id": "esprit_titre",
+      "label": "Titre",
+      "default": "Entre grandeur et abnégation"
     },
     {
       "type": "page",
@@ -421,24 +501,43 @@
     {
       "type": "text",
       "id": "libelle_valeurs",
-      "label": "Texte du lien",
+      "label": "Texte du lien vers la page",
       "default": "Pourquoi « à la française » ?"
     },
     {
       "type": "header",
-      "content": "Inscription aux sorties"
+      "content": "La lettre de la maison"
+    },
+    {
+      "type": "text",
+      "id": "surtitre_inscription",
+      "label": "Surtitre",
+      "default": "La lettre de la maison"
     },
     {
       "type": "text",
       "id": "titre_inscription",
       "label": "Titre",
-      "default": "Reçois les sorties"
+      "default": "Ne manque ni une sortie, ni une rencontre"
+    },
+    {
+      "type": "textarea",
+      "id": "texte_inscription",
+      "label": "Texte",
+      "default": "Les nouveaux romans dès leur parution, les dates où venir nous voir en salon et en dédicace, et un peu des coulisses."
+    },
+    {
+      "type": "text",
+      "id": "libelle_inscription",
+      "label": "Texte du bouton",
+      "default": "Je m'inscris"
     }
   ],
   "blocks": [
     {
       "type": "personne",
       "name": "Personne",
+      "limit": 2,
       "settings": [
         {
           "type": "image_picker",
@@ -454,6 +553,22 @@
           "type": "text",
           "id": "role",
           "label": "Rôle"
+        }
+      ]
+    },
+    {
+      "type": "engagement",
+      "name": "Engagement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titre",
+          "label": "Titre"
+        },
+        {
+          "type": "text",
+          "id": "texte",
+          "label": "Texte"
         }
       ]
     }
@@ -474,6 +589,34 @@
           "settings": {
             "nom": "Uriel Lahoussaye",
             "role": "Direction artistique et couvertures"
+          }
+        },
+        {
+          "type": "engagement",
+          "settings": {
+            "titre": "100 % indépendants",
+            "texte": "On publie les histoires qu'on a envie de lire."
+          }
+        },
+        {
+          "type": "engagement",
+          "settings": {
+            "titre": "Faits et pensés en France",
+            "texte": "Des romans originaux, épiques et déjantés."
+          }
+        },
+        {
+          "type": "engagement",
+          "settings": {
+            "titre": "Jamais ennuyeux",
+            "texte": "Des histoires qui se dévorent comme les meilleures séries."
+          }
+        },
+        {
+          "type": "engagement",
+          "settings": {
+            "titre": "Héroïsme, bravoure",
+            "texte": "Des mots qui ont encore un sens."
           }
         }
       ]

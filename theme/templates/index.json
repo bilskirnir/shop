@@ -62,9 +62,44 @@
             "nom": "Uriel Lahoussaye",
             "role": "Direction artistique et couvertures"
           }
+        },
+        "independants": {
+          "type": "engagement",
+          "settings": {
+            "titre": "100 % indépendants",
+            "texte": "On publie les histoires qu'on a envie de lire."
+          }
+        },
+        "france": {
+          "type": "engagement",
+          "settings": {
+            "titre": "Faits et pensés en France",
+            "texte": "Des romans originaux, épiques et déjantés."
+          }
+        },
+        "jamais-ennuyeux": {
+          "type": "engagement",
+          "settings": {
+            "titre": "Jamais ennuyeux",
+            "texte": "Des histoires qui se dévorent comme les meilleures séries."
+          }
+        },
+        "heroisme": {
+          "type": "engagement",
+          "settings": {
+            "titre": "Héroïsme, bravoure",
+            "texte": "Des mots qui ont encore un sens."
+          }
         }
       },
-      "block_order": ["gautier", "uriel"],
+      "block_order": [
+        "gautier",
+        "uriel",
+        "independants",
+        "france",
+        "jamais-ennuyeux",
+        "heroisme"
+      ],
       "settings": {}
     }
   },
