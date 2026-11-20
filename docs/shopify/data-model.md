@@ -55,10 +55,11 @@ Un avis de lecteur, relié à une saga par son champ `avis`. Type `avis`, accès
 | Texte | `texte` | Multi-line text | ✅ | recopié tel quel, jamais inventé |
 | Auteur | `auteur` | Single line text | ✅ | display name ; un prénom suffit |
 | Source | `source` | Single line text | — | ex. « Amazon » |
+| Vérifié | `verifie` | True or false | — | coché seulement si la source a vérifié l'achat (ex. « Achat vérifié » Amazon) → badge « Avis vérifié » |
 
 ---
 
-## Metaobject : `Genre` — **à créer** (20/11/2026)
+## Metaobject : `Genre` — créé le 20/11/2026
 
 La couleur d'une pastille : un genre dont le `nom` est exactement un tag de saga colore sa pastille (accueil et page Arc). Type `genre`, accès Online Store activé.
 
