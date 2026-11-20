@@ -33,7 +33,8 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Accroche | `teaser_court` | Multi-line text | — | **à créer** (thème Liquid, accueil) |
 | Couleur du halo | `couleur_halo` | Color | — | **à créer** |
 | Mention de lecture | `mention_de_lecture` | Single line text | — | **à créer** |
-| Particules | `style_particules` | Single line text (choix : `braises`) | — | **à créer** (page arc) |
+| Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | — | créé ; vide = aucune particule sur l'écran de l'accueil |
+| Genres | `genres` | List of single line text | — | **à créer** — pastilles sur l'accueil (PC) |
 
 ---
 
@@ -74,6 +75,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Nombre de pages | `nombre_pages` | Integer | **à créer** (jamais défini, le code Hydrogen le lisait dans le vide) |
 | Mention de lecture | `mention_de_lecture` | Single line text | **à créer** (thème Liquid, accueil) |
 | Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
+| Genres | `genres` | List of single line text | **à créer** — pastilles sur l'accueil (PC), livres seuls |
 
 ---
 

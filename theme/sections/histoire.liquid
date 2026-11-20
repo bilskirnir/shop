@@ -38,6 +38,8 @@
     assign accroche = saga.teaser_court.value
     assign couleur = saga.couleur_halo.value
     assign lien = saga.system.url | default: tome_1.url
+    assign auteurs = tome_1.metafields.custom.auteur.value
+    assign genres = saga.genres.value
     assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
@@ -61,6 +63,8 @@
     assign accroche = livre.metafields.custom.teaser_court.value
     assign couleur = livre.metafields.custom.couleur_halo.value | default: livre.metafields.custom.univers.value.metafields.custom.couleur.value
     assign lien = livre.url
+    assign auteurs = livre.metafields.custom.auteur.value
+    assign genres = livre.metafields.custom.genres.value
     assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
     assign date_recente = livre.metafields.custom.date_parution.value
   endif
@@ -75,6 +79,16 @@
   if particules == 'auto'
     assign particules = saga.style_particules.value | default: 'aucune'
   endif
+
+  # « Gautier Durrieu de Madron », ou « A et B » s'il y a plusieurs auteurs (custom.auteur est une liste).
+  assign noms_auteurs = ''
+  for auteur in auteurs
+    if forloop.first
+      assign noms_auteurs = auteur.nom.value
+    else
+      assign noms_auteurs = noms_auteurs | append: ' et ' | append: auteur.nom.value
+    endif
+  endfor
 
   if surtitre_gauche != blank and mention != blank
     assign surtitre = surtitre_gauche | append: ' · ' | append: mention
@@ -119,8 +133,18 @@
         <p class="surtitre histoire__surtitre">{{ surtitre }}</p>
       {%- endif -%}
       <h2>{{ titre }}</h2>
+      {%- if noms_auteurs != blank -%}
+        <p class="histoire__auteur">par {{ noms_auteurs }}</p>
+      {%- endif -%}
       {%- if accroche != blank -%}
         <p class="histoire__accroche">{{ accroche }}</p>
+      {%- endif -%}
+      {%- if genres != blank -%}
+        <ul class="histoire__genres">
+          {%- for genre in genres -%}
+            <li>{{ genre }}</li>
+          {%- endfor -%}
+        </ul>
       {%- endif -%}
       {%- if lien != blank -%}
         {% render 'bouton', libelle: libelle, url: lien, variante: 'contour' %}
@@ -215,6 +239,33 @@
     font-size: clamp(40px, 5vw, 72px);
   }
 
+  .histoire__auteur {
+    margin-top: -4px;
+    font-size: clamp(14px, 1.1vw, 16px);
+    font-style: italic;
+    color: var(--gris-2);
+  }
+
+  /* Les genres en pastilles : sur PC seulement, le mobile est déjà plein. */
+  .histoire__genres {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .histoire__genres li {
+    padding: 6px 14px;
+    border: 1px solid #ece5d633;
+    border-radius: 999px;
+    background: #ece5d60d;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gris-1);
+  }
+
   .histoire__accroche {
     font-size: clamp(16px, 1.3vw, 19px);
     line-height: 1.45;
@@ -259,6 +310,10 @@
 
     .histoire__accroche {
       line-height: 1.5;
+    }
+
+    .histoire__genres {
+      display: flex;
     }
 
     .histoire .bouton {
