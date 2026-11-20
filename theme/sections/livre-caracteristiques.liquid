@@ -1,10 +1,11 @@
 {% comment %}
   Fiche d'un livre — les caractéristiques, sur une ligne sobre : nombre de pages (custom.nombre_pages),
-  ISBN (code-barres de la variante), garantie sans IA (réglage), couverture (champ produit custom.couverture,
+  format (custom.format, texte : « Broché · 15 × 23 cm »), ISBN (code-barres de la variante), garantie sans IA (réglage), couverture (champ produit custom.couverture,
   texte). Une valeur vide disparaît.
 {% endcomment %}
 {%- liquid
   assign pages = product.metafields.custom.nombre_pages
+  assign format = product.metafields.custom.format.value
   assign isbn = product.selected_or_first_available_variant.barcode
   assign couverture = product.metafields.custom.couverture.value
 -%}
@@ -12,6 +13,9 @@
   <dl>
     {%- if pages != blank -%}
       <div><dt>{{ section.settings.libelle_pages }}</dt><dd>{{ pages }} pages</dd></div>
+    {%- endif -%}
+    {%- if format != blank -%}
+      <div><dt>{{ section.settings.libelle_format }}</dt><dd>{{ format }}</dd></div>
     {%- endif -%}
     {%- if isbn != blank -%}
       <div><dt>ISBN</dt><dd>{{ isbn }}</dd></div>
@@ -75,6 +79,7 @@
   "name": "Livre — caractéristiques",
   "settings": [
     { "type": "text", "id": "libelle_pages", "label": "Libellé du nombre de pages", "default": "Longueur" },
+    { "type": "text", "id": "libelle_format", "label": "Libellé du format", "default": "Format" },
     { "type": "text", "id": "libelle_garantie", "label": "Libellé de la garantie", "default": "Création" },
     { "type": "text", "id": "garantie", "label": "Garantie", "default": "Garanti sans IA" },
     { "type": "text", "id": "libelle_couverture", "label": "Libellé de la couverture", "default": "Couverture" }

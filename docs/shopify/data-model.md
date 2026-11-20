@@ -129,6 +129,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Univers associé | `univers_associe` | Collection | — |
 | Couleur du halo | `couleur_halo` | Color | créée le 19/11/2026 (remplace `couleur_theme`, jamais défini) |
 | Nombre de pages | `nombre_pages` | Integer | **à créer** (jamais défini, le code Hydrogen le lisait dans le vide) |
+| Format | `format` | Single line text | **à créer** | reliure et dimensions, ex. « Broché · 15 × 23 cm » ; ligne des caractéristiques de la fiche Livre, cachée si vide |
 | Mention de lecture | `mention_de_lecture` | Single line text | **à créer** (thème Liquid, accueil) |
 | Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | créé le 20/11/2026 — même rôle que sur la saga, pour un livre seul |
