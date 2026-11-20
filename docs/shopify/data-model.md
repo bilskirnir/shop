@@ -136,7 +136,21 @@ query Tome($handle: String!) {
 
 ---
 
+## À nettoyer sur les fiches produit (après la bascule « une histoire = une saga »)
+
+Depuis le 20/11/2026, tout livre appartient à une saga, y compris un roman seul (saga d'un livre). Les champs produit créés pour les livres seuls ne sont plus lus par le thème. **À supprimer une fois les sagas d'un livre créées et vérifiées, avec l'accord d'Uriel** (et leurs valeurs recopiées sur la saga si besoin) :
+
+- `couleur_halo` → remplacé par `saga.couleur_halo`
+- `mention_de_lecture` → `saga.mention_de_lecture`
+- `style_particules` → `saga.style_particules`
+- `illustration_hero` → `saga.illustration_hero_de_la_saga`
+- `genres` (s'il a été créé) → `saga.genres`
+- `est_une_oeuvre_independante` → à revoir au plan Arc (une saga d'un livre le dit déjà)
+
+Restent sur le produit : `auteur`, `saga`, `numero_tome`, `statut_parution`, `date_parution`, `teaser_court` (fiche produit), `nombre_pages`, `extrait`, `univers`. `univers_associe` : doublon probable d'`univers`, à trancher.
+
 ## Historique des décisions
 
 - **2026-04-23** : définitions initiales créées. Namespace `custom` unique pour cohérence avec Shopify default. Keys en français snake_case, labels en français avec accents. Synopsis long = `product.description` natif plutôt que metafield. Ordre homepage reporté en Plan 2 via metaobject dédié.
+- **2026-11-20** : une histoire = une saga, même d'un seul livre (Salvation, Berserker, Parmi ces mondes ici-bas). Le métaobjet peut s'afficher « Histoire » dans l'admin ; sa clé reste `saga`. Son `nom` sert de titre court d'affichage.
 - **2026-11-19** : clés corrigées d'après une sonde Storefront (`illustration_hero_de_la_saga`, collection `couleur`). Champs à créer pour le thème Liquid ajoutés (voir `docs/superpowers/specs/2026-11-19-theme-liquid-accueil.md`). L'ordre de l'accueil se règle désormais dans l'éditeur de thème (une section par histoire).

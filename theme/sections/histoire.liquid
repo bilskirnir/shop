@@ -1,20 +1,20 @@
 {% comment %}
-  Un écran de l'accueil pour une histoire : une saga (l'arc entier) ou un livre seul.
-  Gautier choisit l'une ou l'autre ; tout le reste vient des données Shopify :
+  Un écran de l'accueil pour une histoire. Une histoire est toujours une saga (métaobjet « saga »),
+  d'un ou de plusieurs livres : Gautier ne règle chaque chose qu'à un seul endroit.
 
-  | Élément        | Saga                                      | Livre seul                                  |
-  | Couvertures    | 2 premiers tomes en éventail (1 → grande) | l'image du produit, en grand                |
-  | Surtitre       | « N livres · mention_de_lecture »         | « type de produit · mention_de_lecture »    |
-  | Titre, accroche| nom, teaser_court                         | titre, teaser_court                         |
-  | Couleur        | couleur_halo                              | couleur_halo, sinon la couleur de l'univers |
-  | Nouveauté      | la parution la plus récente des tomes     | sa date_parution                            |
-  | Lien           | page de la saga, sinon le 1er tome        | la fiche produit                            |
+  | Élément         | Source                                                                 |
+  | Couvertures     | 2 premiers tomes en éventail ; un seul → en grand                      |
+  | Surtitre        | « N livres » (1 livre → type du produit, ex. « Roman ») · mention_de_lecture |
+  | Titre, accroche | nom (titre court d'affichage), teaser_court                            |
+  | Auteur          | custom.auteur du premier tome                                          |
+  | Couleur         | couleur_halo, sinon la couleur de l'univers parent                     |
+  | Nouveauté       | la parution la plus récente des tomes                                  |
+  | Lien            | 1 livre → sa fiche ; plusieurs → la page de la saga, sinon le 1er tome |
 
   Un champ vide ne casse rien : l'élément disparaît, la couleur retombe sur un halo ivoire neutre.
 {% endcomment %}
 {%- liquid
   assign saga = section.settings.saga
-  assign livre = section.settings.livre
 
   if saga != blank
     assign tomes = saga.ordre_des_tomes.value
@@ -28,20 +28,26 @@
         assign tome_2 = tome
       endif
     endfor
-    if nombre > 1
-      assign surtitre_gauche = nombre | append: ' livres'
-    elsif nombre == 1
-      assign surtitre_gauche = '1 livre'
+
+    # Une histoire d'un seul livre mène à sa fiche ; un arc mène à sa page (sinon à son premier livre).
+    if nombre == 1
+      assign surtitre_gauche = tome_1.type | default: '1 livre'
+      assign lien = tome_1.url
+      assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
+    else
+      if nombre > 1
+        assign surtitre_gauche = nombre | append: ' livres'
+      endif
+      assign lien = saga.system.url | default: tome_1.url
+      assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
     endif
+
     assign mention = saga.mention_de_lecture.value
     assign titre = saga.nom.value
     assign accroche = saga.teaser_court.value
-    assign couleur = saga.couleur_halo.value
-    assign lien = saga.system.url | default: tome_1.url
+    assign couleur = saga.couleur_halo.value | default: saga.univers_parent.value.metafields.custom.couleur.value
     assign auteurs = tome_1.metafields.custom.auteur.value
     assign genres = saga.genres.value
-    assign illustration = saga.illustration_hero_de_la_saga.value
-    assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
     assign maintenant = 'now' | date: '%s' | plus: 0
@@ -57,34 +63,17 @@
         endif
       endif
     endfor
-  elsif livre != blank
-    assign surtitre_gauche = livre.type
-    assign mention = livre.metafields.custom.mention_de_lecture.value
-    assign titre = livre.title
-    assign accroche = livre.metafields.custom.teaser_court.value
-    assign couleur = livre.metafields.custom.couleur_halo.value | default: livre.metafields.custom.univers.value.metafields.custom.couleur.value
-    assign lien = livre.url
-    assign auteurs = livre.metafields.custom.auteur.value
-    assign genres = livre.metafields.custom.genres.value
-    assign illustration = livre.metafields.custom.illustration_hero.value
-    assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
-    assign date_recente = livre.metafields.custom.date_parution.value
   endif
 
-  # Image de fond : celle choisie dans la section, sinon l'illustration de la fiche
-  # (saga : illustration_hero_de_la_saga ; livre seul : illustration_hero).
-  assign fond = section.settings.image_fond | default: illustration
+  # Image de fond : celle choisie dans la section, sinon l'illustration de la saga.
+  assign fond = section.settings.image_fond | default: saga.illustration_hero_de_la_saga.value
   assign voile_opacite = section.settings.voile_opacite | divided_by: 100.0
   assign voile = section.settings.voile_couleur | color_modify: 'alpha', voile_opacite
 
-  # Particules : le réglage de la section, sinon le champ style_particules de la fiche (saga ou livre seul), sinon aucune.
+  # Particules : le réglage de la section, sinon le champ style_particules de la saga, sinon aucune.
   assign particules = section.settings.particules
   if particules == 'auto'
-    if saga != blank
-      assign particules = saga.style_particules.value | default: 'aucune'
-    else
-      assign particules = livre.metafields.custom.style_particules.value | default: 'aucune'
-    endif
+    assign particules = saga.style_particules.value | default: 'aucune'
   endif
 
   # « Gautier Durrieu de Madron », ou « A et B » s'il y a plusieurs auteurs (custom.auteur est une liste).
@@ -160,21 +149,17 @@
 
     <div class="histoire__couvertures">
       <div class="histoire__halo" aria-hidden="true"></div>
-      {%- if saga != blank -%}
-        {%- if tome_2 -%}
-          {% render 'couverture', produit: tome_1, taille: 'eventail', position: 1 %}
-          {% render 'couverture', produit: tome_2, taille: 'eventail', position: 2 %}
-        {%- elsif tome_1 -%}
-          {% render 'couverture', produit: tome_1, taille: 'seule' %}
-        {%- endif -%}
-      {%- else -%}
-        {% render 'couverture', produit: livre, taille: 'seule' %}
+      {%- if tome_2 -%}
+        {% render 'couverture', produit: tome_1, taille: 'eventail', position: 1 %}
+        {% render 'couverture', produit: tome_2, taille: 'eventail', position: 2 %}
+      {%- elsif tome_1 -%}
+        {% render 'couverture', produit: tome_1, taille: 'seule' %}
       {%- endif -%}
     </div>
   </section>
 {%- elsif request.design_mode -%}
   <section class="ecran histoire histoire--vide">
-    <p>Choisis une saga ou un livre dans les réglages de cette section.</p>
+    <p>Choisis une histoire (saga) dans les réglages de cette section.</p>
   </section>
 {%- endif -%}
 
@@ -336,25 +321,19 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Choisis une saga pour présenter un arc entier, ou un livre pour un roman seul. Couvertures, textes et couleur viennent de la fiche Shopify."
+      "content": "Choisis l'histoire (saga) à présenter, d'un ou de plusieurs livres. Couvertures, textes, couleur et fond viennent de sa fiche."
     },
     {
       "type": "metaobject",
       "id": "saga",
-      "label": "Saga",
+      "label": "Histoire (saga)",
       "metaobject_type": "saga"
-    },
-    {
-      "type": "product",
-      "id": "livre",
-      "label": "Livre seul",
-      "info": "Utilisé seulement si aucune saga n'est choisie."
     },
     {
       "type": "image_picker",
       "id": "image_fond",
       "label": "Image de fond",
-      "info": "Facultative. Apparaît en fondu derrière cet écran, sous les braises. Vide : l'illustration de la fiche (saga ou livre), sinon le décor habituel."
+      "info": "Facultative. Apparaît en fondu derrière cet écran, sous les braises. Vide : l'illustration de la saga, sinon le décor habituel."
     },
     {
       "type": "color",
@@ -389,7 +368,7 @@
       "type": "text",
       "id": "libelle_bouton",
       "label": "Texte du bouton",
-      "info": "Vide : « Entrer dans l'arc » pour une saga, « Voir le livre » pour un livre."
+      "info": "Vide : « Voir le livre » pour une histoire d'un livre, « Entrer dans l'arc » sinon."
     }
   ],
   "presets": [

@@ -46,6 +46,8 @@ Réglages : Menu (`link_list`, défaut `main-menu`). Gautier gère les liens dan
 Le bouton descend vers le premier écran « Histoire » (ancre posée par le code, pas un réglage). Indice « Défiler » animé, décoratif.
 
 ### Histoire (`histoire`) — le composant central
+
+> **Mise à jour du 20/11/2026 :** une histoire est toujours une saga, même d'un seul livre. Le réglage « Livre seul » et la colonne « Livre seul » ci-dessous sont abandonnés : une saga d'un livre affiche le type du produit (sinon « 1 livre »), une grande couverture et un bouton « Voir le livre » vers sa fiche. Détail à jour dans l'en-tête de `theme/sections/histoire.liquid`.
 Un réglage de **source**, deux pickers, un seul rendu :
 
 | Réglage | Type | Rôle |
