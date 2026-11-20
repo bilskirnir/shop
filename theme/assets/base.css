@@ -385,6 +385,51 @@ h2 {
   mix-blend-mode: overlay;
 }
 
+/* ---------- Fondu par écran (.fondu, assets/reveal.js) ---------- */
+/* Ce qui est propre à une histoire (image de fond, neige) n'apparaît que pendant son écran. */
+.fondu {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.fondu.is-visible {
+  opacity: 1;
+}
+
+/* ---------- Neige (snippets/neige.liquid) ---------- */
+.neige {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neige span {
+  position: absolute;
+  top: -10px;
+  border-radius: 50%;
+  background: var(--ivoire);
+  opacity: 0.75;
+  filter: blur(0.5px);
+  animation: tombe linear infinite;
+}
+
+@keyframes tombe {
+  from { transform: translate(0, 0); }
+  to { transform: translate(var(--derive), 110vh); }
+}
+
+/* Pendant un écran enneigé, le feu du décor s'éteint en fondu. */
+.decor__feu {
+  inset: 0;
+  transition: opacity 0.9s ease;
+}
+
+body:has(.neige.is-visible) .decor__feu {
+  opacity: 0;
+}
+
 /* ---------- Apparitions (assets/reveal.js) ---------- */
 @media (prefers-reduced-motion: no-preference) {
   /* Pas dans l'éditeur : une section ré-affichée après un réglage ne serait jamais observée et resterait pâle. */

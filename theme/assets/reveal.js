@@ -1,8 +1,8 @@
 // Deux effets au défilement de l'accueil, par IntersectionObserver :
 // 1. le texte de chaque écran monte une fois à son arrivée ([data-reveal] reçoit is-active) ;
-// 2. l'image de fond d'une histoire (.histoire__fond) apparaît en fondu tant que son écran
+// 2. ce qui est propre à une histoire (.fondu : image de fond, neige) apparaît en fondu tant que son écran
 //    passe sous la ligne du milieu de la vue, puis disparaît (is-visible).
-// Le CSS fait les transitions. Sans ce script, le texte reste visible et les fonds restent cachés.
+// Le CSS fait les transitions. Sans ce script, le texte reste visible et les .fondu restent cachés.
 document.documentElement.classList.add('reveal-pret');
 
 const apparition = new IntersectionObserver(
@@ -20,7 +20,7 @@ const apparition = new IntersectionObserver(
 const fondu = new IntersectionObserver(
   (entrees) => {
     for (const entree of entrees) {
-      entree.target.querySelector('.histoire__fond').classList.toggle('is-visible', entree.isIntersecting);
+      entree.target.querySelectorAll('.fondu').forEach((element) => element.classList.toggle('is-visible', entree.isIntersecting));
     }
   },
   // La « vue » est réduite à sa ligne du milieu : un seul écran à la fois la traverse, quelle que soit sa hauteur.
@@ -31,7 +31,7 @@ const fondu = new IntersectionObserver(
 
 function observer(racine) {
   racine.querySelectorAll('[data-reveal]').forEach((element) => apparition.observe(element));
-  racine.querySelectorAll('.histoire__fond').forEach((fond) => fondu.observe(fond.closest('.histoire')));
+  racine.querySelectorAll('.histoire:has(.fondu)').forEach((ecran) => fondu.observe(ecran));
 }
 
 observer(document);

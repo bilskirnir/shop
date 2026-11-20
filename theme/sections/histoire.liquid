@@ -67,6 +67,14 @@
 
   # Image de fond : celle choisie dans la section, sinon l'illustration de la saga.
   assign fond = section.settings.image_fond | default: saga.illustration_hero_de_la_saga.value
+  assign voile_opacite = section.settings.voile_opacite | divided_by: 100.0
+  assign voile = section.settings.voile_couleur | color_modify: 'alpha', voile_opacite
+
+  # Particules : le réglage de la section, sinon le champ style_particules de la saga, sinon les braises.
+  assign particules = section.settings.particules
+  if particules == 'auto'
+    assign particules = saga.style_particules.value | default: 'braises'
+  endif
 
   if surtitre_gauche != blank and mention != blank
     assign surtitre = surtitre_gauche | append: ' · ' | append: mention
@@ -92,7 +100,13 @@
     style="--halo: {{ halo }}; --halo-fort: {{ halo_fort }}; --halo-doux: {{ halo_doux }};{% if teinte %} --teinte: {{ teinte }};{% endif %}"
   >
     {%- if fond != blank -%}
-      {{- fond | image_url: width: 2400 | image_tag: class: 'histoire__fond', widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}
+      <div class="histoire__fond fondu" style="--voile: {{ voile }};" aria-hidden="true">
+        {{- fond | image_url: width: 2400 | image_tag: widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}
+      </div>
+    {%- endif -%}
+
+    {%- if particules == 'neige' -%}
+      {% render 'neige' %}
     {%- endif -%}
 
     <div class="histoire__texte" data-reveal>
@@ -152,21 +166,26 @@
   }
 
   /* Image de fond de l'histoire : plein écran, fixe, entre la forêt et les particules.
-     Elle apparaît en fondu quand l'écran est à l'écran (classe posée par assets/reveal.js). */
+     Elle apparaît en fondu (.fondu, base.css) quand son écran passe au milieu de la vue. */
   .histoire__fond {
     position: fixed;
     inset: 0;
     z-index: -2;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.9s ease;
     pointer-events: none;
   }
 
-  .histoire__fond.is-visible {
-    opacity: 0.6;
+  .histoire__fond img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Le voile réglable (couleur + intensité) posé sur l'image. */
+  .histoire__fond::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--voile);
   }
 
   .histoire__couvertures {
@@ -269,6 +288,34 @@
       "id": "image_fond",
       "label": "Image de fond",
       "info": "Facultative. Apparaît en fondu derrière cet écran, sous les braises. Vide : l'illustration de la saga si elle en a une, sinon le décor habituel."
+    },
+    {
+      "type": "color",
+      "id": "voile_couleur",
+      "label": "Couleur du voile",
+      "info": "Voile posé sur l'image de fond pour l'assombrir ou la teinter.",
+      "default": "#0b0c0e"
+    },
+    {
+      "type": "range",
+      "id": "voile_opacite",
+      "label": "Intensité du voile",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "particules",
+      "label": "Particules",
+      "options": [
+        { "value": "auto", "label": "Celles de la saga (braises par défaut)" },
+        { "value": "braises", "label": "Braises qui montent" },
+        { "value": "neige", "label": "Neige qui tombe" }
+      ],
+      "default": "auto"
     },
     {
       "type": "text",

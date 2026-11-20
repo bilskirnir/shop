@@ -15,7 +15,8 @@
     "histoire-fracture": {
       "type": "histoire",
       "settings": {
-        "saga": "fracture"
+        "saga": "fracture",
+        "particules": "neige"
       }
     },
     "histoire-salvation": {

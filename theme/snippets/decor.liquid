@@ -2,7 +2,8 @@
   Le décor fixe derrière la page, en deux calques pour qu'une image de fond d'histoire
   puisse se glisser entre eux (voir sections/histoire.liquid) :
     1. le fond : forêt, crêtes, brume ;
-    2. les particules : braises, étincelles, grain.
+    2. les particules : braises et étincelles (le « feu »), grain.
+  Une histoire réglée sur la neige éteint le feu le temps de son écran (base.css, « Neige »).
   Purement décoratif, il ne bouge pas quand on défile. Styles : assets/base.css (« Décor fixe »).
 {% endcomment %}
 <div class="decor decor--fond" aria-hidden="true">
@@ -16,6 +17,7 @@
 </div>
 
 <div class="decor decor--particules" aria-hidden="true">
+  <div class="decor__feu">
   <div class="decor__braises"></div>
   <div class="decor__etincelles">
     {%- comment -%} position | largeur | hauteur | trajectoire | durée | décalage | scintillement — valeurs de la maquette {%- endcomment -%}
@@ -24,6 +26,7 @@
       {%- assign v = e | split: ',' -%}
       <span class="etincelle" style="left: {{ v[0] }}%; width: {{ v[1] }}px; height: {{ v[2] }}px; animation: monte{{ v[3] }} {{ v[4] }}s linear {{ v[5] }}s infinite, scintille {{ v[6] }}s ease-in-out infinite alternate;"></span>
     {%- endfor -%}
+  </div>
   </div>
   <div class="decor__grain"></div>
 </div>

@@ -1,0 +1,18 @@
+{% comment %}
+  Neige qui tombe du haut de l'écran, en calque fixe au-dessus de l'image de fond.
+  Apparaît en fondu avec son écran (.fondu) et éteint pendant ce temps les braises du décor.
+  Les flocons sont répartis par un petit calcul déterministe (pas de hasard : même rendu à chaque visite).
+  Styles : assets/base.css (« Neige »).
+{% endcomment %}
+<div class="neige fondu" aria-hidden="true">
+  {%- for i in (1..40) -%}
+    {%- liquid
+      assign gauche = i | times: 37 | modulo: 100
+      assign taille = i | modulo: 4 | plus: 2
+      assign duree = i | times: 7 | modulo: 9 | plus: 9
+      assign retard = i | times: 13 | modulo: 17
+      assign derive = i | modulo: 5 | minus: 2 | times: 18
+    -%}
+    <span style="left: {{ gauche }}%; width: {{ taille }}px; height: {{ taille }}px; --derive: {{ derive }}px; animation-duration: {{ duree }}s; animation-delay: -{{ retard }}s;"></span>
+  {%- endfor -%}
+</div>
