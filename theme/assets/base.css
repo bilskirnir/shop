@@ -422,13 +422,13 @@ h2 {
   to { transform: translate(var(--derive), 110vh); }
 }
 
-/* Pendant un écran enneigé, le feu du décor s'éteint en fondu. */
+/* Pendant un écran sans braises (neige ou aucune particule), le feu du décor s'éteint en fondu. */
 .decor__feu {
   inset: 0;
   transition: opacity 0.9s ease;
 }
 
-body:has(.neige.is-visible) .decor__feu {
+body:has(.eteint-feu.is-visible) .decor__feu {
   opacity: 0;
 }
 

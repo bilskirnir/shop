@@ -70,10 +70,10 @@
   assign voile_opacite = section.settings.voile_opacite | divided_by: 100.0
   assign voile = section.settings.voile_couleur | color_modify: 'alpha', voile_opacite
 
-  # Particules : le réglage de la section, sinon le champ style_particules de la saga, sinon les braises.
+  # Particules : le réglage de la section, sinon le champ style_particules de la saga, sinon aucune.
   assign particules = section.settings.particules
   if particules == 'auto'
-    assign particules = saga.style_particules.value | default: 'braises'
+    assign particules = saga.style_particules.value | default: 'aucune'
   endif
 
   if surtitre_gauche != blank and mention != blank
@@ -105,8 +105,11 @@
       </div>
     {%- endif -%}
 
+    {%- comment -%} Sauf pour les braises, le feu du décor s'éteint pendant cet écran (.eteint-feu, base.css). {%- endcomment -%}
     {%- if particules == 'neige' -%}
       {% render 'neige' %}
+    {%- elsif particules != 'braises' -%}
+      <div class="eteint-feu fondu" aria-hidden="true"></div>
     {%- endif -%}
 
     <div class="histoire__texte" data-reveal>
@@ -311,7 +314,8 @@
       "id": "particules",
       "label": "Particules",
       "options": [
-        { "value": "auto", "label": "Celles de la saga (braises par défaut)" },
+        { "value": "auto", "label": "Celles de la saga (aucune si elle n'en a pas)" },
+        { "value": "aucune", "label": "Aucune" },
         { "value": "braises", "label": "Braises qui montent" },
         { "value": "neige", "label": "Neige qui tombe" }
       ],

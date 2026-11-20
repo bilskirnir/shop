@@ -4,7 +4,7 @@
   Les flocons sont répartis par un petit calcul déterministe (pas de hasard : même rendu à chaque visite).
   Styles : assets/base.css (« Neige »).
 {% endcomment %}
-<div class="neige fondu" aria-hidden="true">
+<div class="neige eteint-feu fondu" aria-hidden="true">
   {%- for i in (1..40) -%}
     {%- liquid
       assign gauche = i | times: 37 | modulo: 100
