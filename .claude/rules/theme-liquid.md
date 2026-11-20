@@ -14,9 +14,11 @@ Ne pas écrire un fichier neuf avec un heredoc pendant que le serveur tourne san
 
 Un schéma invalide (ex. libellé d'option > 50 caractères, nom de section > 25 caractères) fait refuser **toute la section**, et `--json | tail -1` affiche quand même le thème comme si tout allait bien. Le serveur de dev sert alors une page d'erreur 500. Toujours lire la sortie : `shopify theme push ... 2>&1 | grep -iE "error|invalid"`.
 
-## Ne jamais écraser les réglages d'Uriel sur le thème non publié
+## Ne jamais écraser les réglages d'Uriel sur le thème en ligne
 
-Uriel règle l'accueil dans l'éditeur du thème non publié (200840970627). Un `theme push` y envoie toujours avec :
+**Depuis le 20/11/2026, le thème 200840970627 est PUBLIÉ : chaque push y part sur la boutique en ligne.** Tester d'abord sur le thème de dev (200840675715), n'envoyer en ligne qu'un rendu vérifié.
+
+Uriel règle le site dans l'éditeur de ce thème. Un `theme push` y envoie toujours avec :
 `--ignore "templates/*.json" --ignore "config/settings_data.json" --ignore "sections/*-group.json"`.
 Pour modifier ces fichiers, d'abord `shopify theme pull --only` puis fusionner.
 
