@@ -40,6 +40,7 @@
     assign lien = saga.system.url | default: tome_1.url
     assign auteurs = tome_1.metafields.custom.auteur.value
     assign genres = saga.genres.value
+    assign illustration = saga.illustration_hero_de_la_saga.value
     assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
@@ -65,12 +66,14 @@
     assign lien = livre.url
     assign auteurs = livre.metafields.custom.auteur.value
     assign genres = livre.metafields.custom.genres.value
+    assign illustration = livre.metafields.custom.illustration_hero.value
     assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
     assign date_recente = livre.metafields.custom.date_parution.value
   endif
 
-  # Image de fond : celle choisie dans la section, sinon l'illustration de la saga.
-  assign fond = section.settings.image_fond | default: saga.illustration_hero_de_la_saga.value
+  # Image de fond : celle choisie dans la section, sinon l'illustration de la fiche
+  # (saga : illustration_hero_de_la_saga ; livre seul : illustration_hero).
+  assign fond = section.settings.image_fond | default: illustration
   assign voile_opacite = section.settings.voile_opacite | divided_by: 100.0
   assign voile = section.settings.voile_couleur | color_modify: 'alpha', voile_opacite
 
@@ -351,7 +354,7 @@
       "type": "image_picker",
       "id": "image_fond",
       "label": "Image de fond",
-      "info": "Facultative. Apparaît en fondu derrière cet écran, sous les braises. Vide : l'illustration de la saga si elle en a une, sinon le décor habituel."
+      "info": "Facultative. Apparaît en fondu derrière cet écran, sous les braises. Vide : l'illustration de la fiche (saga ou livre), sinon le décor habituel."
     },
     {
       "type": "color",

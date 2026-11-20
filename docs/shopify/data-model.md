@@ -77,6 +77,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
 | Genres | `genres` | List of single line text | **à créer** — pastilles sur l'accueil (PC), livres seuls |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | créé le 20/11/2026 — même rôle que sur la saga, pour un livre seul |
+| Illustration hero | `illustration_hero` | File (image) | créé le 20/11/2026 — image de fond d'un livre seul sur l'accueil |
 
 ---
 
