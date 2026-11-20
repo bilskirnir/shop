@@ -1,21 +1,6 @@
 {% comment %}
   Premier écran de l'accueil : logo, promesse, fondateur, note, bouton vers les histoires.
 {% endcomment %}
-{%- liquid
-  # Nombre de lecteurs écrit à la française : 10247 → « 10 247 ». On parcourt les chiffres de droite à gauche en glissant une espace fine insécable tous les trois.
-  assign lecteurs = ''
-  if settings.nombre_lecteurs != blank
-    assign chiffres = settings.nombre_lecteurs | append: '' | split: '' | reverse
-    for chiffre in chiffres
-      assign rang = forloop.index0 | modulo: 3
-      if forloop.index0 > 0 and rang == 0
-        assign lecteurs = lecteurs | prepend: '&#8239;'
-      endif
-      assign lecteurs = lecteurs | prepend: chiffre
-    endfor
-  endif
--%}
-
 <section class="ecran ouverture" data-nom="{{ shop.name | escape }}">
   <div class="ouverture__coeur">
     {%- if section.settings.logo != blank -%}
@@ -48,7 +33,7 @@
           <span class="ouverture__etoiles" aria-hidden="true">★★★★★</span>
           <span>
             <strong>{{ section.settings.note }}</strong> {{ section.settings.note_source -}}
-            {%- if lecteurs != '' %} · <strong>{{ lecteurs }}</strong> lecteurs{% endif -%}
+            {%- if settings.lecteurs != blank %} · <strong>{{ settings.lecteurs }}</strong> lecteurs{% endif -%}
           </span>
         </p>
       {%- endif -%}

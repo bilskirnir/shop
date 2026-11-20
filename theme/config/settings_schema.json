@@ -11,10 +11,11 @@
     "name": "Bilskirnir",
     "settings": [
       {
-        "type": "number",
-        "id": "nombre_lecteurs",
+        "type": "text",
+        "id": "lecteurs",
         "label": "Nombre de lecteurs",
-        "info": "Affiché à côté de la note sur l'accueil. Laisser vide pour le masquer."
+        "default": "10 000+",
+        "info": "Écrit tel quel, ex. « 10 000+ ». Affiché à côté de la note sur l'accueil. Vide : masqué."
       },
       {
         "type": "number",
