@@ -28,14 +28,14 @@
         "type": "text",
         "id": "note_source",
         "label": "Source de la note",
-        "default": "sur Amazon"
+        "info": "Vide par défaut : la source n'est citée que sous chaque avis, pour ne pas envoyer le visiteur acheter ailleurs."
       },
       {
         "type": "text",
         "id": "note_nombre",
         "label": "Nombre d'avis",
         "default": "137 avis",
-        "info": "Affiché entre la note et sa source : « 4,7/5 · 137 avis sur Amazon ». Vide : masqué."
+        "info": "Affiché après la note : « 4,7/5 · 137 avis ». Vide : masqué."
       },
       {
         "type": "number",
