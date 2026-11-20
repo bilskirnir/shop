@@ -109,7 +109,8 @@
     {%- if particules == 'neige' -%}
       {% render 'neige' %}
     {%- elsif particules != 'braises' -%}
-      <div class="eteint-feu fondu" aria-hidden="true"></div>
+      {%- comment -%} Marqueur sans rendu : hidden le sort de la grille texte | couvertures. {%- endcomment -%}
+      <div class="eteint-feu fondu" hidden></div>
     {%- endif -%}
 
     <div class="histoire__texte" data-reveal>
