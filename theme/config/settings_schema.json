@@ -22,6 +22,14 @@
         "label": "Durée du badge Nouveauté (jours)",
         "info": "Un livre est « Nouveauté » pendant ce nombre de jours après sa date de parution.",
         "default": 90
+      },
+      {
+        "type": "metaobject_list",
+        "id": "engagements",
+        "label": "Engagements (esprit français)",
+        "metaobject_type": "engagement",
+        "limit": 8,
+        "info": "Accueil et page « à la française ». Contenu › Engagement."
       }
     ]
   },

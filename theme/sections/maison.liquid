@@ -47,7 +47,8 @@
       {%- endif -%}
     </div>
 
-    {%- assign engagements = section.blocks | where: 'type', 'engagement' -%}
+    {%- comment -%} Les engagements vivent dans Contenu › Engagement, choisis dans Paramètres du thème › Bilskirnir. {%- endcomment -%}
+    {%- assign engagements = settings.engagements -%}
     {%- if engagements.size > 0 or section.settings.page_valeurs != blank -%}
       <div class="maison__droite">
         <p class="surtitre maison__surtitre">{{ section.settings.esprit_surtitre }}</p>
@@ -55,10 +56,10 @@
 
         {%- if engagements.size > 0 -%}
           <ul class="maison__engagements">
-            {%- for block in engagements -%}
-              <li {{ block.shopify_attributes }}>
-                {%- if block.settings.titre != blank %}<strong>{{ block.settings.titre }}</strong>{% endif %}
-                {{ block.settings.texte }}
+            {%- for engagement in engagements -%}
+              <li>
+                {%- if engagement.titre.value != blank %}<strong>{{ engagement.titre.value }}</strong>{% endif %}
+                {{ engagement.texte.value }}
               </li>
             {%- endfor -%}
           </ul>
@@ -560,22 +561,6 @@
           "label": "Rôle"
         }
       ]
-    },
-    {
-      "type": "engagement",
-      "name": "Engagement",
-      "settings": [
-        {
-          "type": "text",
-          "id": "titre",
-          "label": "Titre"
-        },
-        {
-          "type": "text",
-          "id": "texte",
-          "label": "Texte"
-        }
-      ]
     }
   ],
   "presets": [
@@ -594,34 +579,6 @@
           "settings": {
             "nom": "Uriel Lahoussaye",
             "role": "Direction artistique et couvertures"
-          }
-        },
-        {
-          "type": "engagement",
-          "settings": {
-            "titre": "100 % indépendants",
-            "texte": "On publie les histoires qu'on a envie de lire."
-          }
-        },
-        {
-          "type": "engagement",
-          "settings": {
-            "titre": "Faits et pensés en France",
-            "texte": "Des romans originaux, épiques et déjantés."
-          }
-        },
-        {
-          "type": "engagement",
-          "settings": {
-            "titre": "Jamais ennuyeux",
-            "texte": "Des histoires qui se dévorent comme les meilleures séries."
-          }
-        },
-        {
-          "type": "engagement",
-          "settings": {
-            "titre": "Héroïsme, bravoure",
-            "texte": "Des mots qui ont encore un sens."
           }
         }
       ]

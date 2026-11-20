@@ -19,6 +19,19 @@ Source de vérité du schéma metaobject + metafields configuré dans l'admin Sh
 
 ---
 
+## Metaobject : `Engagement` — **à créer** (20/11/2026)
+
+Les engagements de la maison (« 100 % indépendants »…), écrits une seule fois et lus par l'accueil (écran La maison) et la page « Pourquoi à la française ». Choisis et ordonnés dans **Paramètres du thème › Bilskirnir › Engagements** (réglage `engagements`, type `metaobject_list`).
+
+Type : `engagement` · accès **Online Store / Storefronts** activé.
+
+| Label | Key | Type | Required | Note |
+|---|---|---|---|---|
+| Titre | `titre` | Single line text | ✅ | **display name** |
+| Texte | `texte` | Single line text | — | |
+
+---
+
 ## Metaobject : `Saga`
 
 Shopify ne fournit pas de champ Name automatique — seul le `handle` est présent par défaut. Le champ `Nom` a été ajouté manuellement et marqué comme **display name** de la définition, ce qui permet l'auto-génération du handle.
