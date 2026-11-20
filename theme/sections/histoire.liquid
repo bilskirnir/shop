@@ -74,7 +74,7 @@
   assign voile_opacite = section.settings.voile_opacite | divided_by: 100.0
   assign voile = section.settings.voile_couleur | color_modify: 'alpha', voile_opacite
 
-  # Particules : le réglage de la section, sinon le champ style_particules de la saga (ou du livre seul), sinon aucune.
+  # Particules : le réglage de la section, sinon le champ style_particules de la fiche (saga ou livre seul), sinon aucune.
   assign particules = section.settings.particules
   if particules == 'auto'
     if saga != blank
@@ -374,7 +374,7 @@
       "id": "particules",
       "label": "Particules",
       "options": [
-        { "value": "auto", "label": "Celles de la fiche (saga ou livre ; aucune si vide)" },
+        { "value": "auto", "label": "Celles de la fiche (aucune si vide)" },
         { "value": "aucune", "label": "Aucune" },
         { "value": "braises", "label": "Braises qui montent" },
         { "value": "neige", "label": "Neige qui tombe" }

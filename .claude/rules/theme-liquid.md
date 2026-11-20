@@ -10,6 +10,10 @@ Trois fois dans la même session : un fichier modifié n'est jamais envoyé, ou 
 `shopify theme push --store bilskirnir-2 --theme 200840675715 --path theme --only <fichier>`.
 Ne pas écrire un fichier neuf avec un heredoc pendant que le serveur tourne sans vérifier sa taille côté serveur (`shopify theme pull --only`).
 
+## Un `theme push` peut refuser un fichier en silence
+
+Un schéma invalide (ex. libellé d'option > 50 caractères) fait refuser **toute la section**, et `--json | tail -1` affiche quand même le thème comme si tout allait bien. Le serveur de dev sert alors une page d'erreur 500. Toujours lire la sortie : `shopify theme push ... 2>&1 | grep -iE "error|invalid"`.
+
 ## Ne jamais écraser les réglages d'Uriel sur le thème non publié
 
 Uriel règle l'accueil dans l'éditeur du thème non publié (200840970627). Un `theme push` y envoie toujours avec :

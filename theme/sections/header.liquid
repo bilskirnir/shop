@@ -69,14 +69,12 @@
     border-radius: 8px;
   }
 
-  /* Verre dépoli : voile clair très léger + flou fort, liseré lumineux en haut, ombre douce.
-     Le décor (neige, braises, fonds) se devine flouté à travers. */
+  /* Verre transparent : la teinte des autres panneaux, un peu plus claire (55 %), et un flou de 1 px
+     seulement : au-delà, un flocon de neige qui passe derrière disparaît (mesuré : 4 px l'efface). */
   .entete.verre {
-    background: linear-gradient(180deg, #ece5d617, #ece5d608), #14161a66;
-    backdrop-filter: blur(24px) saturate(1.5);
-    -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border: 1px solid #ece5d61f;
-    box-shadow: inset 0 1px 0 #ece5d62e, 0 10px 30px -12px #000000b3;
+    background: #14161a8c;
+    backdrop-filter: blur(1px) saturate(1.3);
+    -webkit-backdrop-filter: blur(1px) saturate(1.3);
   }
 
   .entete a,
