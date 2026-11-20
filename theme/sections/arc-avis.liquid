@@ -1,6 +1,7 @@
 {% comment %}
   Page d'un arc — les avis des lecteurs. Champ « avis » de la saga : une liste de métaobjets « avis »
-  (texte, auteur, source). Le premier s'affiche en grand dans le halo, les suivants en petites cartes.
+  (texte, auteur, source, verifie). Le premier s'affiche en grand dans le halo, les suivants en petites cartes.
+  Un avis dont la case « Vérifié » est cochée porte le badge « Avis vérifié ».
   Rien si la saga n'a pas d'avis.
 {% endcomment %}
 {%- assign saga = metaobject -%}
@@ -16,14 +17,20 @@
       {%- if forloop.first -%}
         <figure class="arc-avis__grand">
           <blockquote>« {{ un_avis.texte.value }} »</blockquote>
-          <figcaption>{{ un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif %}</figcaption>
+          <figcaption>
+            {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
+            {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
+          </figcaption>
         </figure>
         {%- if avis.size > 1 %}<div class="arc-avis__cartes">{% endif -%}
       {%- else -%}
         <figure class="arc-avis__carte verre">
           <span class="note__etoiles" aria-hidden="true">★★★★★</span>
           <blockquote>« {{ un_avis.texte.value }} »</blockquote>
-          <figcaption>{{ un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif %}</figcaption>
+          <figcaption>
+            {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
+            {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
+          </figcaption>
         </figure>
         {%- if forloop.last %}</div>{% endif -%}
       {%- endif -%}
@@ -56,6 +63,21 @@
     margin-top: 16px;
     font-size: 14px;
     color: var(--gris-2);
+  }
+
+  .arc-avis__verifie {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 8px;
+    padding: 3px 10px 3px 8px;
+    border-radius: 999px;
+    background: #d2b06a1f;
+    border: 1px solid #d2b06a4d;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--or);
+    vertical-align: middle;
   }
 
   .arc-avis__cartes {
@@ -115,6 +137,12 @@
       "id": "surtitre",
       "label": "Surtitre",
       "default": "Ils l'ont lu"
+    },
+    {
+      "type": "text",
+      "id": "libelle_verifie",
+      "label": "Badge des avis vérifiés",
+      "default": "Avis vérifié"
     }
   ],
   "presets": [{ "name": "Arc — avis" }]
