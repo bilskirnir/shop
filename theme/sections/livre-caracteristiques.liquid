@@ -1,6 +1,6 @@
 {% comment %}
   Fiche d'un livre — les caractéristiques, sur une ligne sobre : nombre de pages (custom.nombre_pages),
-  ISBN (code-barres de la variante), fabrication (réglage), couverture (champ produit custom.couverture,
+  ISBN (code-barres de la variante), garantie sans IA (réglage), couverture (champ produit custom.couverture,
   texte). Une valeur vide disparaît.
 {% endcomment %}
 {%- liquid
@@ -16,8 +16,8 @@
     {%- if isbn != blank -%}
       <div><dt>ISBN</dt><dd>{{ isbn }}</dd></div>
     {%- endif -%}
-    {%- if section.settings.fabrication != blank -%}
-      <div><dt>{{ section.settings.libelle_fabrication }}</dt><dd>{{ section.settings.fabrication }}</dd></div>
+    {%- if section.settings.garantie != blank -%}
+      <div><dt>{{ section.settings.libelle_garantie }}</dt><dd>{{ section.settings.garantie }}</dd></div>
     {%- endif -%}
     {%- if couverture != blank -%}
       <div><dt>{{ section.settings.libelle_couverture }}</dt><dd>{{ couverture }}</dd></div>
@@ -75,8 +75,8 @@
   "name": "Livre — caractéristiques",
   "settings": [
     { "type": "text", "id": "libelle_pages", "label": "Libellé du nombre de pages", "default": "Longueur" },
-    { "type": "text", "id": "libelle_fabrication", "label": "Libellé de la fabrication", "default": "Fabrication" },
-    { "type": "text", "id": "fabrication", "label": "Fabrication", "default": "Imprimé en France" },
+    { "type": "text", "id": "libelle_garantie", "label": "Libellé de la garantie", "default": "Création" },
+    { "type": "text", "id": "garantie", "label": "Garantie", "default": "Garanti sans IA" },
     { "type": "text", "id": "libelle_couverture", "label": "Libellé de la couverture", "default": "Couverture" }
   ],
   "presets": [{ "name": "Livre — caractéristiques" }]
