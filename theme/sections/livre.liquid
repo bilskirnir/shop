@@ -36,7 +36,7 @@
     <nav class="livre__ariane" aria-label="Fil d'Ariane">
       <a href="{{ routes.root_url }}#histoires">{{ section.settings.ariane_accueil }}</a> /
       <a href="{% render 'saga-lien', saga: saga %}">{{ saga.nom.value }}</a> /
-      <span aria-current="page">{{ product.title }}</span>
+      <span aria-current="page">{% render 'livre-titre', livre: product %}</span>
     </nav>
   {%- endif -%}
 
@@ -54,7 +54,7 @@
           {{ saga.nom.value | default: product.type }}
         {%- endif -%}
       </p>
-      <h1>{{ product.title }}</h1>
+      <h1>{% render 'livre-titre', livre: product %}</h1>
       {%- if product.description != blank -%}
         <div class="arc__synopsis">{{ product.description }}</div>
       {%- endif -%}
@@ -126,7 +126,7 @@
       {%- if product.featured_image -%}
         {{ product.featured_image | image_url: width: 80 | image_tag: alt: '', width: 34, loading: 'lazy' }}
       {%- endif -%}
-      <p><strong>{{ product.title }}</strong>{{ variante.price | money_without_trailing_zeros }}{% if section.settings.dedicace and section.settings.barre_mention != blank %} · {{ section.settings.barre_mention }}{% endif %}</p>
+      <p><strong>{% render 'livre-titre', livre: product %}</strong>{{ variante.price | money_without_trailing_zeros }}{% if section.settings.dedicace and section.settings.barre_mention != blank %} · {{ section.settings.barre_mention }}{% endif %}</p>
       {% render 'bouton', libelle: section.settings.libelle_panier, url: '#arc-achat', variante: 'or' %}
     </div>
     <script src="{{ 'arc.js' | asset_url }}" defer></script>
@@ -148,11 +148,20 @@
 </div>
 
 {% stylesheet %}
+  /* Le fil d'Ariane : en petit, centré juste sous la barre, au-dessus de toute la page. */
   .livre__ariane {
     position: relative;
-    margin-bottom: 24px;
-    font-size: 14px;
+    margin: -48px auto 32px;
+    width: fit-content;
+    max-width: 100%;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #14161a99;
+    border: 1px solid #ece5d614;
+    font-size: 13px;
     color: var(--gris-2);
+    text-align: center;
+    text-wrap: balance;
   }
 
   .livre__ariane a {
@@ -170,6 +179,29 @@
 
   .livre .arc__couvertures .couverture--seule {
     width: min(240px, 60vw);
+  }
+
+  /* Le résumé vient de la description du produit : ses intertitres deviennent des surtitres,
+     ses paragraphes respirent. */
+  .livre .arc__synopsis > * + * {
+    margin-top: 12px;
+  }
+
+  .livre .arc__synopsis :is(h1, h2, h3, h4) {
+    font-family: var(--texte);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .livre .arc__synopsis :is(h1, h2, h3, h4) + * {
+    margin-top: 8px;
+  }
+
+  .livre .arc__synopsis strong {
+    color: var(--ivoire);
   }
 
   .livre__achat {
@@ -292,6 +324,11 @@
   }
 
   @media (min-width: 1024px) {
+    .livre__ariane {
+      margin-top: -56px;
+      margin-bottom: 40px;
+    }
+
     .livre .arc__couvertures .couverture--seule {
       width: 340px;
     }

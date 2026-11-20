@@ -90,7 +90,7 @@
           {%- else -%}
             <div class="arc__offre">
               <p class="arc__prix">{{ tome_1.price | money_without_trailing_zeros }}</p>
-              <p>{{ tome_1.title }}</p>
+              <p>{% render 'livre-titre', livre: tome_1 %}</p>
             </div>
             {% render 'bouton', libelle: section.settings.libelle_livre_1, url: tome_1.url, variante: 'or' %}
           {%- endif -%}

@@ -122,6 +122,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Est une œuvre indépendante | `est_une_oeuvre_independante` | Boolean | — |
 | Statut de parution | `statut_parution` | Single line text | Choix : `publié` · `précommande` · `annoncé` |
 | Date de parution | `date_parution` | Date | — |
+| Titre court | `titre_court` | Single line text | — | créé le 20/11/2026 ; « Destinée manifeste » : affiché partout dans le thème (snippet livre-titre), le titre complet reste pour le panier, les commandes et Google |
 | Avis | `avis` | List of metaobject references (Avis) | — | créé le 20/11/2026 ; le meilleur en premier (sur le Livre 1, il s'affiche en grand sur la page Arc) |
 | Teaser court | `teaser_court` | Multi-line text | — |
 | Type de goodie | `type_goodie` | Single line text | Choix : `ex-libris` · `illustration` · `marque-page` · `coffret` |

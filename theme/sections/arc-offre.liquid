@@ -37,7 +37,7 @@
         <h2>{{ section.settings.titre }}</h2>
         <ul class="arc-offre__lignes">
           {%- for tome in tomes -%}
-            <li><strong>Livre {{ forloop.index }} · {{ tome.title }}</strong><span>{{ tome.price | money_without_trailing_zeros }}</span></li>
+            <li><strong>Livre {{ forloop.index }} · {% render 'livre-titre', livre: tome %}</strong><span>{{ tome.price | money_without_trailing_zeros }}</span></li>
           {%- endfor -%}
           {%- for block in section.blocks -%}
             <li {{ block.shopify_attributes }}><strong>{{ block.settings.libelle | replace: '[auteur]', nom_auteur }}</strong><span class="arc-offre__offert">{{ block.settings.mention }}</span></li>

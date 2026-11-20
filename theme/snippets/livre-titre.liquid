@@ -1,0 +1,7 @@
+{% comment %}
+  Le titre d'un livre tel qu'on l'affiche : son titre court (champ produit custom.titre_court,
+  ex. « Destinée manifeste »), sinon le titre complet du produit. Le titre complet reste celui
+  du panier, des commandes et des moteurs de recherche.
+  Usage : {% render 'livre-titre', livre: product %}
+{%- endcomment -%}
+{{- livre.metafields.custom.titre_court.value | default: livre.title -}}
