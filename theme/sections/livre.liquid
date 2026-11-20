@@ -218,8 +218,17 @@
   }
 
   /* « Lire le synopsis » : le synopsis se déplie et remplace l'accroche. */
+  /* L'accroche se replie en fondu ; max-height plutôt que display, qui ne s'anime pas. */
+  .livre__accroche {
+    max-height: 20em;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease;
+  }
+
   .arc__texte:has(.livre__resume[open]) .livre__accroche {
-    display: none;
+    max-height: 0;
+    margin-block: 0;
+    opacity: 0;
   }
 
   .livre__resume summary {
@@ -250,11 +259,19 @@
 
   .livre__resume[open] .arc__synopsis {
     margin-top: 4px;
-    animation: resume-ouvre 0.3s ease-out;
+    animation: resume-ouvre 0.5s ease-out 0.15s backwards;
   }
 
   @keyframes resume-ouvre {
-    from { opacity: 0; transform: translateY(-4px); }
+    from { opacity: 0; transform: translateY(12px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .livre__accroche,
+    .livre__resume[open] .arc__synopsis {
+      transition: none;
+      animation: none;
+    }
   }
 
   .livre__achat {
