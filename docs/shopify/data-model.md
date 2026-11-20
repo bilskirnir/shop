@@ -85,8 +85,8 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Mention de lecture | `mention_de_lecture` | Single line text | — | **à créer** |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | — | créé ; vide = aucune particule sur l'écran de l'accueil |
 | Tags | `tags` | List of single line text | — | créé le 20/11/2026 — pastilles sur l'accueil (PC) |
-| Promesse | `promesse` | Single line text | — | **à créer** — page Arc, la phrase en grand (« Tout ce qu'on t'a raconté sur les dieux est vrai. ») |
-| Raisons | `raisons` | List of single line text | — | **à créer** — page Arc, pastilles sous la promesse |
+| Promesse | `promesse` | Single line text | — | créé le 20/11/2026 — page Arc, la phrase en grand (« Tout ce qu'on t'a raconté sur les dieux est vrai. ») |
+| Raisons | `raisons` | List of single line text | — | créé le 20/11/2026 — page Arc, pastilles sous la promesse |
 | Avis | `avis` | List of metaobject references (Avis) | — | **à créer** — page Arc ; le premier s'affiche en grand |
 
 ---
