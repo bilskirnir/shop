@@ -42,6 +42,7 @@ Relié aux produits par `custom.auteur` (liste). Clés vérifiées par sonde le 
 | Nom | `nom` | Single line text | display name |
 | Avatar | `avatar` | File (image) | photo ronde, haut et carte auteur de la page Arc |
 | Bio | `bio` | Multi-line text | carte auteur de la page Arc |
+| Chiffres | `chiffres` | List of single line text | créé le 20/11/2026 ; « 180k abonnés TikTok » → premier mot en grand, le reste en légende |
 
 ---
 

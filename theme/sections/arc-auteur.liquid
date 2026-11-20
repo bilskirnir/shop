@@ -1,6 +1,7 @@
 {% comment %}
   Page d'un arc — l'auteur : photo, nom, présentation (métaobjet auteur du premier livre :
-  champs nom, avatar, bio), puis des chiffres réglés une fois pour tous les arcs (blocs).
+  champs nom, avatar, bio, chiffres). Rien de propre à un auteur n'est réglé dans le modèle.
+  chiffres : une liste de textes, « 150k abonnés TikTok » → le premier mot en grand, le reste en légende.
 {% endcomment %}
 {%- assign saga = metaobject -%}
 {%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
@@ -20,10 +21,11 @@
         {%- if auteur.bio.value != blank -%}
           <p>{{ auteur.bio.value }}</p>
         {%- endif -%}
-        {%- if section.blocks.size > 0 -%}
+        {%- if auteur.chiffres.value != blank -%}
           <dl class="arc-auteur__chiffres">
-            {%- for block in section.blocks -%}
-              <div {{ block.shopify_attributes }}><dt>{{ block.settings.libelle }}</dt><dd>{{ block.settings.valeur }}</dd></div>
+            {%- for chiffre in auteur.chiffres.value -%}
+              {%- assign valeur = chiffre | split: ' ' | first -%}
+              <div><dt>{{ chiffre | remove_first: valeur | strip }}</dt><dd>{{ valeur }}</dd></div>
             {%- endfor -%}
           </dl>
         {%- endif -%}
@@ -154,20 +156,19 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Nom, avatar et bio viennent du métaobjet auteur du premier livre."
+      "content": "Nom, avatar, bio et chiffres viennent du métaobjet auteur du premier livre."
     },
-    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "L'auteur" }
-  ],
-  "blocks": [
     {
-      "type": "chiffre",
-      "name": "Chiffre",
-      "settings": [
-        { "type": "text", "id": "valeur", "label": "Valeur" },
-        { "type": "text", "id": "libelle", "label": "Libellé" }
-      ]
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "L'auteur"
     }
   ],
-  "presets": [{ "name": "Arc — l'auteur" }]
+  "presets": [
+    {
+      "name": "Arc — l'auteur"
+    }
+  ]
 }
 {% endschema %}

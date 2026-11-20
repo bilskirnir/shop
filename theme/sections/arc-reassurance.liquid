@@ -1,7 +1,9 @@
 {% comment %}
   Page d'un arc — les garanties, juste sous le bloc d'achat : une ligne par bloc (icône, titre, texte).
   Les mêmes pour tous les arcs : elles se règlent une fois dans l'éditeur.
+  « [auteur] » dans un texte devient le nom de l'auteur de la saga.
 {% endcomment %}
+{%- capture nom_auteur %}{% render 'saga-auteurs', saga: metaobject %}{% endcapture -%}
 {%- if section.blocks.size > 0 -%}
   <section class="arc-reassurance verre" aria-label="{{ section.settings.titre_accessible }}">
     {%- for block in section.blocks -%}
@@ -16,7 +18,7 @@
             {%- endcase -%}
           </svg>
         </span>
-        <span><strong>{{ block.settings.titre }}</strong>{{ block.settings.texte }}</span>
+        <span><strong>{{ block.settings.titre | replace: '[auteur]', nom_auteur }}</strong>{{ block.settings.texte | replace: '[auteur]', nom_auteur }}</span>
       </div>
     {%- endfor -%}
   </section>
@@ -107,7 +109,7 @@
           "default": "dedicace"
         },
         { "type": "text", "id": "titre", "label": "Titre" },
-        { "type": "text", "id": "texte", "label": "Texte" }
+        { "type": "text", "id": "texte", "label": "Texte", "info": "[auteur] = le nom de l'auteur de la saga." }
       ]
     }
   ],

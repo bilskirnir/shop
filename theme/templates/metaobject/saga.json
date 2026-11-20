@@ -12,7 +12,7 @@
           "settings": {
             "icone": "dedicace",
             "titre": "Dédicace offerte",
-            "texte": "par Gautier, sur demande"
+            "texte": "par [auteur], sur demande"
           }
         },
         "garantie-2": {
@@ -69,7 +69,7 @@
         "offert-2": {
           "type": "offert",
           "settings": {
-            "libelle": "La dédicace de Gautier",
+            "libelle": "La dédicace de [auteur]",
             "mention": "Offerte"
           }
         },
@@ -94,34 +94,6 @@
     },
     "auteur": {
       "type": "arc-auteur",
-      "blocks": {
-        "chiffre-1": {
-          "type": "chiffre",
-          "settings": {
-            "valeur": "150k",
-            "libelle": "abonnés TikTok"
-          }
-        },
-        "chiffre-2": {
-          "type": "chiffre",
-          "settings": {
-            "valeur": "10k+",
-            "libelle": "lecteurs"
-          }
-        },
-        "chiffre-3": {
-          "type": "chiffre",
-          "settings": {
-            "valeur": "2018",
-            "libelle": "fondation de la maison"
-          }
-        }
-      },
-      "block_order": [
-        "chiffre-1",
-        "chiffre-2",
-        "chiffre-3"
-      ],
       "settings": {}
     },
     "questions": {

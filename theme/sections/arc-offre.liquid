@@ -2,7 +2,9 @@
   Page d'un arc — « Tout ce qu'il y a dans le colis » : les tomes avec leur prix, puis les lignes
   offertes (blocs réglés une fois pour tous les arcs), le total et le bouton.
   Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
+  « [auteur] » dans un libellé devient le nom de l'auteur de la saga.
 {% endcomment %}
+{%- capture nom_auteur %}{% render 'saga-auteurs', saga: metaobject %}{% endcapture -%}
 {%- liquid
   assign saga = metaobject
   assign tomes = saga.ordre_des_tomes.value
@@ -38,7 +40,7 @@
             <li><strong>Livre {{ forloop.index }} · {{ tome.title }}</strong><span>{{ tome.price | money_without_trailing_zeros }}</span></li>
           {%- endfor -%}
           {%- for block in section.blocks -%}
-            <li {{ block.shopify_attributes }}><strong>{{ block.settings.libelle }}</strong><span class="arc-offre__offert">{{ block.settings.mention }}</span></li>
+            <li {{ block.shopify_attributes }}><strong>{{ block.settings.libelle | replace: '[auteur]', nom_auteur }}</strong><span class="arc-offre__offert">{{ block.settings.mention }}</span></li>
           {%- endfor -%}
         </ul>
         <p class="arc-offre__total"><span class="surtitre">Total</span><span>{% render 'arc-total', saga: saga %}</span></p>
@@ -199,7 +201,7 @@
       "type": "offert",
       "name": "Ligne offerte",
       "settings": [
-        { "type": "text", "id": "libelle", "label": "Libellé" },
+        { "type": "text", "id": "libelle", "label": "Libellé", "info": "[auteur] = le nom de l'auteur de la saga." },
         { "type": "text", "id": "mention", "label": "Mention", "default": "Offert" }
       ]
     }
