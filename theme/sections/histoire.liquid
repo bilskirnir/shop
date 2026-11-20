@@ -47,7 +47,7 @@
     assign accroche = saga.teaser_court.value
     assign couleur = saga.couleur_halo.value | default: saga.univers_parent.value.metafields.custom.couleur.value
     assign auteurs = tome_1.metafields.custom.auteur.value
-    assign genres = saga.genres.value
+    assign tags = saga.tags.value
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
     assign maintenant = 'now' | date: '%s' | plus: 0
@@ -135,10 +135,10 @@
       {%- if accroche != blank -%}
         <p class="histoire__accroche">{{ accroche }}</p>
       {%- endif -%}
-      {%- if genres != blank -%}
-        <ul class="histoire__genres">
-          {%- for genre in genres -%}
-            <li>{{ genre }}</li>
+      {%- if tags != blank -%}
+        <ul class="histoire__tags">
+          {%- for tag in tags -%}
+            <li>{{ tag }}</li>
           {%- endfor -%}
         </ul>
       {%- endif -%}
@@ -238,8 +238,8 @@
     color: var(--gris-2);
   }
 
-  /* Les genres en pastilles : sur PC seulement, le mobile est déjà plein. */
-  .histoire__genres {
+  /* Les tags en pastilles : sur PC seulement, le mobile est déjà plein. */
+  .histoire__tags {
     display: none;
     flex-wrap: wrap;
     gap: 8px;
@@ -248,7 +248,7 @@
     list-style: none;
   }
 
-  .histoire__genres li {
+  .histoire__tags li {
     padding: 6px 14px;
     border: 1px solid #ece5d633;
     border-radius: 999px;
@@ -305,7 +305,7 @@
       line-height: 1.5;
     }
 
-    .histoire__genres {
+    .histoire__tags {
       display: flex;
     }
 

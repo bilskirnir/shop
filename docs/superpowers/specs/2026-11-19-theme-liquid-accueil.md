@@ -66,7 +66,7 @@ Tout le reste vient des données, pour que Gautier n'écrive rien deux fois :
 | Surtitre (partie droite) | `saga.mention_de_lecture` | `product.metafields.custom.mention_de_lecture` |
 | Titre | `saga.nom` | `product.title` |
 | Auteur (sous le titre) | `custom.auteur` du 1er tome (liste de métaobjets `auteur`, champ `nom`) | `custom.auteur` du produit |
-| Genres (pastilles, PC seulement) | `saga.genres` | `custom.genres` |
+| Tags (pastilles, PC seulement) | `saga.tags` | — |
 | Accroche | `saga.teaser_court` | `product.metafields.custom.teaser_court` (existe) |
 | Halo + teinte du surtitre | `saga.couleur_halo` | `product.metafields.custom.couleur_halo`, sinon couleur de son univers |
 | Badge « Nouveauté » | si un tome a une `date_parution` de moins de X jours | si sa `date_parution` a moins de X jours |

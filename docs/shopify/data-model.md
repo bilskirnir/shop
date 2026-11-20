@@ -34,7 +34,7 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Couleur du halo | `couleur_halo` | Color | — | **à créer** |
 | Mention de lecture | `mention_de_lecture` | Single line text | — | **à créer** |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | — | créé ; vide = aucune particule sur l'écran de l'accueil |
-| Genres | `genres` | List of single line text | — | **à créer** — pastilles sur l'accueil (PC) |
+| Tags | `tags` | List of single line text | — | créé le 20/11/2026 — pastilles sur l'accueil (PC) |
 
 ---
 
@@ -75,7 +75,6 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Nombre de pages | `nombre_pages` | Integer | **à créer** (jamais défini, le code Hydrogen le lisait dans le vide) |
 | Mention de lecture | `mention_de_lecture` | Single line text | **à créer** (thème Liquid, accueil) |
 | Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
-| Genres | `genres` | List of single line text | **à créer** — pastilles sur l'accueil (PC), livres seuls |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | créé le 20/11/2026 — même rôle que sur la saga, pour un livre seul |
 | Illustration hero | `illustration_hero` | File (image) | créé le 20/11/2026 — image de fond d'un livre seul sur l'accueil |
 
@@ -144,7 +143,6 @@ Depuis le 20/11/2026, tout livre appartient à une saga, y compris un roman seul
 - `mention_de_lecture` → `saga.mention_de_lecture`
 - `style_particules` → `saga.style_particules`
 - `illustration_hero` → `saga.illustration_hero_de_la_saga`
-- `genres` (s'il a été créé) → `saga.genres`
 - `est_une_oeuvre_independante` → à revoir au plan Arc (une saga d'un livre le dit déjà)
 
 Restent sur le produit : `auteur`, `saga`, `numero_tome`, `statut_parution`, `date_parution`, `teaser_court` (fiche produit), `nombre_pages`, `extrait`, `univers`. `univers_associe` : doublon probable d'`univers`, à trancher.
