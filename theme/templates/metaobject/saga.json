@@ -2,10 +2,7 @@
   "sections": {
     "haut": {
       "type": "arc",
-      "settings": {}
-    },
-    "garanties": {
-      "type": "arc-reassurance",
+      "settings": {},
       "blocks": {
         "garantie-1": {
           "type": "garantie",
@@ -36,8 +33,7 @@
         "garantie-1",
         "garantie-2",
         "garantie-4"
-      ],
-      "settings": {}
+      ]
     },
     "promesse": {
       "type": "arc-promesse",
@@ -114,7 +110,6 @@
   },
   "order": [
     "haut",
-    "garanties",
     "promesse",
     "avis",
     "colis",

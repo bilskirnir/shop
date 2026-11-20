@@ -1,0 +1,24 @@
+{% comment %}
+  Les garanties sous un bouton d'achat : une icône et un texte court par ligne.
+  Elles viennent des blocs « garantie » de la section (icône, titre, texte) ;
+  « [auteur] » devient le nom de l'auteur passé en paramètre.
+  Styles : assets/base.css (« Garanties »).
+  Usage : {% render 'garanties', blocs: section.blocks, auteur: nom_auteur %}
+{%- endcomment -%}
+{%- assign garanties = blocs | where: 'type', 'garantie' -%}
+{%- if garanties.size > 0 -%}
+  <ul class="garanties">
+    {%- for block in garanties -%}
+      <li {{ block.shopify_attributes }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {%- case block.settings.icone -%}
+            {%- when 'livraison' -%}<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>
+            {%- when 'france' -%}<path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/>
+            {%- else -%}<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>
+          {%- endcase -%}
+        </svg>
+        <span><strong>{{ block.settings.titre | replace: '[auteur]', auteur }}</strong> {{ block.settings.texte | replace: '[auteur]', auteur }}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

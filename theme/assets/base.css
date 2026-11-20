@@ -656,6 +656,37 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   }
 }
 
+/* ---------- Garanties sous un bouton d'achat (snippets/garanties.liquid) ---------- */
+.garanties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid #ece5d61a;
+  list-style: none;
+}
+
+.garanties li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--gris-2);
+}
+
+.garanties svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--or);
+}
+
+.garanties strong {
+  font-weight: 600;
+  color: var(--ivoire);
+}
+
 /* ---------- Indicateur de l'accueil (assets/indicateur.js) ---------- */
 /* Mobile : une rangée de points centrée en haut, sous la barre (10 px de marge + 52 px). */
 .indicateur {

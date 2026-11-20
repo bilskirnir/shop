@@ -1,6 +1,7 @@
 {% comment %}
   Haut de la page d'un arc (page web du métaobjet « saga », modèle templates/metaobject/saga.json).
-  Couvertures en éventail, surtitre, titre, synopsis, auteur, note, pastilles, bloc d'achat ;
+  Couvertures en éventail, surtitre, titre, synopsis, auteur, note, pastilles, bloc d'achat
+  avec ses garanties sous le bouton (blocs « garantie », « [auteur] » = l'auteur de la saga) ;
   derrière, l'illustration de la saga sous un voile. Une barre d'achat suit le défilement
   une fois ce bloc dépassé (arc.js). Les autres blocs de la page sont les sections arc-*.
 
@@ -93,6 +94,7 @@
             </div>
             {% render 'bouton', libelle: section.settings.libelle_livre_1, url: tome_1.url, variante: 'or' %}
           {%- endif -%}
+          {% render 'garanties', blocs: section.blocks, auteur: noms_auteurs %}
         </div>
       {%- endif -%}
     </div>
@@ -358,7 +360,8 @@
       padding: 22px 22px 22px 26px;
     }
 
-    .arc__livre-seul {
+    .arc__livre-seul,
+    .arc__achat .garanties {
       grid-column: 1 / -1;
     }
 
@@ -412,6 +415,45 @@
       "id": "libelle_livre_1",
       "label": "Bouton si l'arc n'est pas complet",
       "default": "Commencer par le Livre 1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "garantie",
+      "name": "Garantie",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icone",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "dedicace",
+              "label": "Plume (dédicace)"
+            },
+            {
+              "value": "livraison",
+              "label": "Camion (livraison)"
+            },
+            {
+              "value": "france",
+              "label": "Drapeau"
+            }
+          ],
+          "default": "dedicace"
+        },
+        {
+          "type": "text",
+          "id": "titre",
+          "label": "Titre"
+        },
+        {
+          "type": "text",
+          "id": "texte",
+          "label": "Texte",
+          "info": "[auteur] = le nom de l'auteur de la saga."
+        }
+      ]
     }
   ]
 }
