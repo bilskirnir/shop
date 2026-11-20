@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "ouverture": {
+      "type": "francaise-ouverture",
+      "settings": {}
+    },
+    "engagements": {
+      "type": "francaise-engagements",
+      "settings": {}
+    },
+    "maison": {
+      "type": "francaise-maison",
+      "blocks": {
+        "dieux": {
+          "type": "univers",
+          "settings": {
+            "texte": "Embarquez aux côtés de demi-dieux légendaires pour sauver une Humanité à la dérive."
+          }
+        },
+        "gaule": {
+          "type": "univers",
+          "settings": {
+            "texte": "Chevauchez avec des cavaliers celtes pour défendre la Gaule envahie par Rome."
+          }
+        },
+        "infectes": {
+          "type": "univers",
+          "settings": {
+            "texte": "Repoussez des hordes d'infectés dans l'un des derniers bastions de France."
+          }
+        }
+      },
+      "block_order": [
+        "dieux",
+        "gaule",
+        "infectes"
+      ],
+      "settings": {
+        "personne_photo": "shopify://shop_images/avatar-gautier.jpg"
+      }
+    },
+    "appel": {
+      "type": "francaise-appel",
+      "settings": {}
+    }
+  },
+  "order": [
+    "ouverture",
+    "engagements",
+    "maison",
+    "appel"
+  ]
+}

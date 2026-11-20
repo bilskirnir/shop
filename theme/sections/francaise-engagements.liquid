@@ -1,0 +1,56 @@
+{% comment %}
+  Page « Pourquoi à la française » — les engagements de la maison, en cartes.
+  Les mêmes que sur l'accueil : Contenu › Engagement, choisis dans Paramètres du thème › Bilskirnir.
+{% endcomment %}
+{%- if settings.engagements.size > 0 -%}
+  <section class="francaise-engagements">
+    <h2 class="surtitre francaise-engagements__surtitre">{{ section.settings.surtitre }}</h2>
+    {%- for engagement in settings.engagements -%}
+      <div data-reveal>{% render 'engagement', engagement: engagement, variante: 'carte' %}</div>
+    {%- endfor -%}
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .francaise-engagements {
+    display: grid;
+    gap: 14px;
+    padding: 0 var(--marge-centre) 72px;
+  }
+
+  .francaise-engagements__surtitre {
+    color: var(--gris-2);
+    margin-bottom: 4px;
+  }
+
+  @media (min-width: 1024px) {
+    .francaise-engagements {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      padding-bottom: 96px;
+    }
+
+    .francaise-engagements__surtitre {
+      grid-column: 1 / -1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Française — engagements",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les engagements se choisissent dans Paramètres du thème › Bilskirnir."
+    },
+    {
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "Nos engagements"
+    }
+  ],
+  "presets": [{ "name": "Française — engagements" }]
+}
+{% endschema %}

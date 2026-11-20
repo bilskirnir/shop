@@ -12,7 +12,7 @@ Ne pas écrire un fichier neuf avec un heredoc pendant que le serveur tourne san
 
 ## Un `theme push` peut refuser un fichier en silence
 
-Un schéma invalide (ex. libellé d'option > 50 caractères) fait refuser **toute la section**, et `--json | tail -1` affiche quand même le thème comme si tout allait bien. Le serveur de dev sert alors une page d'erreur 500. Toujours lire la sortie : `shopify theme push ... 2>&1 | grep -iE "error|invalid"`.
+Un schéma invalide (ex. libellé d'option > 50 caractères, nom de section > 25 caractères) fait refuser **toute la section**, et `--json | tail -1` affiche quand même le thème comme si tout allait bien. Le serveur de dev sert alors une page d'erreur 500. Toujours lire la sortie : `shopify theme push ... 2>&1 | grep -iE "error|invalid"`.
 
 ## Ne jamais écraser les réglages d'Uriel sur le thème non publié
 

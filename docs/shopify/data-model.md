@@ -29,6 +29,7 @@ Type : `engagement` · accès **Online Store / Storefronts** activé.
 |---|---|---|---|---|
 | Titre | `titre` | Single line text | ✅ | **display name** |
 | Texte | `texte` | Single line text | — | |
+| Icône | `icone` | Single line text (choix : `bouclier`, `drapeau`, `eclair`, `couronne`) | — | vide = bouclier ; page « à la française » |
 
 ---
 

@@ -1,6 +1,6 @@
 {% comment %}
   Dernier écran de l'accueil : la maison d'édition, le prochain salon, les personnes,
-  et à droite l'esprit français (engagements en blocs, lien vers sa page).
+  et à droite l'esprit français (engagements partagés avec la page « à la française », lien vers sa page).
   Dessous, « La lettre de la maison » : inscription par le formulaire client natif, tag « newsletter ».
   Le pied de page suit juste dessous et partage l'écran.
 {% endcomment %}
@@ -57,10 +57,7 @@
         {%- if engagements.size > 0 -%}
           <ul class="maison__engagements">
             {%- for engagement in engagements -%}
-              <li>
-                {%- if engagement.titre.value != blank %}<strong>{{ engagement.titre.value }}</strong>{% endif %}
-                {{ engagement.texte.value }}
-              </li>
+              <li>{% render 'engagement', engagement: engagement, variante: 'ligne' %}</li>
             {%- endfor -%}
           </ul>
         {%- endif -%}
@@ -252,19 +249,6 @@
     gap: 12px;
   }
 
-  .maison__engagements li {
-    font-size: 14px;
-    line-height: 1.45;
-    color: var(--gris-2);
-  }
-
-  .maison__engagements strong {
-    display: block;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ivoire);
-  }
-
   .maison__valeurs {
     align-self: flex-start;
     font-weight: 600;
@@ -411,14 +395,6 @@
     .maison__engagements {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px 24px;
-    }
-
-    .maison__engagements li {
-      font-size: 15px;
-    }
-
-    .maison__engagements strong {
-      font-size: 16px;
     }
 
     .maison__lettre {

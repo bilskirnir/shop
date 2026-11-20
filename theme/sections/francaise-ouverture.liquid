@@ -1,0 +1,75 @@
+{% comment %}
+  Page « Pourquoi à la française » — ouverture : logo, surtitre or, grand titre, accroche.
+{% endcomment %}
+<section class="francaise-ouverture" data-reveal>
+  <img class="francaise-ouverture__logo" src="{{ 'logo-ivoire.svg' | asset_url }}" alt="" width="120" height="120">
+  <p class="surtitre francaise-ouverture__surtitre">{{ section.settings.surtitre }}</p>
+  <h1>{{ section.settings.titre }}</h1>
+  {%- if section.settings.accroche != blank -%}
+    <p class="francaise-ouverture__accroche">{{ section.settings.accroche }}</p>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+  .francaise-ouverture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-height: 80svh;
+    justify-content: center;
+    padding: 110px var(--marge-centre) 56px;
+    text-align: center;
+  }
+
+  .francaise-ouverture__logo {
+    width: clamp(84px, 8vw, 120px);
+    opacity: 0.55;
+  }
+
+  .francaise-ouverture__surtitre {
+    color: var(--or);
+  }
+
+  .francaise-ouverture h1 {
+    max-width: 980px;
+    font-size: clamp(36px, 4.6vw, 64px);
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .francaise-ouverture__accroche {
+    max-width: 640px;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.5;
+    color: var(--gris-1);
+    text-wrap: balance;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Française — ouverture",
+  "settings": [
+    {
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "Pourquoi « à la française » ?"
+    },
+    {
+      "type": "text",
+      "id": "titre",
+      "label": "Titre",
+      "default": "Entre grandeur et abnégation, des romans imprégnés d'esprit français"
+    },
+    {
+      "type": "textarea",
+      "id": "accroche",
+      "label": "Accroche",
+      "default": "Des héros. Des mythes. Des mondes à découvrir. Des romans pour ceux qui veulent encore rêver grand."
+    }
+  ],
+  "presets": [{ "name": "Française — ouverture" }]
+}
+{% endschema %}

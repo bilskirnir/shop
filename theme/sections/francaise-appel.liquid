@@ -1,0 +1,51 @@
+{% comment %}
+  Page « Pourquoi à la française » — l'appel final : une question et le bouton or vers les histoires.
+{% endcomment %}
+{%- assign lien = section.settings.lien | default: '/#histoires' -%}
+<section class="francaise-appel" data-reveal>
+  <h2>{{ section.settings.titre }}</h2>
+  {% render 'bouton', libelle: section.settings.libelle_bouton, url: lien, variante: 'or' %}
+</section>
+
+{% stylesheet %}
+  .francaise-appel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 24px var(--marge-centre) 96px;
+    text-align: center;
+  }
+
+  .francaise-appel h2 {
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 1.05;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Française — appel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titre",
+      "label": "Titre",
+      "default": "Prêts pour l'aventure ?"
+    },
+    {
+      "type": "text",
+      "id": "libelle_bouton",
+      "label": "Texte du bouton",
+      "default": "Découvrir nos histoires"
+    },
+    {
+      "type": "url",
+      "id": "lien",
+      "label": "Lien du bouton",
+      "info": "Vide : les histoires de l'accueil."
+    }
+  ],
+  "presets": [{ "name": "Française — appel" }]
+}
+{% endschema %}

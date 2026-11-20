@@ -482,6 +482,69 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   50% { transform: translateY(-16px) rotate(4deg); }
 }
 
+/* ---------- Engagement (snippets/engagement.liquid) ---------- */
+.engagement--ligne {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--gris-2);
+}
+
+.engagement--ligne strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ivoire);
+}
+
+.engagement--carte {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px;
+  border-radius: 20px;
+}
+
+.engagement__icone {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #d2b06a1f;
+  border: 1px solid #d2b06a40;
+  color: var(--or);
+}
+
+.engagement__titre {
+  font-family: var(--titre);
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.engagement--carte p {
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+  color: var(--gris-1);
+}
+
+@media (min-width: 1024px) {
+  .engagement--ligne {
+    font-size: 15px;
+  }
+
+  .engagement--ligne strong {
+    font-size: 16px;
+  }
+
+  .engagement--carte {
+    gap: 20px;
+    padding: 28px;
+  }
+}
+
 /* ---------- Indicateur de l'accueil (assets/indicateur.js) ---------- */
 /* Mobile : une rangée de points centrée en haut, sous la barre (10 px de marge + 52 px). */
 .indicateur {

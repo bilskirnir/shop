@@ -1,0 +1,31 @@
+{% comment %}
+  Un engagement de la maison (metaobject « engagement » : titre, texte, icône).
+  - variante 'ligne' : titre et texte, sans icône (accueil, écran La maison).
+  - variante 'carte' : panneau en verre avec son icône (page « à la française »).
+
+  Styles : assets/base.css (« Engagement »).
+  Usage : {% render 'engagement', engagement: engagement, variante: 'carte' %}
+{% endcomment %}
+{%- if variante == 'carte' -%}
+  <div class="engagement engagement--carte verre">
+    <span class="engagement__icone" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        {%- case engagement.icone.value -%}
+          {%- when 'drapeau' -%}<path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/>
+          {%- when 'eclair' -%}<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>
+          {%- when 'couronne' -%}<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/>
+          {%- else -%}<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>
+        {%- endcase -%}
+      </svg>
+    </span>
+    <div>
+      <h3 class="engagement__titre">{{ engagement.titre.value }}</h3>
+      <p>{{ engagement.texte.value }}</p>
+    </div>
+  </div>
+{%- else -%}
+  <div class="engagement engagement--ligne">
+    {%- if engagement.titre.value != blank %}<strong>{{ engagement.titre.value }}</strong>{% endif %}
+    {{ engagement.texte.value }}
+  </div>
+{%- endif -%}

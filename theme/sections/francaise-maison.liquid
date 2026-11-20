@@ -1,0 +1,243 @@
+{% comment %}
+  Page « Pourquoi à la française » — deux colonnes :
+  à gauche « Ce qui vous attend » (texte, une ligne par univers en blocs, conclusion) ;
+  à droite « Qui est derrière ? » (photo, nom, rôle, présentation).
+{% endcomment %}
+<div class="francaise-maison">
+  <section class="francaise-maison__attente" data-reveal>
+    <h2>{{ section.settings.titre }}</h2>
+    {{ section.settings.intro }}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="francaise-maison__univers">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>{{ block.settings.texte }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if section.settings.conclusion != blank -%}
+      <p class="francaise-maison__conclusion">{{ section.settings.conclusion }}</p>
+    {%- endif -%}
+  </section>
+
+  {%- if section.settings.personne_nom != blank -%}
+    <section class="francaise-maison__personne verre" data-reveal>
+      <h2 class="surtitre">{{ section.settings.personne_surtitre }}</h2>
+      <div class="francaise-maison__identite">
+        {%- if section.settings.personne_photo != blank -%}
+          {{ section.settings.personne_photo | image_url: width: 144, height: 144, crop: 'center' | image_tag: alt: section.settings.personne_nom, width: 72, height: 72, loading: 'lazy' }}
+        {%- endif -%}
+        <span>
+          <strong>{{ section.settings.personne_nom }}</strong>
+          {{ section.settings.personne_role }}
+        </span>
+      </div>
+      {{ section.settings.personne_texte }}
+    </section>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .francaise-maison {
+    display: grid;
+    gap: 40px;
+    padding: 0 var(--marge-centre) 72px;
+  }
+
+  .francaise-maison__attente {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: clamp(16px, 1.3vw, 18px);
+    line-height: 1.6;
+    color: var(--gris-1);
+  }
+
+  .francaise-maison__attente h2 {
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 1.05;
+    color: var(--ivoire);
+  }
+
+  .francaise-maison__attente strong {
+    color: var(--ivoire);
+  }
+
+  .francaise-maison__univers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Une puce or devant chaque univers. */
+  .francaise-maison__univers li {
+    display: flex;
+    gap: 12px;
+  }
+
+  .francaise-maison__univers li::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 6px;
+    height: 6px;
+    margin-top: 0.7em;
+    border-radius: 50%;
+    background: var(--or);
+  }
+
+  .francaise-maison__conclusion {
+    color: var(--ivoire);
+    font-weight: 600;
+  }
+
+  .francaise-maison__personne {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--gris-1);
+  }
+
+  .francaise-maison__personne .surtitre {
+    color: var(--gris-2);
+  }
+
+  .francaise-maison__identite {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .francaise-maison__identite img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ece5d640;
+  }
+
+  .francaise-maison__identite span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .francaise-maison__identite strong {
+    font-family: var(--titre);
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--ivoire);
+  }
+
+  @media (min-width: 1024px) {
+    .francaise-maison {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      align-items: start;
+      gap: 64px;
+      padding-bottom: 96px;
+    }
+
+    .francaise-maison__personne {
+      padding: 32px;
+    }
+
+    .francaise-maison__identite img {
+      width: 72px;
+      height: 72px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Française — la maison",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Ce qui vous attend"
+    },
+    {
+      "type": "text",
+      "id": "titre",
+      "label": "Titre",
+      "default": "Ce qui vous attend"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Bilskirnir, le Hall de Force, est <strong>le</strong> spécialiste des histoires épiques et héroïques de France : des romans originaux, des aventures époustouflantes et des personnages charismatiques.</p>"
+    },
+    {
+      "type": "text",
+      "id": "conclusion",
+      "label": "Conclusion",
+      "default": "Et découvrez de nombreux univers originaux."
+    },
+    {
+      "type": "header",
+      "content": "Qui est derrière ?"
+    },
+    {
+      "type": "text",
+      "id": "personne_surtitre",
+      "label": "Surtitre",
+      "default": "Qui est derrière ?"
+    },
+    {
+      "type": "image_picker",
+      "id": "personne_photo",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "personne_nom",
+      "label": "Nom",
+      "default": "Gautier Durrieu de Madron"
+    },
+    {
+      "type": "text",
+      "id": "personne_role",
+      "label": "Rôle",
+      "default": "Fondateur, écrivain et conférencier"
+    },
+    {
+      "type": "richtext",
+      "id": "personne_texte",
+      "label": "Présentation",
+      "default": "<p>Bilskirnir a été fondé en 2018 par Gautier. Spécialiste des mythologies, designer narratif dans le jeu vidéo, conteur et entrepreneur, il anime aujourd'hui une chaîne TikTok populaire et parcourt la France pour faire connaître Bilskirnir et son envie de réinsuffler de l'héroïsme.</p><p>Nordique d'apparence mais sudiste d'état (Saint-Raphaël), il tient la ligne de Bilskirnir et s'attelle à terminer les quatre derniers tomes de la saga Au Nom des Dieux.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "univers",
+      "name": "Univers",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "texte",
+          "label": "Une phrase sur l'univers"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Française — la maison",
+      "blocks": [
+        { "type": "univers", "settings": { "texte": "Embarquez aux côtés de demi-dieux légendaires pour sauver une Humanité à la dérive." } },
+        { "type": "univers", "settings": { "texte": "Chevauchez avec des cavaliers celtes pour défendre la Gaule envahie par Rome." } },
+        { "type": "univers", "settings": { "texte": "Repoussez des hordes d'infectés dans l'un des derniers bastions de France." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
