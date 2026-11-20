@@ -76,6 +76,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Mention de lecture | `mention_de_lecture` | Single line text | **à créer** (thème Liquid, accueil) |
 | Extrait | `extrait` | File (PDF) | **à créer** (fiche produit) |
 | Genres | `genres` | List of single line text | **à créer** — pastilles sur l'accueil (PC), livres seuls |
+| Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | **à créer** — même rôle que sur la saga, pour un livre seul |
 
 ---
 
