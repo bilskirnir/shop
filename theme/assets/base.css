@@ -483,12 +483,13 @@ body:has(.eteint-feu.is-visible) .decor__feu {
 }
 
 /* ---------- Indicateur de l'accueil (assets/indicateur.js) ---------- */
-/* Mobile : une rangée de points en haut à droite, sous la barre (10 px de marge + 52 px). */
+/* Mobile : une rangée de points centrée en haut, sous la barre (10 px de marge + 52 px). */
 .indicateur {
   position: fixed;
   top: 72px;
-  right: 18px;
+  left: 50%;
   z-index: 5;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 2px;
@@ -535,6 +536,7 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   .indicateur {
     top: 50%;
     right: 24px;
+    left: auto;
     flex-direction: column;
     gap: 6px;
     transform: translateY(-50%);
