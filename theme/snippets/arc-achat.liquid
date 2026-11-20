@@ -1,0 +1,11 @@
+{% comment %}
+  Le formulaire « Prendre l'arc complet » : tous les tomes de la saga au panier en un envoi.
+  Usage : {% render 'arc-achat', saga: saga, libelle: "Prendre l'arc complet" %}
+{%- endcomment -%}
+<form action="{{ routes.cart_add_url }}" method="post" class="arc-achat">
+  {%- for tome in saga.ordre_des_tomes.value -%}
+    <input type="hidden" name="items[{{ forloop.index0 }}][id]" value="{{ tome.selected_or_first_available_variant.id }}">
+    <input type="hidden" name="items[{{ forloop.index0 }}][quantity]" value="1">
+  {%- endfor -%}
+  {% render 'bouton', libelle: libelle, variante: 'or' %}
+</form>

@@ -1,0 +1,127 @@
+{% comment %}
+  Page d'un arc — « Les livres de l'arc » : les couvertures côte à côte dans le halo, légèrement
+  décalées, avec numéro, titre, prix (ou « À paraître ») et un lien vers la fiche.
+  Seulement pour une saga de plusieurs livres.
+{% endcomment %}
+{%- assign saga = metaobject -%}
+{%- assign tomes = saga.ordre_des_tomes.value -%}
+{%- if tomes.size > 1 -%}
+  <section class="arc-bloc arc-livres" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-bloc__halo" aria-hidden="true"></div>
+    <div class="arc-tete">
+      <p class="surtitre">{{ section.settings.surtitre }}</p>
+      <h2>{{ section.settings.titre }}</h2>
+    </div>
+    <ol class="arc-livres__liste">
+      {%- for tome in tomes -%}
+        <li>
+          <a href="{{ tome.url }}">
+            {%- if tome.featured_image -%}
+              {{ tome.featured_image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 1024px) 250px, 45vw', alt: '', class: 'arc-livres__couverture', loading: 'lazy' }}
+            {%- endif -%}
+            <span class="surtitre">Livre {{ forloop.index }}</span>
+            <strong>{{ tome.title }}</strong>
+            <span class="arc-livres__prix">
+              {%- if tome.available -%}{{ tome.price | money_without_trailing_zeros }}{%- else -%}À paraître{%- endif -%}
+            </span>
+            <span class="bouton bouton--contour">{{ section.settings.libelle_bouton }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-livres__liste {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 20px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .arc-livres__liste a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  /* Un livre sur deux descend un peu, comme posés à la main. */
+  .arc-livres__liste li:nth-child(even) {
+    margin-top: 24px;
+  }
+
+  .arc-livres__couverture {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    box-shadow: 0 24px 50px -16px #000000e6, 0 0 0 1px #ece5d614;
+    transform: rotate(-2deg);
+  }
+
+  .arc-livres__liste li:nth-child(even) .arc-livres__couverture {
+    transform: rotate(2deg);
+  }
+
+  .arc-livres__liste .surtitre {
+    color: var(--gris-2);
+  }
+
+  .arc-livres__liste strong {
+    font-family: var(--titre);
+    font-size: clamp(18px, 1.8vw, 26px);
+    line-height: 1.15;
+    color: var(--ivoire);
+  }
+
+  .arc-livres__prix {
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .arc-livres__liste .bouton--contour {
+    display: none;
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 0 22px;
+    font-size: 14px;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-livres__liste {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 56px 120px;
+    }
+
+    .arc-livres__liste li {
+      width: 250px;
+    }
+
+    .arc-livres__liste li:nth-child(even) {
+      margin-top: 40px;
+    }
+
+    .arc-livres__liste .bouton--contour {
+      display: inline-flex;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — les livres",
+  "settings": [
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Dans l'ordre" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Les livres de l'arc" },
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Voir le livre" }
+  ],
+  "presets": [{ "name": "Arc — les livres" }]
+}
+{% endschema %}

@@ -1,0 +1,143 @@
+{% comment %}
+  Page d'un arc — « Dans le même univers… » : les autres sagas du même univers parent, chacune
+  dans une carte de verre à sa propre couleur de halo, avec le bouton de l'accueil.
+{% endcomment %}
+{%- assign saga = metaobject -%}
+{%- capture cartes -%}
+  {%- for autre in shop.metaobjects.saga.values -%}
+    {%- if autre.univers_parent.value.id == saga.univers_parent.value.id and autre.system.id != saga.system.id -%}
+      <li>
+        <a class="arc-univers__carte verre" href="{% render 'saga-lien', saga: autre %}" style="{% render 'saga-halo', saga: autre %}">
+          <span class="arc-univers__halo" aria-hidden="true"></span>
+          {%- for tome in autre.ordre_des_tomes.value limit: 1 -%}
+            {%- if tome.featured_image -%}
+              {{ tome.featured_image | image_url: width: 300 | image_tag: alt: '', width: 150, loading: 'lazy' }}
+            {%- endif -%}
+          {%- endfor -%}
+          <span class="surtitre">{% render 'saga-surtitre', saga: autre %}</span>
+          <strong>{{ autre.nom.value }}</strong>
+          <span class="bouton bouton--contour">
+            {%- if autre.ordre_des_tomes.value.size == 1 -%}{{ section.settings.libelle_livre }}{%- else -%}{{ section.settings.libelle_arc }}{%- endif -%}
+          </span>
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if cartes != blank -%}
+  <section class="arc-bloc arc-univers" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-tete">
+      <p class="surtitre">{{ saga.univers_parent.value.title }}</p>
+      <h2>{{ section.settings.titre }}</h2>
+    </div>
+    <ul class="arc-univers__liste">{{ cartes }}</ul>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-univers {
+    padding-bottom: 40px;
+  }
+
+  .arc-univers__liste {
+    display: flex;
+    gap: 14px;
+    margin-right: calc(-1 * var(--marge-centre));
+    padding: 0 var(--marge-centre) 0 0;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .arc-univers__liste li {
+    flex: 0 0 min(230px, 70vw);
+    scroll-snap-align: start;
+  }
+
+  .arc-univers__carte {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 26px 18px 22px;
+    border-radius: 22px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .arc-univers__carte > * {
+    position: relative;
+  }
+
+  .arc-univers__halo {
+    position: absolute !important;
+    left: 50%;
+    top: -40px;
+    width: 300px;
+    height: 300px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, var(--halo-fort), transparent 72%);
+  }
+
+  .arc-univers__carte img {
+    width: 120px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 18px 36px -12px #000000e6, 0 0 0 1px #ece5d614;
+    transform: rotate(-2deg);
+  }
+
+  .arc-univers__carte .surtitre {
+    margin-top: 6px;
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .arc-univers__carte strong {
+    font-family: var(--titre);
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.1;
+    color: var(--ivoire);
+  }
+
+  .arc-univers__carte .bouton--contour {
+    min-height: 44px;
+    margin-top: auto;
+    padding: 0 20px;
+    font-size: 14px;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-univers__liste {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      margin-right: 0;
+      padding-right: 0;
+      overflow: visible;
+    }
+
+    .arc-univers__carte {
+      padding: 36px 28px 30px;
+      border-radius: 24px;
+    }
+
+    .arc-univers__carte img {
+      width: 150px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — même univers",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Dans le même univers…" },
+    { "type": "text", "id": "libelle_arc", "label": "Bouton (saga de plusieurs livres)", "default": "Entrer dans l'arc" },
+    { "type": "text", "id": "libelle_livre", "label": "Bouton (livre seul)", "default": "Voir le livre" }
+  ],
+  "presets": [{ "name": "Arc — même univers" }]
+}
+{% endschema %}

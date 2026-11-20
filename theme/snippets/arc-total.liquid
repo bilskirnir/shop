@@ -1,0 +1,9 @@
+{% comment %}
+  Le prix de l'arc complet : la somme des prix de ses tomes, au format de la boutique.
+  Usage : {% render 'arc-total', saga: saga %}
+{%- endcomment -%}
+{%- assign total = 0 -%}
+{%- for tome in saga.ordre_des_tomes.value -%}
+  {%- assign total = total | plus: tome.price -%}
+{%- endfor -%}
+{{- total | money_without_trailing_zeros -}}

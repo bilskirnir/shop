@@ -1,9 +1,172 @@
 {
   "sections": {
-    "arc": {
+    "haut": {
       "type": "arc",
+      "settings": {}
+    },
+    "garanties": {
+      "type": "arc-reassurance",
+      "blocks": {
+        "garantie-1": {
+          "type": "garantie",
+          "settings": {
+            "icone": "dedicace",
+            "titre": "Dédicace offerte",
+            "texte": "par Gautier, sur demande"
+          }
+        },
+        "garantie-2": {
+          "type": "garantie",
+          "settings": {
+            "icone": "livraison",
+            "titre": "Livraison offerte",
+            "texte": "dès 40 € en point relais"
+          }
+        },
+        "garantie-3": {
+          "type": "garantie",
+          "settings": {
+            "icone": "cadeau",
+            "titre": "Un cadeau",
+            "texte": "avec chaque arc complet"
+          }
+        },
+        "garantie-4": {
+          "type": "garantie",
+          "settings": {
+            "icone": "france",
+            "titre": "Écrit en France",
+            "texte": "maison indépendante"
+          }
+        }
+      },
+      "block_order": [
+        "garantie-1",
+        "garantie-2",
+        "garantie-3",
+        "garantie-4"
+      ],
+      "settings": {}
+    },
+    "promesse": {
+      "type": "arc-promesse",
+      "settings": {}
+    },
+    "avis": {
+      "type": "arc-avis",
+      "settings": {}
+    },
+    "colis": {
+      "type": "arc-offre",
+      "blocks": {
+        "offert-1": {
+          "type": "offert",
+          "settings": {
+            "libelle": "Le décapsuleur Bilskirnir",
+            "mention": "Offert"
+          }
+        },
+        "offert-2": {
+          "type": "offert",
+          "settings": {
+            "libelle": "La dédicace de Gautier",
+            "mention": "Offerte"
+          }
+        },
+        "offert-3": {
+          "type": "offert",
+          "settings": {
+            "libelle": "Livraison en point relais",
+            "mention": "Offerte"
+          }
+        }
+      },
+      "block_order": [
+        "offert-1",
+        "offert-2",
+        "offert-3"
+      ],
+      "settings": {}
+    },
+    "livres": {
+      "type": "arc-livres",
+      "settings": {}
+    },
+    "auteur": {
+      "type": "arc-auteur",
+      "blocks": {
+        "chiffre-1": {
+          "type": "chiffre",
+          "settings": {
+            "valeur": "150k",
+            "libelle": "abonnés TikTok"
+          }
+        },
+        "chiffre-2": {
+          "type": "chiffre",
+          "settings": {
+            "valeur": "10k+",
+            "libelle": "lecteurs"
+          }
+        },
+        "chiffre-3": {
+          "type": "chiffre",
+          "settings": {
+            "valeur": "2018",
+            "libelle": "fondation de la maison"
+          }
+        }
+      },
+      "block_order": [
+        "chiffre-1",
+        "chiffre-2",
+        "chiffre-3"
+      ],
+      "settings": {}
+    },
+    "questions": {
+      "type": "arc-faq",
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "question": "Par quel livre commencer ?",
+            "reponse": "<p>Par le Livre 1 : chaque arc se lit dans l'ordre. La mention sous le titre dit où il se place dans l'univers.</p>"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "question": "Combien coûte la livraison ?",
+            "reponse": "<p>Elle est offerte dès 40 € en point relais. En dessous, son prix est calculé au paiement.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2"
+      ],
+      "settings": {}
+    },
+    "appel": {
+      "type": "arc-appel",
+      "settings": {}
+    },
+    "univers": {
+      "type": "arc-univers",
       "settings": {}
     }
   },
-  "order": ["arc"]
+  "order": [
+    "haut",
+    "garanties",
+    "promesse",
+    "avis",
+    "colis",
+    "livres",
+    "auteur",
+    "questions",
+    "appel",
+    "univers"
+  ]
 }

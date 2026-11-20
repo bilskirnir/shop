@@ -578,19 +578,81 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   list-style: none;
 }
 
+/* Chaque pastille prend la couleur de son genre (--pastille), ivoire par défaut. */
 .pastilles li {
-  padding: 6px 14px;
-  border: 1px solid #ece5d633;
+  --pastille: #ece5d6;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--pastille) 40%, transparent);
   border-radius: 999px;
-  background: #ece5d60d;
+  background: color-mix(in srgb, var(--pastille) 12%, transparent);
   font-size: 13px;
   font-weight: 600;
-  color: var(--gris-1);
+  color: var(--pastille);
+}
+
+.pastilles li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 @media (min-width: 1024px) {
   .note {
     font-size: 14px;
+  }
+}
+
+/* ---------- Blocs de la page d'un arc (sections arc-*) ---------- */
+/* Chaque bloc reçoit les couleurs de sa saga (snippets/saga-halo) sur sa racine .arc-bloc. */
+.arc-bloc {
+  position: relative;
+  padding: 110px var(--marge-centre) 0;
+}
+
+.arc-tete {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.arc-tete .surtitre {
+  color: var(--teinte, var(--gris-2));
+}
+
+.arc-tete h2 {
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* Le halo de la saga derrière un bloc. */
+.arc-bloc__halo {
+  position: absolute;
+  left: 50%;
+  top: 80px;
+  width: min(1000px, 140vw);
+  height: 520px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, var(--halo), transparent 72%);
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .arc-bloc {
+    padding-top: 200px;
+  }
+
+  .arc-tete {
+    margin-bottom: 56px;
   }
 }
 

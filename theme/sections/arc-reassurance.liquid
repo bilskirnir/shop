@@ -1,0 +1,116 @@
+{% comment %}
+  Page d'un arc — les garanties, juste sous le bloc d'achat : une ligne par bloc (icône, titre, texte).
+  Les mêmes pour tous les arcs : elles se règlent une fois dans l'éditeur.
+{% endcomment %}
+{%- if section.blocks.size > 0 -%}
+  <section class="arc-reassurance verre" aria-label="{{ section.settings.titre_accessible }}">
+    {%- for block in section.blocks -%}
+      <div class="arc-reassurance__item" {{ block.shopify_attributes }}>
+        <span class="arc-reassurance__icone" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            {%- case block.settings.icone -%}
+              {%- when 'livraison' -%}<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>
+              {%- when 'cadeau' -%}<path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13"/><path d="M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0"/>
+              {%- when 'france' -%}<path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/>
+              {%- else -%}<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>
+            {%- endcase -%}
+          </svg>
+        </span>
+        <span><strong>{{ block.settings.titre }}</strong>{{ block.settings.texte }}</span>
+      </div>
+    {%- endfor -%}
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-reassurance {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 14px;
+    margin: 40px var(--marge-centre) 0;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .arc-reassurance__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--gris-1);
+  }
+
+  .arc-reassurance__item strong {
+    display: block;
+    font-size: 14px;
+    color: var(--ivoire);
+  }
+
+  .arc-reassurance__icone {
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-radius: 50%;
+    background: #d2b06a1f;
+    border: 1px solid #d2b06a40;
+    color: var(--or);
+  }
+
+  @media (min-width: 1024px) {
+    .arc-reassurance {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+      padding: 28px 32px;
+      border-radius: 22px;
+    }
+
+    .arc-reassurance__item {
+      font-size: 14px;
+    }
+
+    .arc-reassurance__item strong {
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — garanties",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titre_accessible",
+      "label": "Nom pour les lecteurs d'écran",
+      "default": "Nos garanties"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "garantie",
+      "name": "Garantie",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icone",
+          "label": "Icône",
+          "options": [
+            { "value": "dedicace", "label": "Plume (dédicace)" },
+            { "value": "livraison", "label": "Camion (livraison)" },
+            { "value": "cadeau", "label": "Cadeau" },
+            { "value": "france", "label": "Drapeau" }
+          ],
+          "default": "dedicace"
+        },
+        { "type": "text", "id": "titre", "label": "Titre" },
+        { "type": "text", "id": "texte", "label": "Texte" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Arc — garanties" }]
+}
+{% endschema %}

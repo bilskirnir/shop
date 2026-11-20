@@ -1,0 +1,89 @@
+{% comment %}
+  Page d'un arc — l'appel final : une question, le prix de l'arc complet, l'offre et le bouton.
+  Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
+{% endcomment %}
+{%- liquid
+  assign saga = metaobject
+  assign tomes = saga.ordre_des_tomes.value
+  assign tout_en_vente = true
+  for tome in tomes
+    if forloop.first
+      assign tome_1 = tome
+    endif
+    unless tome.available
+      assign tout_en_vente = false
+    endunless
+  endfor
+-%}
+{%- if tomes.size > 1 and tout_en_vente -%}
+  <section class="arc-bloc arc-appel" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-bloc__halo" aria-hidden="true"></div>
+    <h2>{{ section.settings.titre }}</h2>
+    <p class="arc-appel__prix">{% render 'arc-total', saga: saga %}</p>
+    {%- if section.settings.offre != blank -%}
+      <p class="arc-appel__offre">{{ section.settings.offre }}</p>
+    {%- endif -%}
+    {% render 'arc-achat', saga: saga, libelle: section.settings.libelle_bouton %}
+    <a class="arc-appel__seul" href="{{ tome_1.url }}">ou Livre 1 · {{ tome_1.price | money_without_trailing_zeros }}</a>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-appel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .arc-appel > * {
+    position: relative;
+  }
+
+  .arc-appel h2 {
+    font-size: clamp(30px, 3vw, 44px);
+  }
+
+  .arc-appel__prix {
+    font-family: var(--titre);
+    font-size: clamp(40px, 3.4vw, 48px);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .arc-appel__offre {
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .arc-appel .arc-achat {
+    align-self: stretch;
+    margin-top: 6px;
+  }
+
+  .arc-appel__seul {
+    font-size: 14px;
+    color: var(--gris-1);
+    text-underline-offset: 3px;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-appel .arc-achat {
+      align-self: center;
+      min-width: 340px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — appel final",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Prêt à entrer dans l'arc ?" },
+    { "type": "text", "id": "offre", "label": "Offre", "default": "Livraison offerte et un décapsuleur en cadeau." },
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Prendre l'arc complet" }
+  ],
+  "presets": [{ "name": "Arc — appel final" }]
+}
+{% endschema %}

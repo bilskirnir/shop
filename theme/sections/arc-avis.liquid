@@ -1,0 +1,122 @@
+{% comment %}
+  Page d'un arc — les avis des lecteurs. Champ « avis » de la saga : une liste de métaobjets « avis »
+  (texte, auteur, source). Le premier s'affiche en grand dans le halo, les suivants en petites cartes.
+  Rien si la saga n'a pas d'avis.
+{% endcomment %}
+{%- assign saga = metaobject -%}
+{%- assign avis = saga.avis.value -%}
+{%- if avis != blank -%}
+  <section class="arc-bloc arc-avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-bloc__halo" aria-hidden="true"></div>
+    <div class="arc-tete">
+      <p class="surtitre">{{ section.settings.surtitre }}</p>
+      {% render 'note', lecteurs: true %}
+    </div>
+    {%- for un_avis in avis -%}
+      {%- if forloop.first -%}
+        <figure class="arc-avis__grand">
+          <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+          <figcaption>{{ un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif %}</figcaption>
+        </figure>
+        {%- if avis.size > 1 %}<div class="arc-avis__cartes">{% endif -%}
+      {%- else -%}
+        <figure class="arc-avis__carte verre">
+          <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+          <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+          <figcaption>{{ un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif %}</figcaption>
+        </figure>
+        {%- if forloop.last %}</div>{% endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-avis .arc-tete {
+    margin-bottom: 28px;
+  }
+
+  .arc-avis__grand {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .arc-avis__grand blockquote {
+    margin: 0;
+    font-family: var(--titre);
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 44px);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .arc-avis__grand figcaption {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .arc-avis__cartes {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    margin: 40px calc(-1 * var(--marge-centre)) 0 0;
+    padding-right: var(--marge-centre);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .arc-avis__carte {
+    flex: 0 0 min(260px, 75vw);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 18px 20px;
+    border-radius: 16px;
+    scroll-snap-align: start;
+  }
+
+  .arc-avis__carte blockquote {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--gris-1);
+  }
+
+  .arc-avis__carte figcaption {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-avis__cartes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-right: 0;
+      padding-right: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — avis",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les avis viennent de la saga (champ avis, des métaobjets Avis)."
+    },
+    {
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "Ils l'ont lu"
+    }
+  ],
+  "presets": [{ "name": "Arc — avis" }]
+}
+{% endschema %}

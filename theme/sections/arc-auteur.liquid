@@ -1,0 +1,147 @@
+{% comment %}
+  Page d'un arc — l'auteur : photo, nom, présentation (métaobjet auteur du premier livre :
+  champs nom, photo, presentation), puis des chiffres réglés une fois pour tous les arcs (blocs).
+{% endcomment %}
+{%- assign saga = metaobject -%}
+{%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
+  {%- for a in tome.metafields.custom.auteur.value limit: 1 -%}
+    {%- assign auteur = a -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- if auteur -%}
+  <section class="arc-bloc arc-auteur" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-auteur__grille">
+      {%- if auteur.photo.value != blank -%}
+        {{ auteur.photo.value | image_url: width: 380, height: 380, crop: 'center' | image_tag: alt: auteur.nom.value, width: 190, height: 190, class: 'arc-auteur__photo', loading: 'lazy' }}
+      {%- endif -%}
+      <div class="arc-auteur__texte">
+        <p class="surtitre">{{ section.settings.surtitre }}</p>
+        <h2>{{ auteur.nom.value }}</h2>
+        {%- if auteur.presentation.value != blank -%}
+          <p>{{ auteur.presentation.value }}</p>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="arc-auteur__chiffres">
+            {%- for block in section.blocks -%}
+              <div {{ block.shopify_attributes }}><dt>{{ block.settings.libelle }}</dt><dd>{{ block.settings.valeur }}</dd></div>
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-auteur__grille {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .arc-auteur__photo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px #ece5d633, 0 0 0 10px #d2b06a14, 0 24px 44px -14px #000;
+  }
+
+  .arc-auteur__texte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .arc-auteur__texte .surtitre {
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .arc-auteur__texte h2 {
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.05;
+  }
+
+  .arc-auteur__texte > p:not(.surtitre) {
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.6;
+    color: var(--gris-1);
+  }
+
+  .arc-auteur__chiffres {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 32px;
+    margin: 8px 0 0;
+  }
+
+  .arc-auteur__chiffres div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .arc-auteur__chiffres dt {
+    font-size: 13px;
+    color: var(--gris-2);
+  }
+
+  .arc-auteur__chiffres dd {
+    margin: 0;
+    font-family: var(--titre);
+    font-size: clamp(28px, 2.6vw, 36px);
+    font-weight: 700;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-auteur__grille {
+      flex-direction: row;
+      gap: 56px;
+      text-align: left;
+    }
+
+    .arc-auteur__photo {
+      flex: 0 0 auto;
+      width: 190px;
+      height: 190px;
+    }
+
+    .arc-auteur__texte {
+      align-items: flex-start;
+    }
+
+    .arc-auteur__chiffres {
+      justify-content: flex-start;
+      gap: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — l'auteur",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Nom, photo et présentation viennent du métaobjet auteur du premier livre."
+    },
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "L'auteur" }
+  ],
+  "blocks": [
+    {
+      "type": "chiffre",
+      "name": "Chiffre",
+      "settings": [
+        { "type": "text", "id": "valeur", "label": "Valeur" },
+        { "type": "text", "id": "libelle", "label": "Libellé" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Arc — l'auteur" }]
+}
+{% endschema %}

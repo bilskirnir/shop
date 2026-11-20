@@ -1,0 +1,74 @@
+{% comment %}
+  Page d'un arc — « Pourquoi on ne le lâche pas » : une phrase-promesse en grand dans le halo,
+  et les raisons en pastilles de verre. Champs de la saga : promesse (texte), raisons (liste de textes).
+  Rien si la saga n'a pas de promesse.
+{% endcomment %}
+{%- assign saga = metaobject -%}
+{%- if saga.promesse.value != blank -%}
+  <section class="arc-bloc arc-promesse" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-bloc__halo" aria-hidden="true"></div>
+    <div class="arc-tete">
+      <p class="surtitre">{{ section.settings.surtitre }}</p>
+      <h2 class="arc-promesse__phrase">{{ saga.promesse.value }}</h2>
+    </div>
+    {%- if saga.raisons.value != blank -%}
+      <ul class="arc-promesse__raisons">
+        {%- for raison in saga.raisons.value -%}
+          <li class="verre">{{ raison }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-promesse .arc-tete h2 {
+    max-width: 940px;
+    font-size: clamp(36px, 4.6vw, 64px);
+    line-height: 1.02;
+  }
+
+  .arc-promesse__raisons {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: -12px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .arc-promesse__raisons li {
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-promesse__raisons li {
+      padding: 12px 22px;
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — promesse",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "La phrase et les raisons viennent de la saga (champs promesse et raisons)."
+    },
+    {
+      "type": "text",
+      "id": "surtitre",
+      "label": "Surtitre",
+      "default": "Pourquoi on ne le lâche pas"
+    }
+  ],
+  "presets": [{ "name": "Arc — promesse" }]
+}
+{% endschema %}

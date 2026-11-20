@@ -1,0 +1,209 @@
+{% comment %}
+  Page d'un arc — « Tout ce qu'il y a dans le colis » : les tomes avec leur prix, puis les lignes
+  offertes (blocs réglés une fois pour tous les arcs), le total et le bouton.
+  Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
+{% endcomment %}
+{%- liquid
+  assign saga = metaobject
+  assign tomes = saga.ordre_des_tomes.value
+  assign tout_en_vente = true
+  for tome in tomes
+    if forloop.index == 1
+      assign tome_1 = tome
+    elsif forloop.index == 2
+      assign tome_2 = tome
+    endif
+    unless tome.available
+      assign tout_en_vente = false
+    endunless
+  endfor
+-%}
+{%- if tomes.size > 1 and tout_en_vente -%}
+  <section class="arc-bloc arc-offre" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="arc-offre__panneau verre">
+      <div class="arc-offre__colis" aria-hidden="true">
+        <div class="arc-offre__halo"></div>
+        {% render 'couverture', produit: tome_1, taille: 'eventail', position: 1 %}
+        {% render 'couverture', produit: tome_2, taille: 'eventail', position: 2 %}
+        {%- if section.settings.badge != blank -%}
+          <span class="arc-offre__badge">{{ section.settings.badge }}</span>
+        {%- endif -%}
+      </div>
+
+      <div class="arc-offre__detail">
+        <p class="surtitre">{{ section.settings.surtitre }}</p>
+        <h2>{{ section.settings.titre }}</h2>
+        <ul class="arc-offre__lignes">
+          {%- for tome in tomes -%}
+            <li><strong>Livre {{ forloop.index }} · {{ tome.title }}</strong><span>{{ tome.price | money_without_trailing_zeros }}</span></li>
+          {%- endfor -%}
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}><strong>{{ block.settings.libelle }}</strong><span class="arc-offre__offert">{{ block.settings.mention }}</span></li>
+          {%- endfor -%}
+        </ul>
+        <p class="arc-offre__total"><span class="surtitre">Total</span><span>{% render 'arc-total', saga: saga %}</span></p>
+        {% render 'arc-achat', saga: saga, libelle: section.settings.libelle_bouton %}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-offre__panneau {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+
+  .arc-offre__colis {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 260px;
+  }
+
+  .arc-offre__halo {
+    position: absolute;
+    inset: -6%;
+    background: radial-gradient(closest-side, var(--halo-fort), transparent 72%);
+  }
+
+  .arc-offre__colis .couverture--eventail {
+    width: 140px;
+  }
+
+  .arc-offre__badge {
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 92px;
+    height: 92px;
+    padding: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e5cfa4, var(--or-fonce));
+    color: var(--rond);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    transform: rotate(-8deg);
+    box-shadow: 0 14px 30px -10px #000;
+  }
+
+  .arc-offre__detail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .arc-offre__detail .surtitre {
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .arc-offre__detail h2 {
+    margin: 10px 0 14px;
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.05;
+  }
+
+  .arc-offre__lignes {
+    padding: 0;
+    list-style: none;
+  }
+
+  .arc-offre__lignes li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #ece5d61a;
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .arc-offre__lignes strong {
+    font-weight: 600;
+    color: var(--ivoire);
+  }
+
+  .arc-offre__offert {
+    font-weight: 700;
+    color: var(--or);
+    white-space: nowrap;
+  }
+
+  .arc-offre__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 20px 0;
+  }
+
+  .arc-offre__total span:last-child {
+    font-family: var(--titre);
+    font-size: clamp(40px, 3.4vw, 48px);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .arc-offre__panneau {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 64px;
+      padding: 56px;
+      border-radius: 28px;
+    }
+
+    .arc-offre__colis {
+      min-height: 380px;
+    }
+
+    .arc-offre__colis .couverture--eventail {
+      width: 210px;
+    }
+
+    .arc-offre__badge {
+      right: 24px;
+      width: 116px;
+      height: 116px;
+      font-size: 14px;
+    }
+
+    .arc-offre__lignes li {
+      padding: 16px 0;
+      font-size: 17px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — le colis",
+  "settings": [
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "L'arc complet" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Tout ce qu'il y a dans le colis" },
+    { "type": "text", "id": "badge", "label": "Pastille sur les couvertures", "default": "Décapsuleur offert" },
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Prendre l'arc complet" }
+  ],
+  "blocks": [
+    {
+      "type": "offert",
+      "name": "Ligne offerte",
+      "settings": [
+        { "type": "text", "id": "libelle", "label": "Libellé" },
+        { "type": "text", "id": "mention", "label": "Mention", "default": "Offert" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Arc — le colis" }]
+}
+{% endschema %}

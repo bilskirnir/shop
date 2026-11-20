@@ -1,20 +1,15 @@
 {% comment %}
-  La page d'un arc : la page web du métaobjet « saga » (modèle templates/metaobject/saga.json).
-  Tout vient de la saga, comme sur l'accueil : rien à régler deux fois.
+  Haut de la page d'un arc (page web du métaobjet « saga », modèle templates/metaobject/saga.json).
+  Couvertures en éventail, surtitre, titre, synopsis, auteur, note, pastilles, bloc d'achat ;
+  derrière, l'illustration de la saga sous un voile. Une barre d'achat suit le défilement
+  une fois ce bloc dépassé (arc.js). Les autres blocs de la page sont les sections arc-*.
 
-  1. En-tête : couvertures en éventail, surtitre, titre, synopsis, auteur, note, pastilles.
-  2. Achat : l'arc complet (tous les tomes au panier en un envoi) si tous sont en vente,
-     sinon le premier livre seul.
-  3. Les livres, dans l'ordre.
-  4. Les autres sagas du même univers.
+  Arc complet (tous les tomes au panier en un envoi) seulement si la saga a plusieurs tomes
+  tous en vente ; sinon, le premier livre seul.
 {% endcomment %}
 {%- liquid
   assign saga = metaobject
   assign tomes = saga.ordre_des_tomes.value
-  assign nombre = tomes.size | default: 0
-
-  # La liste des tomes se parcourt mais ne s'indexe pas : premier, deuxième, total et disponibilité en une boucle.
-  assign total = 0
   assign tout_en_vente = true
   for tome in tomes
     if forloop.index == 1
@@ -22,20 +17,27 @@
     elsif forloop.index == 2
       assign tome_2 = tome
     endif
-    assign total = total | plus: tome.price
     unless tome.available
       assign tout_en_vente = false
     endunless
   endfor
   assign offre_arc = false
-  if nombre > 1 and tout_en_vente
+  if tomes.size > 1 and tout_en_vente
     assign offre_arc = true
   endif
+  assign fond = saga.illustration_hero_de_la_saga.value
 -%}
 {%- capture surtitre %}{% render 'saga-surtitre', saga: saga %}{% endcapture -%}
 {%- capture noms_auteurs %}{% render 'saga-auteurs', saga: saga %}{% endcapture -%}
+{%- capture total %}{% render 'arc-total', saga: saga %}{% endcapture -%}
 
 <div class="arc" style="{% render 'saga-halo', saga: saga %}">
+  {%- if fond != blank -%}
+    <div class="arc__fond" aria-hidden="true">
+      {{- fond | image_url: width: 2400 | image_tag: widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}
+    </div>
+  {%- endif -%}
+
   <section class="arc__entete">
     <div class="arc__couvertures">
       <div class="arc__halo" aria-hidden="true"></div>
@@ -60,7 +62,7 @@
         {%- if noms_auteurs != blank -%}
           <p class="arc__auteur">
             {%- for auteur in tome_1.metafields.custom.auteur.value limit: 1 -%}
-              {%- comment -%} Photo de l'auteur : champ « photo » du métaobjet auteur, s'il existe. {%- endcomment -%}
+              {%- comment -%} Photo : champ « photo » du métaobjet auteur, s'il existe. {%- endcomment -%}
               {%- if auteur.photo.value != blank -%}
                 {{ auteur.photo.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
               {%- endif -%}
@@ -74,21 +76,15 @@
       {% render 'pastilles', liste: saga.tags.value %}
 
       {%- if tome_1 -%}
-        <div class="arc__achat verre">
+        <div class="arc__achat verre" id="arc-achat">
           {%- if offre_arc -%}
             <div class="arc__offre">
-              <p class="arc__prix">{{ total | money_without_trailing_zeros }}</p>
+              <p class="arc__prix">{{ total }}</p>
               {%- if section.settings.offre != blank -%}
                 <p>{{ section.settings.offre }}</p>
               {%- endif -%}
             </div>
-            <form action="{{ routes.cart_add_url }}" method="post" class="arc__formulaire">
-              {%- for tome in tomes -%}
-                <input type="hidden" name="items[{{ forloop.index0 }}][id]" value="{{ tome.selected_or_first_available_variant.id }}">
-                <input type="hidden" name="items[{{ forloop.index0 }}][quantity]" value="1">
-              {%- endfor -%}
-              {% render 'bouton', libelle: section.settings.libelle_arc, variante: 'or' %}
-            </form>
+            {% render 'arc-achat', saga: saga, libelle: section.settings.libelle_arc %}
             <a class="arc__livre-seul" href="{{ tome_1.url }}">ou Livre 1 · {{ tome_1.price | money_without_trailing_zeros }}</a>
           {%- else -%}
             <div class="arc__offre">
@@ -102,76 +98,52 @@
     </div>
   </section>
 
-  {%- if nombre > 1 -%}
-    <section class="arc__livres" data-reveal>
-      <h2>{{ section.settings.titre_livres }}</h2>
-      <ol>
-        {%- for tome in tomes -%}
-          <li>
-            <a class="arc__livre verre" href="{{ tome.url }}">
-              {%- if tome.featured_image -%}
-                {{ tome.featured_image | image_url: width: 160 | image_tag: alt: '', width: 72, loading: 'lazy' }}
-              {%- endif -%}
-              <span class="arc__livre-nom">
-                <span class="surtitre">Livre {{ forloop.index }}</span>
-                <strong>{{ tome.title }}</strong>
-              </span>
-              <span class="arc__livre-prix">
-                {%- if tome.available -%}
-                  {{ tome.price | money_without_trailing_zeros }}
-                {%- else -%}
-                  À paraître
-                {%- endif -%}
-              </span>
-            </a>
-          </li>
-        {%- endfor -%}
-      </ol>
-    </section>
-  {%- endif -%}
-
-  {%- capture voisines -%}
-    {%- for autre in shop.metaobjects.saga.values -%}
-      {%- if autre.univers_parent.value.id == saga.univers_parent.value.id and autre.system.id != saga.system.id -%}
-        <li>
-          <a class="arc__voisine" href="{% render 'saga-lien', saga: autre %}">
-            {%- for tome in autre.ordre_des_tomes.value limit: 1 -%}
-              {%- if tome.featured_image -%}
-                {{ tome.featured_image | image_url: width: 240 | image_tag: alt: '', width: 120, loading: 'lazy' }}
-              {%- endif -%}
-            {%- endfor -%}
-            <span>
-              <strong>{{ autre.nom.value }}</strong>
-              {% render 'saga-surtitre', saga: autre %}
-            </span>
-          </a>
-        </li>
+  {%- if offre_arc -%}
+    <div class="arc__barre verre" aria-hidden="true" inert>
+      {%- if tome_1.featured_image -%}
+        {{ tome_1.featured_image | image_url: width: 80 | image_tag: alt: '', width: 34, loading: 'lazy' }}
       {%- endif -%}
-    {%- endfor -%}
-  {%- endcapture -%}
-  {%- if voisines != blank -%}
-    <section class="arc__univers" data-reveal>
-      <h2>{{ section.settings.titre_univers }}</h2>
-      <ul>{{ voisines }}</ul>
-    </section>
+      <p><strong>{{ saga.nom.value }}</strong>L'arc complet · {{ total }}</p>
+      {% render 'arc-achat', saga: saga, libelle: section.settings.libelle_barre %}
+    </div>
+    <script src="{{ 'arc.js' | asset_url }}" defer></script>
   {%- endif -%}
 </div>
 
 {% stylesheet %}
   .arc {
-    padding: 96px var(--marge-centre) 40px;
+    position: relative;
+    padding: 96px var(--marge-centre) 0;
   }
 
-  .arc h2 {
-    font-size: clamp(26px, 2.4vw, 34px);
+  /* L'illustration de la saga, sous un voile, qui s'efface vers le bas de l'en-tête. */
+  .arc__fond {
+    position: absolute;
+    inset: 0 0 auto;
+    height: min(1100px, 130svh);
+    z-index: -1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(#000 45%, transparent);
+    mask-image: linear-gradient(#000 45%, transparent);
   }
 
-  /* ---------- En-tête ---------- */
+  .arc__fond img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .arc__fond::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #0b0c0ea6;
+  }
+
   .arc__entete {
     display: flex;
     flex-direction: column;
     gap: 28px;
-    padding-bottom: 56px;
   }
 
   .arc__couvertures {
@@ -246,7 +218,6 @@
     color: var(--ivoire);
   }
 
-  /* ---------- Achat ---------- */
   .arc__achat {
     display: flex;
     flex-direction: column;
@@ -272,12 +243,11 @@
     color: var(--ivoire);
   }
 
-  .arc__formulaire,
-  .arc__achat > .bouton {
+  .arc-achat {
     display: flex;
   }
 
-  .arc__formulaire .bouton,
+  .arc-achat .bouton,
   .arc__achat > .bouton {
     flex: 1;
   }
@@ -289,95 +259,61 @@
     text-underline-offset: 3px;
   }
 
-  /* ---------- Les livres ---------- */
-  .arc__livres,
-  .arc__univers {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-bottom: 56px;
-  }
-
-  .arc__livres ol,
-  .arc__univers ul {
-    display: grid;
-    gap: 14px;
-    padding: 0;
-    list-style: none;
-  }
-
-  .arc__livre {
+  /* Barre d'achat : cachée tant que le bloc d'achat est à l'écran (arc.js pose .visible). */
+  .arc__barre {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 8;
     display: flex;
     align-items: center;
-    gap: 18px;
-    padding: 14px 20px 14px 14px;
-    border-radius: 18px;
-    text-decoration: none;
+    gap: 12px;
+    padding: 8px 8px 8px 16px;
+    border-radius: 999px;
+    box-shadow: 0 16px 32px -12px #000;
+    opacity: 0;
+    transform: translateY(24px);
+    pointer-events: none;
+    transition: opacity 0.35s, transform 0.35s;
   }
 
-  .arc__livre img,
-  .arc__voisine img {
-    border-radius: 3px;
-    box-shadow: 0 10px 20px -8px #000000d9;
+  .arc__barre.visible {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
   }
 
-  .arc__livre img {
-    width: 60px;
-    height: auto;
+  .arc__barre img {
+    display: none;
+    width: 34px;
+    border-radius: 2px;
   }
 
-  .arc__livre-nom {
+  .arc__barre p {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-  }
-
-  .arc__livre-nom .surtitre {
-    color: var(--gris-2);
-  }
-
-  .arc__livre-nom strong {
-    font-family: var(--titre);
-    font-size: clamp(19px, 1.7vw, 24px);
-    line-height: 1.15;
-    color: var(--ivoire);
-  }
-
-  .arc__livre-prix {
-    font-size: 17px;
+    font-size: 12px;
+    line-height: 1.3;
     color: var(--gris-1);
-    white-space: nowrap;
   }
 
-  /* ---------- Même univers ---------- */
-  .arc__voisine {
-    display: flex;
-    align-items: center;
-    gap: 18px;
+  .arc__barre strong {
     font-size: 14px;
-    color: var(--gris-2);
-    text-decoration: none;
-  }
-
-  .arc__voisine img {
-    width: 84px;
-    aspect-ratio: 2 / 3;
-    height: auto;
-    object-fit: cover;
-  }
-
-  .arc__voisine span {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .arc__voisine strong {
-    font-family: var(--titre);
-    font-size: clamp(20px, 1.7vw, 24px);
-    line-height: 1.1;
     color: var(--ivoire);
+  }
+
+  .arc__barre .bouton--or {
+    min-height: 48px;
+    gap: 14px;
+    padding-left: 18px;
+    font-size: 15px;
+  }
+
+  .arc__barre .bouton__fleche {
+    width: 34px;
+    height: 34px;
   }
 
   @media (min-width: 1024px) {
@@ -390,7 +326,6 @@
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
       align-items: center;
       gap: 72px;
-      padding-bottom: 72px;
     }
 
     .arc__couvertures {
@@ -430,42 +365,32 @@
       grid-column: 1 / -1;
     }
 
-    .arc__livres ol {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
+    .arc__barre {
+      left: 50%;
+      right: auto;
+      bottom: 20px;
+      gap: 24px;
+      padding-left: 12px;
+      transform: translate(-50%, 24px);
     }
 
-    .arc__livre {
-      gap: 22px;
-      padding: 18px 26px 18px 18px;
+    .arc__barre.visible {
+      transform: translate(-50%, 0);
     }
 
-    .arc__livre img {
-      width: 72px;
-    }
-
-    .arc__univers ul {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 40px;
-    }
-
-    .arc__voisine {
-      gap: 20px;
-    }
-
-    .arc__voisine img {
-      width: 120px;
+    .arc__barre img {
+      display: block;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Arc",
+  "name": "Arc — haut",
   "settings": [
     {
       "type": "paragraph",
-      "content": "Tout le contenu vient de la saga (Contenu › Métaobjets › Saga)."
+      "content": "Le contenu vient de la saga (Contenu › Métaobjets › Saga)."
     },
     {
       "type": "text",
@@ -481,21 +406,15 @@
     },
     {
       "type": "text",
+      "id": "libelle_barre",
+      "label": "Bouton de la barre d'achat",
+      "default": "Prendre l'arc"
+    },
+    {
+      "type": "text",
       "id": "libelle_livre_1",
       "label": "Bouton si l'arc n'est pas complet",
       "default": "Commencer par le Livre 1"
-    },
-    {
-      "type": "text",
-      "id": "titre_livres",
-      "label": "Titre de la liste des livres",
-      "default": "Les livres, dans l'ordre"
-    },
-    {
-      "type": "text",
-      "id": "titre_univers",
-      "label": "Titre des autres histoires",
-      "default": "Dans le même univers…"
     }
   ]
 }

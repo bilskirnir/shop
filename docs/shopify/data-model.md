@@ -33,6 +33,29 @@ Type : `engagement` · accès **Online Store / Storefronts** activé.
 
 ---
 
+## Metaobject : `Avis` — **à créer** (20/11/2026)
+
+Un avis de lecteur, relié à une saga par son champ `avis`. Type `avis`, accès Online Store activé.
+
+| Label | Key | Type | Required | Note |
+|---|---|---|---|---|
+| Texte | `texte` | Multi-line text | ✅ | recopié tel quel, jamais inventé |
+| Auteur | `auteur` | Single line text | ✅ | display name ; un prénom suffit |
+| Source | `source` | Single line text | — | ex. « Amazon » |
+
+---
+
+## Metaobject : `Genre` — **à créer** (20/11/2026)
+
+La couleur d'une pastille : un genre dont le `nom` est exactement un tag de saga colore sa pastille (accueil et page Arc). Type `genre`, accès Online Store activé.
+
+| Label | Key | Type | Required | Note |
+|---|---|---|---|---|
+| Nom | `nom` | Single line text | ✅ | display name ; identique au tag (« Mythologie ») |
+| Couleur | `couleur` | Color | ✅ | ex. `#d2b06a` |
+
+---
+
 ## Metaobject : `Saga`
 
 Shopify ne fournit pas de champ Name automatique — seul le `handle` est présent par défaut. Le champ `Nom` a été ajouté manuellement et marqué comme **display name** de la définition, ce qui permet l'auto-génération du handle.
@@ -49,6 +72,9 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Mention de lecture | `mention_de_lecture` | Single line text | — | **à créer** |
 | Particules | `style_particules` | Single line text (choix : `neige`, `braises`) | — | créé ; vide = aucune particule sur l'écran de l'accueil |
 | Tags | `tags` | List of single line text | — | créé le 20/11/2026 — pastilles sur l'accueil (PC) |
+| Promesse | `promesse` | Single line text | — | **à créer** — page Arc, la phrase en grand (« Tout ce qu'on t'a raconté sur les dieux est vrai. ») |
+| Raisons | `raisons` | List of single line text | — | **à créer** — page Arc, pastilles sous la promesse |
+| Avis | `avis` | List of metaobject references (Avis) | — | **à créer** — page Arc ; le premier s'affiche en grand |
 
 ---
 

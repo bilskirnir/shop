@@ -1,12 +1,17 @@
 {% comment %}
   Des étiquettes en pilules (les tags d'une saga). Rien si la liste est vide.
+  Couleur : celle du métaobjet « genre » du même nom (champs nom, couleur), sinon ivoire neutre.
   Styles : assets/base.css (« Pastilles »).
   Usage : {% render 'pastilles', liste: saga.tags.value %}
 {%- endcomment -%}
 {%- if liste != blank -%}
   <ul class="pastilles">
     {%- for element in liste -%}
-      <li>{{ element }}</li>
+      {%- assign couleur = nil -%}
+      {%- for genre in shop.metaobjects.genre.values -%}
+        {%- if genre.nom.value == element -%}{%- assign couleur = genre.couleur.value -%}{%- endif -%}
+      {%- endfor -%}
+      <li{% if couleur %} style="--pastille: {{ couleur }}"{% endif %}>{{ element }}</li>
     {%- endfor -%}
   </ul>
 {%- endif -%}

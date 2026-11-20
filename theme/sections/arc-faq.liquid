@@ -1,0 +1,95 @@
+{% comment %}
+  Page d'un arc — « Avant de te lancer » : questions fréquentes, une par bloc, qui s'ouvrent
+  au clic (<details>, rien en JavaScript). Les mêmes pour tous les arcs.
+{% endcomment %}
+{%- if section.blocks.size > 0 -%}
+  <section class="arc-bloc arc-faq" data-reveal>
+    <div class="arc-tete">
+      <p class="surtitre">{{ section.settings.surtitre }}</p>
+      <h2>{{ section.settings.titre }}</h2>
+    </div>
+    <div class="arc-faq__liste">
+      {%- for block in section.blocks -%}
+        <details {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }}</summary>
+          <div>{{ block.settings.reponse }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .arc-faq__liste {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .arc-faq details {
+    border-bottom: 1px solid #ece5d61a;
+  }
+
+  .arc-faq summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    min-height: 44px;
+    padding: 18px 0;
+    font-size: clamp(16px, 1.4vw, 19px);
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .arc-faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .arc-faq summary::after {
+    content: '+';
+    color: var(--or);
+    font-size: 22px;
+    transition: transform 0.3s;
+  }
+
+  .arc-faq details[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .arc-faq details > div {
+    padding-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--gris-1);
+  }
+
+  .arc-faq details[open] > div {
+    animation: faq-ouvre 0.3s ease-out;
+  }
+
+  @keyframes faq-ouvre {
+    from { opacity: 0; transform: translateY(-4px); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Arc — questions",
+  "settings": [
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Questions" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Avant de te lancer" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "reponse", "label": "Réponse" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Arc — questions" }]
+}
+{% endschema %}
