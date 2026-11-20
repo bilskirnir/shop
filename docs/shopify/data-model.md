@@ -48,7 +48,7 @@ Relié aux produits par `custom.auteur` (liste). Clés vérifiées par sonde le 
 
 ## Metaobject : `Avis` — créé le 20/11/2026
 
-Un avis de lecteur, relié à une saga par son champ `avis`. Type `avis`, accès Online Store activé.
+Un avis de lecteur, relié à un **livre** par le champ produit `custom.avis` (liste). La page Arc réunit les avis de tous ses tomes ; le premier avis du Livre 1 s'affiche en grand. Type `avis`, accès Online Store activé.
 
 | Label | Key | Type | Required | Note |
 |---|---|---|---|---|
@@ -88,7 +88,6 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Tags | `tags` | List of single line text | — | créé le 20/11/2026 — pastilles sur l'accueil (PC) |
 | Promesse | `promesse` | Single line text | — | créé le 20/11/2026 — page Arc, la phrase en grand (« Tout ce qu'on t'a raconté sur les dieux est vrai. ») |
 | Raisons | `raisons` | List of single line text | — | créé le 20/11/2026 — page Arc, pastilles sous la promesse |
-| Avis | `avis` | List of metaobject references (Avis) | — | créé le 20/11/2026 — page Arc ; le premier s'affiche en grand |
 
 ---
 
@@ -122,6 +121,7 @@ Le champ `description` natif de Shopify sert de **synopsis long** (4e de couvert
 | Est une œuvre indépendante | `est_une_oeuvre_independante` | Boolean | — |
 | Statut de parution | `statut_parution` | Single line text | Choix : `publié` · `précommande` · `annoncé` |
 | Date de parution | `date_parution` | Date | — |
+| Avis | `avis` | List of metaobject references (Avis) | — | créé le 20/11/2026 ; le meilleur en premier (sur le Livre 1, il s'affiche en grand sur la page Arc) |
 | Teaser court | `teaser_court` | Multi-line text | — |
 | Type de goodie | `type_goodie` | Single line text | Choix : `ex-libris` · `illustration` · `marque-page` · `coffret` |
 | Univers associé | `univers_associe` | Collection | — |

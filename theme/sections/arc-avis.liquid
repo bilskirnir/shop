@@ -1,39 +1,47 @@
 {% comment %}
-  Page d'un arc — les avis des lecteurs. Champ « avis » de la saga : une liste de métaobjets « avis »
-  (texte, auteur, source, verifie). Le premier s'affiche en grand dans le halo, les suivants en petites cartes.
-  Un avis dont la case « Vérifié » est cochée porte le badge « Avis vérifié ».
-  Rien si la saga n'a pas d'avis.
+  Page d'un arc — les avis des lecteurs. Un avis porte sur un livre : champ produit custom.avis
+  (liste de métaobjets « avis » : texte, auteur, source, verifie). La page réunit ceux de tous les tomes,
+  dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
+  les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
+  Rien si aucun tome n'a d'avis.
 {% endcomment %}
 {%- assign saga = metaobject -%}
-{%- assign avis = saga.avis.value -%}
-{%- if avis != blank -%}
+{%- assign nombre = 0 -%}
+{%- for tome in saga.ordre_des_tomes.value -%}
+  {%- assign nombre = nombre | plus: tome.metafields.custom.avis.value.size -%}
+{%- endfor -%}
+{%- if nombre > 0 -%}
   <section class="arc-bloc arc-avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
     <div class="arc-tete">
       <p class="surtitre">{{ section.settings.surtitre }}</p>
       {% render 'note', lecteurs: true %}
     </div>
-    {%- for un_avis in avis -%}
-      {%- if forloop.first -%}
-        <figure class="arc-avis__grand">
-          <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+    {%- assign rang = 0 -%}
+    {%- for tome in saga.ordre_des_tomes.value -%}
+      {%- for un_avis in tome.metafields.custom.avis.value -%}
+        {%- assign rang = rang | plus: 1 -%}
+        {%- capture legende -%}
           <figcaption>
             {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
             {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
           </figcaption>
-        </figure>
-        {%- if avis.size > 1 %}<div class="arc-avis__cartes">{% endif -%}
-      {%- else -%}
-        <figure class="arc-avis__carte verre">
-          <span class="note__etoiles" aria-hidden="true">★★★★★</span>
-          <blockquote>« {{ un_avis.texte.value }} »</blockquote>
-          <figcaption>
-            {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
-            {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
-          </figcaption>
-        </figure>
-        {%- if forloop.last %}</div>{% endif -%}
-      {%- endif -%}
+        {%- endcapture -%}
+        {%- if rang == 1 -%}
+          <figure class="arc-avis__grand">
+            <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+            {{ legende }}
+          </figure>
+          {%- if nombre > 1 %}<div class="arc-avis__cartes">{% endif -%}
+        {%- else -%}
+          <figure class="arc-avis__carte verre">
+            <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+            <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+            {{ legende }}
+          </figure>
+          {%- if rang == nombre %}</div>{% endif -%}
+        {%- endif -%}
+      {%- endfor -%}
     {%- endfor -%}
   </section>
 {%- endif -%}
@@ -130,7 +138,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Les avis viennent de la saga (champ avis, des métaobjets Avis)."
+      "content": "Les avis viennent des livres de la saga (champ produit Avis), dans l'ordre des tomes."
     },
     {
       "type": "text",
