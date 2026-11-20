@@ -57,11 +57,11 @@
       <h1>{% render 'livre-titre', livre: product %}</h1>
       {%- comment -%}
         En haut, l'accroche du livre (custom.teaser_court) pour que le bloc d'achat reste au premier écran ;
-        le résumé complet se déplie dessous. Sans accroche, le résumé s'affiche directement.
+        le synopsis complet se déplie dessous et prend sa place. Sans accroche, le synopsis s'affiche directement.
       {%- endcomment -%}
       {%- assign accroche = product.metafields.custom.teaser_court.value -%}
       {%- if accroche != blank -%}
-        <p class="arc__synopsis">{{ accroche }}</p>
+        <p class="arc__synopsis livre__accroche">{{ accroche }}</p>
         {%- if product.description != blank -%}
           <details class="livre__resume">
             <summary>{{ section.settings.libelle_resume }}</summary>
@@ -217,7 +217,11 @@
     color: var(--ivoire);
   }
 
-  /* « Lire tout le résumé » : le résumé complet se déplie sous l'accroche. */
+  /* « Lire le synopsis » : le synopsis se déplie et remplace l'accroche. */
+  .arc__texte:has(.livre__resume[open]) .livre__accroche {
+    display: none;
+  }
+
   .livre__resume summary {
     display: inline-flex;
     align-items: center;
@@ -409,7 +413,7 @@
   "name": "Livre — haut",
   "settings": [
     { "type": "text", "id": "ariane_accueil", "label": "Fil d'Ariane : premier lien", "default": "Nos histoires" },
-    { "type": "text", "id": "libelle_resume", "label": "Lien du résumé complet", "default": "Lire tout le résumé" },
+    { "type": "text", "id": "libelle_resume", "label": "Lien du synopsis", "default": "Lire le synopsis" },
     { "type": "text", "id": "libelle_panier", "label": "Bouton d'achat", "default": "Ajouter au panier" },
     { "type": "text", "id": "libelle_indisponible", "label": "Texte si le livre n'est pas en vente", "default": "À paraître" },
     { "type": "header", "content": "Dédicace" },
