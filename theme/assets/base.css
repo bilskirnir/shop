@@ -483,25 +483,25 @@ body:has(.eteint-feu.is-visible) .decor__feu {
 }
 
 /* ---------- Indicateur de l'accueil (assets/indicateur.js) ---------- */
+/* Mobile : une rangée de points en haut à droite, sous la barre (10 px de marge + 52 px). */
 .indicateur {
   position: fixed;
-  right: 10px;
-  top: 50%;
+  top: 72px;
+  right: 18px;
   z-index: 5;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  transform: translateY(-50%);
+  gap: 2px;
 }
 
 /* Zone de clic plus large que le point visible. */
 .indicateur a {
   position: relative;
   display: flex;
+  align-items: center;
   justify-content: center;
-  width: 20px;
-  padding: 3px 0;
+  min-width: 14px;
+  height: 20px;
 }
 
 .indicateur a::before {
@@ -510,13 +510,13 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   height: 5px;
   border-radius: 999px;
   background: #ece5d659;
-  transition: height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, box-shadow 0.5s;
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, box-shadow 0.5s;
 }
 
 .indicateur a.actif::before {
-  height: 26px;
+  width: 22px;
   background: var(--point, var(--or));
-  box-shadow: 0 0 14px var(--point, var(--or));
+  box-shadow: 0 0 12px var(--point, var(--or));
 }
 
 .indicateur a:focus-visible {
@@ -525,40 +525,25 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   border-radius: 999px;
 }
 
-/* Le nom de l'écran, au survol (sur ordinateur seulement). */
+/* Le nom de l'écran : seulement au survol, sur ordinateur. */
 .indicateur span {
-  position: absolute;
-  right: 26px;
-  top: 50%;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ivoire);
-  text-shadow: 0 1px 8px #000;
-  opacity: 0;
-  transform: translate(8px, -50%);
-  transition: opacity 0.3s, transform 0.3s;
-  pointer-events: none;
+  display: none;
 }
 
-@media (hover: hover) {
-  .indicateur a:hover span,
-  .indicateur a:focus-visible span {
-    opacity: 1;
-    transform: translate(0, -50%);
-  }
-}
-
-@media (max-width: 1023px) {
-  .indicateur span {
-    display: none;
-  }
-}
-
+/* Ordinateur : une colonne de points au bord droit, centrée en hauteur. */
 @media (min-width: 1024px) {
   .indicateur {
+    top: 50%;
     right: 24px;
-    gap: 14px;
+    flex-direction: column;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+
+  .indicateur a {
+    width: 20px;
+    height: auto;
+    min-height: 14px;
   }
 
   .indicateur a::before {
@@ -567,7 +552,30 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   }
 
   .indicateur a.actif::before {
+    width: 6px;
     height: 34px;
+  }
+
+  .indicateur span {
+    display: block;
+    position: absolute;
+    right: 26px;
+    top: 50%;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ivoire);
+    text-shadow: 0 1px 8px #000;
+    opacity: 0;
+    transform: translate(8px, -50%);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+
+  .indicateur a:hover span,
+  .indicateur a:focus-visible span {
+    opacity: 1;
+    transform: translate(0, -50%);
   }
 }
 
