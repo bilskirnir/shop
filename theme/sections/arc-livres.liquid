@@ -1,14 +1,14 @@
 {% comment %}
-  Page d'un arc — « Les livres de l'arc » : les couvertures côte à côte dans le halo, légèrement
-  décalées, avec numéro, titre, prix (ou « À paraître ») et un lien vers la fiche.
+  Page d'un arc — « Les livres de l'arc » en sommaire : une ligne par livre, tout aligné à gauche
+  (chiffre romain, couverture, titre, prix ou « À paraître », bouton). Un titre long s'étale sur la largeur.
   Seulement pour une saga de plusieurs livres.
 {% endcomment %}
 {%- assign saga = metaobject -%}
 {%- assign tomes = saga.ordre_des_tomes.value -%}
+{%- assign romains = 'I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII' | split: ',' -%}
 {%- if tomes.size > 1 -%}
   <section class="arc-bloc arc-livres" style="{% render 'saga-halo', saga: saga %}" data-reveal>
-    <div class="arc-bloc__halo" aria-hidden="true"></div>
-    <div class="arc-tete">
+    <div class="arc-livres__tete">
       <p class="surtitre">{{ section.settings.surtitre }}</p>
       <h2>{{ section.settings.titre }}</h2>
     </div>
@@ -16,11 +16,14 @@
       {%- for tome in tomes -%}
         <li>
           <a href="{{ tome.url }}">
+            <span class="arc-livres__numero" aria-hidden="true">{{ romains[forloop.index0] | default: forloop.index }}</span>
             {%- if tome.featured_image -%}
-              {{ tome.featured_image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 1024px) 250px, 45vw', alt: '', class: 'arc-livres__couverture', loading: 'lazy' }}
+              {{ tome.featured_image | image_url: width: 240 | image_tag: alt: '', width: 120, class: 'arc-livres__couverture', loading: 'lazy' }}
             {%- endif -%}
-            <span class="surtitre">Livre {{ forloop.index }}</span>
-            <strong>{{ tome.title }}</strong>
+            <span class="arc-livres__nom">
+              <span class="surtitre">Livre {{ forloop.index }}</span>
+              <strong>{{ tome.title }}</strong>
+            </span>
             <span class="arc-livres__prix">
               {%- if tome.available -%}{{ tome.price | money_without_trailing_zeros }}{%- else -%}À paraître{%- endif -%}
             </span>
@@ -33,83 +36,129 @@
 {%- endif -%}
 
 {% stylesheet %}
+  .arc-livres__tete {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .arc-livres__tete .surtitre {
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .arc-livres__tete h2 {
+    font-size: clamp(30px, 3vw, 44px);
+    line-height: 1.05;
+  }
+
   .arc-livres__liste {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 32px 20px;
     padding: 0;
     list-style: none;
   }
 
+  .arc-livres__liste li {
+    border-top: 1px solid #ece5d61a;
+  }
+
+  .arc-livres__liste li:last-child {
+    border-bottom: 1px solid #ece5d61a;
+  }
+
+  /* Mobile : couverture à gauche, texte, prix et bouton à droite, empilés. */
   .arc-livres__liste a {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    grid-template-areas:
+      'couv nom'
+      'couv prix'
+      'couv bouton';
     align-items: center;
-    gap: 8px;
-    text-align: center;
+    gap: 6px 18px;
+    padding: 22px 0;
+    color: var(--ivoire);
     text-decoration: none;
   }
 
-  /* Un livre sur deux descend un peu, comme posés à la main. */
-  .arc-livres__liste li:nth-child(even) {
-    margin-top: 24px;
+  .arc-livres__numero {
+    display: none;
   }
 
   .arc-livres__couverture {
-    width: 100%;
-    margin-bottom: 10px;
+    grid-area: couv;
+    width: 72px;
+    height: auto;
     border-radius: 3px;
-    box-shadow: 0 24px 50px -16px #000000e6, 0 0 0 1px #ece5d614;
-    transform: rotate(-2deg);
+    box-shadow: 0 18px 36px -12px #000000e6, 0 0 0 1px #ece5d614;
   }
 
-  .arc-livres__liste li:nth-child(even) .arc-livres__couverture {
-    transform: rotate(2deg);
+  .arc-livres__nom {
+    grid-area: nom;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .arc-livres__liste .surtitre {
+  .arc-livres__nom .surtitre {
     color: var(--gris-2);
   }
 
-  .arc-livres__liste strong {
+  .arc-livres__nom strong {
     font-family: var(--titre);
-    font-size: clamp(18px, 1.8vw, 26px);
-    line-height: 1.15;
-    color: var(--ivoire);
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.25;
   }
 
   .arc-livres__prix {
+    grid-area: prix;
     font-size: 15px;
     color: var(--gris-1);
   }
 
   .arc-livres__liste .bouton--contour {
-    display: none;
+    grid-area: bouton;
+    justify-self: start;
     min-height: 44px;
-    margin-top: 6px;
     padding: 0 22px;
     font-size: 14px;
   }
 
   @media (min-width: 1024px) {
-    .arc-livres__liste {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 56px 120px;
+    .arc-livres__tete {
+      margin-bottom: 36px;
     }
 
-    .arc-livres__liste li {
-      width: 250px;
+    .arc-livres__liste a {
+      grid-template-columns: 72px 120px minmax(0, 1fr) auto auto;
+      grid-template-areas: 'numero couv nom prix bouton';
+      gap: 32px;
+      padding: 28px 0;
     }
 
-    .arc-livres__liste li:nth-child(even) {
-      margin-top: 40px;
+    .arc-livres__numero {
+      display: block;
+      grid-area: numero;
+      font-family: var(--titre);
+      font-size: 56px;
+      line-height: 1;
+      color: color-mix(in srgb, var(--teinte, var(--or)) 45%, transparent);
     }
 
-    .arc-livres__liste .bouton--contour {
-      display: inline-flex;
+    .arc-livres__couverture {
+      width: 120px;
+    }
+
+    .arc-livres__nom .surtitre {
+      display: none;
+    }
+
+    .arc-livres__prix {
+      font-size: 17px;
+    }
+
+    .arc-livres__liste a:hover .bouton--contour {
+      border-color: var(--or);
+      color: var(--or);
     }
   }
 {% endstylesheet %}
