@@ -302,7 +302,9 @@ h2 {
   z-index: -1;
 }
 
-.decor > * {
+/* Les calques du décor, y compris ceux rangés dans .decor__feu (braises, étincelles), se placent en absolu. */
+.decor > *,
+.decor__feu > * {
   position: absolute;
   pointer-events: none;
 }
