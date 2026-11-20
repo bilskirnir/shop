@@ -116,15 +116,12 @@
     padding: 96px var(--marge-centre) 0;
   }
 
-  /* L'illustration de la saga, sous un voile, qui s'efface vers le bas de l'en-tête. */
+  /* L'illustration de la saga, fixe au fond de toute la page, sous un voile (même plan que sur l'accueil). */
   .arc__fond {
-    position: absolute;
-    inset: 0 0 auto;
-    height: min(1100px, 130svh);
-    z-index: -1;
+    position: fixed;
+    inset: 0;
+    z-index: -2;
     pointer-events: none;
-    -webkit-mask-image: linear-gradient(#000 45%, transparent);
-    mask-image: linear-gradient(#000 45%, transparent);
   }
 
   .arc__fond img {
