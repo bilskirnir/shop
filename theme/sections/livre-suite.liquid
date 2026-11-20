@@ -1,0 +1,170 @@
+{% comment %}
+  Fiche d'un livre — « La suite » : le livre suivant de la saga, et l'offre des deux ensemble
+  (les deux au panier en un envoi). Rien pour le dernier livre d'une saga, ni si la suite n'est pas en vente.
+{% endcomment %}
+{%- liquid
+  assign saga = product.metafields.custom.saga.value
+  assign trouve = false
+  for tome in saga.ordre_des_tomes.value
+    if trouve
+      assign suivant = tome
+      break
+    endif
+    if tome.id == product.id
+      assign trouve = true
+      assign rang_suivant = forloop.index | plus: 1
+    endif
+  endfor
+-%}
+{%- if suivant and suivant.available and product.available -%}
+  {%- assign deux = product.price | plus: suivant.price -%}
+  <section class="arc-bloc livre-suite" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+    <div class="livre-suite__panneau verre">
+      <div class="livre-suite__couvertures" aria-hidden="true">
+        <div class="livre-suite__halo"></div>
+        {%- if product.featured_image -%}
+          {{ product.featured_image | image_url: width: 300 | image_tag: alt: '', class: 'livre-suite__actuel', loading: 'lazy' }}
+        {%- endif -%}
+        {%- if suivant.featured_image -%}
+          {{ suivant.featured_image | image_url: width: 340 | image_tag: alt: '', class: 'livre-suite__suivant', loading: 'lazy' }}
+        {%- endif -%}
+      </div>
+      <div class="livre-suite__texte">
+        <p class="surtitre">{{ section.settings.surtitre }} · Livre {{ rang_suivant }}</p>
+        <h2>{{ suivant.title }}</h2>
+        <p>{{ section.settings.texte_deux }} <strong>{{ deux | money_without_trailing_zeros }}</strong>{% if section.settings.mention != blank %}, {{ section.settings.mention }}{% endif %}.</p>
+      </div>
+      <div class="livre-suite__actions">
+        <form action="{{ routes.cart_add_url }}" method="post" class="arc-achat">
+          <input type="hidden" name="items[0][id]" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="items[0][quantity]" value="1">
+          <input type="hidden" name="items[1][id]" value="{{ suivant.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="items[1][quantity]" value="1">
+          {% render 'bouton', libelle: section.settings.libelle_deux, variante: 'or' %}
+        </form>
+        <a href="{{ suivant.url }}">Voir le Livre {{ rang_suivant }} · {{ suivant.price | money_without_trailing_zeros }}</a>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .livre-suite__panneau {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 22px;
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .livre-suite__couvertures {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .livre-suite__halo {
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(closest-side, var(--halo), transparent 72%);
+    filter: blur(30px);
+  }
+
+  .livre-suite__couvertures img {
+    position: relative;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 24px 50px -16px #000000e6, 0 0 0 1px #ece5d614;
+  }
+
+  .livre-suite__actuel {
+    z-index: 1;
+    width: 110px;
+    margin-right: -30px;
+    opacity: 0.85;
+    transform: rotate(-4deg);
+  }
+
+  .livre-suite__suivant {
+    z-index: 2;
+    width: 130px;
+    transform: rotate(4deg);
+  }
+
+  .livre-suite__texte {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .livre-suite__texte .surtitre {
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .livre-suite__texte h2 {
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.1;
+  }
+
+  .livre-suite__texte p:last-child {
+    color: var(--gris-1);
+  }
+
+  .livre-suite__texte strong {
+    color: var(--ivoire);
+  }
+
+  .livre-suite__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .livre-suite__actions > a {
+    font-size: 14px;
+    color: var(--gris-1);
+    text-underline-offset: 3px;
+  }
+
+  @media (min-width: 1024px) {
+    .livre-suite__panneau {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 48px;
+      padding: 48px 56px;
+      border-radius: 28px;
+      text-align: left;
+    }
+
+    .livre-suite__actuel {
+      width: 150px;
+      margin-right: -40px;
+    }
+
+    .livre-suite__suivant {
+      width: 170px;
+    }
+
+    .livre-suite__actions {
+      width: auto;
+      text-align: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Livre — la suite",
+  "settings": [
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "La suite" },
+    { "type": "text", "id": "texte_deux", "label": "Texte", "default": "Les deux ensemble :" },
+    { "type": "text", "id": "mention", "label": "Mention", "default": "livraison offerte" },
+    { "type": "text", "id": "libelle_deux", "label": "Bouton", "default": "Prendre les deux" }
+  ],
+  "presets": [{ "name": "Livre — la suite" }]
+}
+{% endschema %}

@@ -3,11 +3,13 @@
   (liste de métaobjets « avis » : titre, texte, auteur, source, verifie). La page réunit ceux de tous les tomes,
   dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
   les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
-  Rien si aucun tome n'a d'avis.
+  Sur la fiche d'un livre, seulement les avis de ce livre. Rien si aucun n'a d'avis.
 {% endcomment %}
-{%- assign saga = metaobject -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
 {%- assign nombre = 0 -%}
 {%- for tome in saga.ordre_des_tomes.value -%}
+  {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
   {%- assign nombre = nombre | plus: tome.metafields.custom.avis.value.size -%}
 {%- endfor -%}
 {%- assign limite = section.settings.nombre_cartes | plus: 1 -%}
@@ -21,6 +23,7 @@
     </div>
     {%- assign rang = 0 -%}
     {%- for tome in saga.ordre_des_tomes.value -%}
+      {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
       {%- for un_avis in tome.metafields.custom.avis.value -%}
         {%- assign rang = rang | plus: 1 -%}
         {%- if rang > nombre %}{% break %}{% endif -%}

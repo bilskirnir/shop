@@ -2,7 +2,8 @@
   Page d'un arc — « Dans le même univers… » : les autres sagas du même univers parent, chacune
   dans une carte de verre à sa propre couleur de halo, avec le bouton de l'accueil.
 {% endcomment %}
-{%- assign saga = metaobject -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
 {%- capture cartes -%}
   {%- for autre in shop.metaobjects.saga.values -%}
     {%- if autre.univers_parent.value.id == saga.univers_parent.value.id and autre.system.id != saga.system.id -%}

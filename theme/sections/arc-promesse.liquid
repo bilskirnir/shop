@@ -3,7 +3,8 @@
   et les raisons en pastilles de verre. Champs de la saga : promesse (texte), raisons (liste de textes).
   Rien si la saga n'a pas de promesse.
 {% endcomment %}
-{%- assign saga = metaobject -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
 {%- if saga.promesse.value != blank -%}
   <section class="arc-bloc arc-promesse" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>

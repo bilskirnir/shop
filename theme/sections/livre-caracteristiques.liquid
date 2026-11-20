@@ -1,0 +1,84 @@
+{% comment %}
+  Fiche d'un livre — les caractéristiques, sur une ligne sobre : nombre de pages (custom.nombre_pages),
+  ISBN (code-barres de la variante), fabrication (réglage), couverture (champ produit custom.couverture,
+  texte). Une valeur vide disparaît.
+{% endcomment %}
+{%- liquid
+  assign pages = product.metafields.custom.nombre_pages
+  assign isbn = product.selected_or_first_available_variant.barcode
+  assign couverture = product.metafields.custom.couverture.value
+-%}
+<section class="livre-carac" data-reveal>
+  <dl>
+    {%- if pages != blank -%}
+      <div><dt>{{ section.settings.libelle_pages }}</dt><dd>{{ pages }} pages</dd></div>
+    {%- endif -%}
+    {%- if isbn != blank -%}
+      <div><dt>ISBN</dt><dd>{{ isbn }}</dd></div>
+    {%- endif -%}
+    {%- if section.settings.fabrication != blank -%}
+      <div><dt>{{ section.settings.libelle_fabrication }}</dt><dd>{{ section.settings.fabrication }}</dd></div>
+    {%- endif -%}
+    {%- if couverture != blank -%}
+      <div><dt>{{ section.settings.libelle_couverture }}</dt><dd>{{ couverture }}</dd></div>
+    {%- endif -%}
+  </dl>
+</section>
+
+{% stylesheet %}
+  .livre-carac {
+    padding: 80px var(--marge-centre) 0;
+  }
+
+  .livre-carac dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 24px;
+    margin: 0;
+    padding: 22px 0;
+    border-top: 1px solid #ece5d61a;
+    border-bottom: 1px solid #ece5d61a;
+  }
+
+  .livre-carac div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+  }
+
+  .livre-carac dt {
+    font-size: 13px;
+    color: var(--gris-2);
+  }
+
+  .livre-carac dd {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  @media (min-width: 1024px) {
+    .livre-carac {
+      padding-top: 120px;
+    }
+
+    .livre-carac dl {
+      display: flex;
+      justify-content: space-between;
+      padding: 26px 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Livre — caractéristiques",
+  "settings": [
+    { "type": "text", "id": "libelle_pages", "label": "Libellé du nombre de pages", "default": "Longueur" },
+    { "type": "text", "id": "libelle_fabrication", "label": "Libellé de la fabrication", "default": "Fabrication" },
+    { "type": "text", "id": "fabrication", "label": "Fabrication", "default": "Imprimé en France" },
+    { "type": "text", "id": "libelle_couverture", "label": "Libellé de la couverture", "default": "Couverture" }
+  ],
+  "presets": [{ "name": "Livre — caractéristiques" }]
+}
+{% endschema %}

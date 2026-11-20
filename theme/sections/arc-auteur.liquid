@@ -3,7 +3,8 @@
   champs nom, avatar, bio, chiffres). Rien de propre à un auteur n'est réglé dans le modèle.
   chiffres : une liste de textes, « 150k abonnés TikTok » → le premier mot en grand, le reste en légende.
 {% endcomment %}
-{%- assign saga = metaobject -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
 {%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
   {%- for a in tome.metafields.custom.auteur.value limit: 1 -%}
     {%- assign auteur = a -%}

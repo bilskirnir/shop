@@ -1,9 +1,11 @@
 {% comment %}
   Page d'un arc — « Les livres de l'arc » en sommaire : une ligne par livre, tout aligné à gauche
   (chiffre romain, couverture, titre, prix ou « À paraître », bouton). Un titre long s'étale sur la largeur.
+  Sur la fiche d'un livre, ce livre est mis en évidence (« Vous êtes ici »).
   Seulement pour une saga de plusieurs livres.
 {% endcomment %}
-{%- assign saga = metaobject -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
 {%- assign tomes = saga.ordre_des_tomes.value -%}
 {%- assign romains = 'I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII' | split: ',' -%}
 {%- if tomes.size > 1 -%}
@@ -14,8 +16,10 @@
     </div>
     <ol class="arc-livres__liste">
       {%- for tome in tomes -%}
-        <li>
-          <a href="{{ tome.url }}">
+        {%- assign courant = false -%}
+        {%- if product and tome.id == product.id %}{% assign courant = true %}{% endif -%}
+        <li{% if courant %} class="arc-livres__courant"{% endif %}>
+          <a href="{{ tome.url }}"{% if courant %} aria-current="page"{% endif %}>
             <span class="arc-livres__numero" aria-hidden="true">{{ romains[forloop.index0] | default: forloop.index }}</span>
             {%- if tome.featured_image -%}
               {{ tome.featured_image | image_url: width: 240 | image_tag: alt: '', width: 120, class: 'arc-livres__couverture', loading: 'lazy' }}
@@ -27,7 +31,11 @@
             <span class="arc-livres__prix">
               {%- if tome.available -%}{{ tome.price | money_without_trailing_zeros }}{%- else -%}À paraître{%- endif -%}
             </span>
-            <span class="bouton bouton--contour">{{ section.settings.libelle_bouton }}</span>
+            {%- if courant -%}
+              <span class="arc-livres__ici">{{ section.settings.libelle_ici }}</span>
+            {%- else -%}
+              <span class="bouton bouton--contour">{{ section.settings.libelle_bouton }}</span>
+            {%- endif -%}
           </a>
         </li>
       {%- endfor -%}
@@ -123,7 +131,34 @@
     font-size: 14px;
   }
 
+  /* Le livre de la fiche : fond or léger et pastille « Vous êtes ici ». */
+  .arc-livres__courant {
+    border-radius: 18px;
+    background: #d2b06a12;
+    outline: 1px solid #d2b06a40;
+  }
+
+  .arc-livres__courant a {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .arc-livres__ici {
+    grid-area: bouton;
+    justify-self: start;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--or);
+    color: var(--rond);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
   @media (min-width: 1024px) {
+    .arc-livres__courant .arc-livres__numero {
+      color: var(--or);
+    }
+
     .arc-livres__tete {
       margin-bottom: 36px;
     }
@@ -169,7 +204,8 @@
   "settings": [
     { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Dans l'ordre" },
     { "type": "text", "id": "titre", "label": "Titre", "default": "Les livres de l'arc" },
-    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Voir le livre" }
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Voir le livre" },
+    { "type": "text", "id": "libelle_ici", "label": "Pastille du livre en cours (fiche)", "default": "Vous êtes ici" }
   ],
   "presets": [{ "name": "Arc — les livres" }]
 }

@@ -1,9 +1,10 @@
 {% comment %}
   Page d'un arc — l'appel final : une question, l'offre, et le bouton qui porte le prix de l'arc complet.
   Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
+  Sur la fiche d'un livre : le prix du livre, le bouton remonte au bloc d'achat, puis l'arc complet en lien.
 {% endcomment %}
 {%- liquid
-  assign saga = metaobject
+  assign saga = metaobject | default: product.metafields.custom.saga.value
   assign tomes = saga.ordre_des_tomes.value
   assign tout_en_vente = true
   for tome in tomes
@@ -15,7 +16,24 @@
     endunless
   endfor
 -%}
-{%- if tomes.size > 1 and tout_en_vente -%}
+{%- if product -%}
+  {%- if product.available -%}
+    <section class="arc-bloc arc-appel" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+      <div class="arc-bloc__halo" aria-hidden="true"></div>
+      <h2>{{ section.settings.titre_livre }}</h2>
+      {%- if section.settings.offre_livre != blank -%}
+        <p class="arc-appel__offre">{{ section.settings.offre_livre }}</p>
+      {%- endif -%}
+      {%- capture prix %}{{ product.price | money_without_trailing_zeros }}{% endcapture -%}
+      {%- assign libelle = section.settings.libelle_livre | append: ' · ' | append: prix -%}
+      {%- comment -%} Le bouton remonte au bloc d'achat : c'est là que se choisit la dédicace. {%- endcomment -%}
+      {% render 'bouton', libelle: libelle, url: '#arc-achat', variante: 'or' %}
+      {%- if tomes.size > 1 and tout_en_vente -%}
+        <a class="arc-appel__seul" href="{{ saga.system.url }}">ou l'arc complet · {% render 'arc-total', saga: saga %}</a>
+      {%- endif -%}
+    </section>
+  {%- endif -%}
+{%- elsif tomes.size > 1 and tout_en_vente -%}
   <section class="arc-bloc arc-appel" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
     <h2>{{ section.settings.titre }}</h2>
@@ -88,7 +106,11 @@
   "settings": [
     { "type": "text", "id": "titre", "label": "Titre", "default": "Prêt à entrer dans l'arc ?" },
     { "type": "text", "id": "offre", "label": "Offre", "default": "Livraison offerte dès 40 € en point relais." },
-    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Prendre l'arc complet" }
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Prendre l'arc complet" },
+    { "type": "header", "content": "Sur la fiche d'un livre" },
+    { "type": "text", "id": "titre_livre", "label": "Titre", "default": "Prêt à commencer ?" },
+    { "type": "text", "id": "offre_livre", "label": "Texte", "default": "Dédicacé par l'auteur, livraison offerte dès 40 €." },
+    { "type": "text", "id": "libelle_livre", "label": "Bouton", "default": "Ajouter au panier" }
   ],
   "presets": [{ "name": "Arc — appel final" }]
 }

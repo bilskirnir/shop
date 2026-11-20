@@ -1,0 +1,344 @@
+{% comment %}
+  Haut de la fiche d'un livre (modèle templates/product.json) : la page Arc centrée sur un livre.
+  Une seule couverture, « Saga · Livre 1 sur 2 », résumé, auteur, note, pastilles de la saga,
+  et le bloc d'achat : prix, Ajouter au panier, dédicace offerte (« À qui ? », envoyée avec le livre
+  comme propriété de ligne), garanties, et l'incitation vers l'arc complet.
+  Les styles .arc__* viennent de sections/arc.liquid (Shopify réunit les styles de toutes les sections).
+{% endcomment %}
+{%- liquid
+  assign saga = product.metafields.custom.saga.value
+  assign tomes = saga.ordre_des_tomes.value
+  assign rang = 0
+  assign total = 0
+  assign tout_en_vente = true
+  for tome in tomes
+    if tome.id == product.id
+      assign rang = forloop.index
+    endif
+    assign total = total | plus: tome.price
+    unless tome.available
+      assign tout_en_vente = false
+    endunless
+  endfor
+  assign variante = product.selected_or_first_available_variant
+  assign fond = saga.illustration_hero_de_la_saga.value
+-%}
+{%- capture noms_auteurs %}{% render 'saga-auteurs', saga: saga %}{% endcapture -%}
+
+<div class="arc livre" style="{% render 'saga-halo', saga: saga %}">
+  {%- if fond != blank -%}
+    <div class="arc__fond" aria-hidden="true">
+      {{- fond | image_url: width: 2400 | image_tag: widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}
+    </div>
+  {%- endif -%}
+
+  {%- if saga -%}
+    <nav class="livre__ariane" aria-label="Fil d'Ariane">
+      <a href="{{ routes.root_url }}#histoires">{{ section.settings.ariane_accueil }}</a> /
+      <a href="{% render 'saga-lien', saga: saga %}">{{ saga.nom.value }}</a> /
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+  {%- endif -%}
+
+  <section class="arc__entete">
+    <div class="arc__couvertures">
+      <div class="arc__halo" aria-hidden="true"></div>
+      {% render 'couverture', produit: product, taille: 'seule' %}
+    </div>
+
+    <div class="arc__texte" data-reveal>
+      <p class="surtitre arc__surtitre">
+        {%- if saga and tomes.size > 1 -%}
+          {{ saga.nom.value }} · Livre {{ rang }} sur {{ tomes.size }}
+        {%- else -%}
+          {{ saga.nom.value | default: product.type }}
+        {%- endif -%}
+      </p>
+      <h1>{{ product.title }}</h1>
+      {%- if product.description != blank -%}
+        <div class="arc__synopsis">{{ product.description }}</div>
+      {%- endif -%}
+
+      <div class="arc__preuves">
+        {%- for auteur in product.metafields.custom.auteur.value limit: 1 -%}
+          <p class="arc__auteur">
+            {%- if auteur.avatar.value != blank -%}
+              {{ auteur.avatar.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
+            {%- endif -%}
+            <span>Écrit par <strong>{{ auteur.nom.value }}</strong></span>
+          </p>
+        {%- endfor -%}
+        {% render 'note' %}
+      </div>
+
+      {% render 'pastilles', liste: saga.tags.value %}
+
+      <div class="arc__achat livre__achat verre" id="arc-achat">
+        {%- form 'product', product, class: 'livre__formulaire' -%}
+          <input type="hidden" name="id" value="{{ variante.id }}">
+          <div class="livre__ligne">
+            <div class="arc__offre">
+              <p class="arc__prix">{{ variante.price | money_without_trailing_zeros }}</p>
+              {%- if product.metafields.custom.nombre_pages != blank -%}
+                <p>{{ product.metafields.custom.nombre_pages }} pages</p>
+              {%- endif -%}
+            </div>
+            {%- if variante.available -%}
+              {% render 'bouton', libelle: section.settings.libelle_panier, variante: 'or' %}
+            {%- else -%}
+              <p class="livre__indisponible">{{ section.settings.libelle_indisponible }}</p>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.dedicace and variante.available -%}
+            {%- comment -%} Le champ « À qui ? » s'ouvre quand la case est cochée (CSS :has, sans JavaScript). {%- endcomment -%}
+            <div class="livre__dedicace">
+              <label class="livre__dedicace-case">
+                <input type="checkbox" name="properties[Dédicace]" value="Oui">
+                <span>{{ section.settings.dedicace_libelle }}</span>
+                <strong>{{ section.settings.dedicace_mention }}</strong>
+              </label>
+              <label class="livre__dedicace-nom">
+                {{ section.settings.dedicace_question }}
+                <input type="text" name="properties[Dédicace pour]" maxlength="60" autocomplete="off" placeholder="{{ section.settings.dedicace_exemple }}">
+              </label>
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+
+        {% render 'garanties', blocs: section.blocks, auteur: noms_auteurs %}
+
+        {%- if tomes.size > 1 and tout_en_vente -%}
+          <a class="livre__arc" href="{{ saga.system.url }}">
+            <span>ou <strong>l'arc complet</strong> ({{ tomes.size }} livres) · <strong>{{ total | money_without_trailing_zeros }}</strong>, {{ section.settings.arc_mention }}</span>
+            <span class="livre__arc-lien">{{ section.settings.arc_lien }} →</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  {%- if variante.available -%}
+    <div class="arc__barre verre" aria-hidden="true" inert>
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 80 | image_tag: alt: '', width: 34, loading: 'lazy' }}
+      {%- endif -%}
+      <p><strong>{{ product.title }}</strong>{{ variante.price | money_without_trailing_zeros }}{% if section.settings.dedicace and section.settings.barre_mention != blank %} · {{ section.settings.barre_mention }}{% endif %}</p>
+      {% render 'bouton', libelle: section.settings.libelle_panier, url: '#arc-achat', variante: 'or' %}
+    </div>
+    <script src="{{ 'arc.js' | asset_url }}" defer></script>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .livre__ariane {
+    position: relative;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .livre__ariane a {
+    color: var(--gris-2);
+    text-decoration: none;
+  }
+
+  .livre__ariane a:hover {
+    color: var(--ivoire);
+  }
+
+  .livre__ariane [aria-current] {
+    color: var(--ivoire);
+  }
+
+  .livre .arc__couvertures .couverture--seule {
+    width: min(240px, 60vw);
+  }
+
+  .livre__achat {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .livre__formulaire {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .livre__ligne {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .livre__ligne .bouton {
+    justify-content: space-between;
+  }
+
+  .livre__indisponible {
+    font-weight: 600;
+    color: var(--gris-1);
+  }
+
+  /* La dédicace : une case, puis le champ « À qui ? » qui s'ouvre quand elle est cochée. */
+  .livre__dedicace {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #d2b06a12;
+    border: 1px solid #d2b06a33;
+  }
+
+  .livre__dedicace-case {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .livre__dedicace-case input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--or);
+  }
+
+  .livre__dedicace-case strong {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--or);
+  }
+
+  .livre__dedicace-nom {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--gris-2);
+  }
+
+  .livre__dedicace:has(input[type='checkbox']:checked) .livre__dedicace-nom {
+    display: flex;
+    animation: dedicace-ouvre 0.3s ease-out;
+  }
+
+  .livre__dedicace-nom input {
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid #ece5d626;
+    background: #0b0c0e99;
+    color: var(--ivoire);
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .livre__dedicace-nom input:focus-visible {
+    outline: 2px solid var(--or);
+    outline-offset: 2px;
+  }
+
+  @keyframes dedicace-ouvre {
+    from { opacity: 0; transform: translateY(-4px); }
+  }
+
+  /* L'incitation vers l'arc complet, sous le bloc d'achat. */
+  .livre__arc {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 16px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #ece5d60a;
+    border: 1px dashed #ece5d633;
+    font-size: 14px;
+    color: var(--gris-1);
+    text-decoration: none;
+  }
+
+  .livre__arc strong {
+    color: var(--ivoire);
+  }
+
+  .livre__arc-lien {
+    font-weight: 600;
+    color: var(--or);
+  }
+
+  @media (min-width: 1024px) {
+    .livre .arc__couvertures .couverture--seule {
+      width: 340px;
+    }
+
+    /* Le bloc d'achat de la fiche reste en colonne (prix et bouton sur une ligne, puis le reste). */
+    .livre .arc__achat {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .livre__ligne {
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .livre__ligne .arc__offre {
+      flex: 1;
+    }
+
+    .livre__arc {
+      font-size: 15px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Livre — haut",
+  "settings": [
+    { "type": "text", "id": "ariane_accueil", "label": "Fil d'Ariane : premier lien", "default": "Nos histoires" },
+    { "type": "text", "id": "libelle_panier", "label": "Bouton d'achat", "default": "Ajouter au panier" },
+    { "type": "text", "id": "libelle_indisponible", "label": "Texte si le livre n'est pas en vente", "default": "À paraître" },
+    { "type": "header", "content": "Dédicace" },
+    { "type": "checkbox", "id": "dedicace", "label": "Proposer la dédicace", "default": true },
+    { "type": "text", "id": "dedicace_libelle", "label": "Case", "default": "Dédicacé par l'auteur" },
+    { "type": "text", "id": "dedicace_mention", "label": "Mention", "default": "Offert" },
+    { "type": "text", "id": "dedicace_question", "label": "Question", "default": "À qui ?" },
+    { "type": "text", "id": "dedicace_exemple", "label": "Exemple dans le champ", "default": "Prénom de la personne" },
+    { "type": "text", "id": "barre_mention", "label": "Mention dans la barre d'achat", "default": "dédicace offerte" },
+    { "type": "header", "content": "Vers l'arc complet" },
+    { "type": "text", "id": "arc_mention", "label": "Mention", "default": "livraison offerte" },
+    { "type": "text", "id": "arc_lien", "label": "Lien", "default": "Voir l'arc" }
+  ],
+  "blocks": [
+    {
+      "type": "garantie",
+      "name": "Garantie",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icone",
+          "label": "Icône",
+          "options": [
+            { "value": "dedicace", "label": "Plume (dédicace)" },
+            { "value": "livraison", "label": "Camion (livraison)" },
+            { "value": "france", "label": "Drapeau" }
+          ],
+          "default": "livraison"
+        },
+        { "type": "text", "id": "titre", "label": "Titre" },
+        { "type": "text", "id": "texte", "label": "Texte", "info": "[auteur] = le nom de l'auteur." }
+      ]
+    }
+  ]
+}
+{% endschema %}

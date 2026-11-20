@@ -10,11 +10,100 @@
 {
   "sections": {
     "main": {
-      "type": "product",
+      "type": "livre",
+      "blocks": {
+        "garantie-2": {
+          "type": "garantie",
+          "settings": {
+            "icone": "livraison",
+            "titre": "Livraison offerte",
+            "texte": "dès 40 € en point relais"
+          }
+        },
+        "garantie-4": {
+          "type": "garantie",
+          "settings": {
+            "icone": "france",
+            "titre": "Écrit en France",
+            "texte": "maison indépendante"
+          }
+        }
+      },
+      "block_order": [
+        "garantie-2",
+        "garantie-4"
+      ],
+      "settings": {}
+    },
+    "promesse": {
+      "type": "arc-promesse",
+      "settings": {}
+    },
+    "avis": {
+      "type": "arc-avis",
+      "settings": {
+        "nombre_cartes": 3
+      }
+    },
+    "suite": {
+      "type": "livre-suite",
+      "settings": {}
+    },
+    "livres": {
+      "type": "arc-livres",
+      "settings": {}
+    },
+    "caracteristiques": {
+      "type": "livre-caracteristiques",
+      "settings": {}
+    },
+    "auteur": {
+      "type": "arc-auteur",
+      "settings": {}
+    },
+    "questions": {
+      "type": "arc-faq",
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "question": "Par quel livre commencer ?",
+            "reponse": "<p>Par le Livre 1 : chaque arc se lit dans l'ordre. La mention sous le titre dit où il se place dans l'univers.</p>"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "question": "Combien coûte la livraison ?",
+            "reponse": "<p>Elle est offerte dès 40 € en point relais. En dessous, son prix est calculé au paiement.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2"
+      ],
+      "settings": {}
+    },
+    "appel": {
+      "type": "arc-appel",
+      "settings": {}
+    },
+    "univers": {
+      "type": "arc-univers",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "promesse",
+    "avis",
+    "suite",
+    "livres",
+    "caracteristiques",
+    "auteur",
+    "questions",
+    "appel",
+    "univers"
   ]
 }
