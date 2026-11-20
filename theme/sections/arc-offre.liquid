@@ -67,10 +67,12 @@
     min-height: 260px;
   }
 
+  /* Le halo derrière les couvertures : large et fondu, comme celui de la carte auteur. */
   .arc-offre__halo {
     position: absolute;
-    inset: -6%;
-    background: radial-gradient(closest-side, var(--halo-fort), transparent 72%);
+    inset: -30%;
+    background: radial-gradient(closest-side, var(--halo), var(--halo-doux) 45%, transparent 100%);
+    filter: blur(40px);
   }
 
   .arc-offre__colis .couverture--eventail {
