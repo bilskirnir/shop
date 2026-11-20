@@ -91,7 +91,10 @@
           </div>
 
           {%- if section.settings.dedicace and variante.available -%}
-            {%- comment -%} Le champ « À qui ? » s'ouvre quand la case est cochée (CSS :has, sans JavaScript). {%- endcomment -%}
+            {%- comment -%}
+              Le champ « À qui ? » s'ouvre quand la case est cochée (CSS :has). Il reste désactivé tant que
+              la case ne l'est pas, pour qu'un prénom tapé puis abandonné ne parte pas avec la commande.
+            {%- endcomment -%}
             <div class="livre__dedicace">
               <label class="livre__dedicace-case">
                 <input type="checkbox" name="properties[Dédicace]" value="Oui">
@@ -100,7 +103,7 @@
               </label>
               <label class="livre__dedicace-nom">
                 {{ section.settings.dedicace_question }}
-                <input type="text" name="properties[Dédicace pour]" maxlength="60" autocomplete="off" placeholder="{{ section.settings.dedicace_exemple }}">
+                <input type="text" name="properties[Dédicace pour]" maxlength="60" autocomplete="off" placeholder="{{ section.settings.dedicace_exemple }}" disabled>
               </label>
             </div>
           {%- endif -%}
@@ -128,6 +131,20 @@
     </div>
     <script src="{{ 'arc.js' | asset_url }}" defer></script>
   {%- endif -%}
+
+  <script>
+    // Le prénom de la dédicace n'est envoyé (champ actif) que si la case est cochée.
+    document.querySelectorAll('.livre__dedicace').forEach((dedicace) => {
+      const caseDedicace = dedicace.querySelector('input[type="checkbox"]');
+      const prenom = dedicace.querySelector('input[type="text"]');
+      const suivre = () => { prenom.disabled = !caseDedicace.checked; };
+      suivre();
+      caseDedicace.addEventListener('change', () => {
+        suivre();
+        if (caseDedicace.checked) prenom.focus();
+      });
+    });
+  </script>
 </div>
 
 {% stylesheet %}
