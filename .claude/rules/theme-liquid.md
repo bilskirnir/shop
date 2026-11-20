@@ -16,7 +16,7 @@ Un schéma invalide (ex. libellé d'option > 50 caractères, nom de section > 25
 
 ## Ne jamais écraser les réglages d'Uriel sur le thème en ligne
 
-**Depuis le 20/11/2026, le thème 200840970627 est PUBLIÉ : chaque push y part sur la boutique en ligne.** Tester d'abord sur le thème de dev (200840675715), n'envoyer en ligne qu'un rendu vérifié.
+**Depuis le 20/11/2026, le thème 200840970627 est PUBLIÉ : chaque push y part sur la boutique en ligne.** Tester d'abord sur le thème de dev (200840675715), n'envoyer en ligne qu'un rendu vérifié. L'envoi en ligne demande `--allow-live` ; Uriel l'autorise pour les ajustements qu'il demande, une fois vérifiés sur le dev (20/11/2026).
 
 Uriel règle le site dans l'éditeur de ce thème. Un `theme push` y envoie toujours avec :
 `--ignore "templates/*.json" --ignore "config/settings_data.json" --ignore "sections/*-group.json"`.
