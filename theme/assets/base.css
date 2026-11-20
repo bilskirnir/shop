@@ -551,6 +551,49 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   }
 }
 
+/* ---------- Note des lecteurs (snippets/note.liquid) ---------- */
+.note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gris-2);
+}
+
+.note strong {
+  color: var(--ivoire);
+}
+
+.note__etoiles {
+  color: var(--or);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Pastilles (snippets/pastilles.liquid) ---------- */
+.pastilles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.pastilles li {
+  padding: 6px 14px;
+  border: 1px solid #ece5d633;
+  border-radius: 999px;
+  background: #ece5d60d;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gris-1);
+}
+
+@media (min-width: 1024px) {
+  .note {
+    font-size: 14px;
+  }
+}
+
 /* ---------- Indicateur de l'accueil (assets/indicateur.js) ---------- */
 /* Mobile : une rangée de points centrée en haut, sous la barre (10 px de marge + 52 px). */
 .indicateur {

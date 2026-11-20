@@ -28,15 +28,7 @@
         </div>
       {%- endif -%}
 
-      {%- if section.settings.note != blank -%}
-        <p class="ouverture__note">
-          <span class="ouverture__etoiles" aria-hidden="true">★★★★★</span>
-          <span>
-            <strong>{{ section.settings.note }}</strong> {{ section.settings.note_source -}}
-            {%- if settings.lecteurs != blank %} · <strong>{{ settings.lecteurs }}</strong> lecteurs{% endif -%}
-          </span>
-        </p>
-      {%- endif -%}
+      {% render 'note', lecteurs: true %}
     </div>
   </div>
 
@@ -129,23 +121,6 @@
     color: var(--ivoire);
   }
 
-  .ouverture__note {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--gris-2);
-  }
-
-  .ouverture__note strong {
-    color: var(--ivoire);
-  }
-
-  .ouverture__etoiles {
-    color: var(--or);
-    letter-spacing: 0.08em;
-  }
-
   .ouverture__action {
     display: flex;
     flex-direction: column;
@@ -210,10 +185,6 @@
     .ouverture__fondateur img {
       width: 36px;
       height: 36px;
-    }
-
-    .ouverture__note {
-      font-size: 14px;
     }
 
     .ouverture__action {
@@ -285,18 +256,6 @@
       "type": "header",
       "content": "Note",
       "info": "Le nombre de lecteurs se règle dans Paramètres du thème › Bilskirnir."
-    },
-    {
-      "type": "text",
-      "id": "note",
-      "label": "Note",
-      "default": "4,7/5"
-    },
-    {
-      "type": "text",
-      "id": "note_source",
-      "label": "Source de la note",
-      "default": "sur Amazon"
     },
     {
       "type": "header",

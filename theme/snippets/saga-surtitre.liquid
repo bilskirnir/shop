@@ -1,0 +1,23 @@
+{% comment %}
+  Le surtitre d'une saga : « 2 livres · Le commencement ».
+  Un seul livre : le type du produit (« Roman »), sinon « 1 livre ». Puis la mention de lecture si elle existe.
+  Usage : {% render 'saga-surtitre', saga: saga %}
+{%- endcomment -%}
+{%- liquid
+  assign tomes = saga.ordre_des_tomes.value
+  assign nombre = tomes.size | default: 0
+  assign gauche = ''
+  if nombre == 1
+    for tome in tomes
+      assign gauche = tome.type | default: '1 livre'
+    endfor
+  elsif nombre > 1
+    assign gauche = nombre | append: ' livres'
+  endif
+  assign mention = saga.mention_de_lecture.value
+  if gauche != blank and mention != blank
+    echo gauche | append: ' · ' | append: mention
+  else
+    echo gauche | default: mention
+  endif
+-%}

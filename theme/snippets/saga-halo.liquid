@@ -1,0 +1,18 @@
+{% comment %}
+  Les variables de couleur d'une saga, à poser dans un attribut style :
+  --halo, --halo-fort, --halo-doux (le halo derrière les couvertures) et --teinte (surtitre, indicateur).
+  Couleur : couleur_halo de la saga, sinon celle de son univers parent, sinon un halo ivoire neutre.
+  Usage : style="{% render 'saga-halo', saga: saga %}"
+{%- endcomment -%}
+{%- liquid
+  assign couleur = saga.couleur_halo.value | default: saga.univers_parent.value.metafields.custom.couleur.value
+  if couleur != blank
+    assign halo = couleur | color_modify: 'alpha', 0.25
+    assign halo_fort = couleur | color_modify: 'alpha', 0.4
+    assign halo_doux = couleur | color_modify: 'alpha', 0.14
+    assign teinte = couleur | color_lighten: 20
+    echo '--halo: ' | append: halo | append: '; --halo-fort: ' | append: halo_fort | append: '; --halo-doux: ' | append: halo_doux | append: '; --teinte: ' | append: teinte | append: ';'
+  else
+    echo '--halo: #ece5d61a; --halo-fort: #ece5d626; --halo-doux: #ece5d60d;'
+  endif
+-%}

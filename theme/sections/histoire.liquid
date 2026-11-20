@@ -29,25 +29,14 @@
       endif
     endfor
 
-    # Une histoire d'un seul livre mène à sa fiche ; un arc mène à sa page (sinon à son premier livre).
     if nombre == 1
-      assign surtitre_gauche = tome_1.type | default: '1 livre'
-      assign lien = tome_1.url
       assign libelle = section.settings.libelle_bouton | default: 'Voir le livre'
     else
-      if nombre > 1
-        assign surtitre_gauche = nombre | append: ' livres'
-      endif
-      assign lien = saga.system.url | default: tome_1.url
       assign libelle = section.settings.libelle_bouton | default: "Entrer dans l'arc"
     endif
 
-    assign mention = saga.mention_de_lecture.value
     assign titre = saga.nom.value
     assign accroche = saga.teaser_court.value
-    assign couleur = saga.couleur_halo.value | default: saga.univers_parent.value.metafields.custom.couleur.value
-    assign auteurs = tome_1.metafields.custom.auteur.value
-    assign tags = saga.tags.value
 
     # La date la plus récente parmi les tomes déjà parus (une date future ne compte pas).
     assign maintenant = 'now' | date: '%s' | plus: 0
@@ -76,39 +65,16 @@
     assign particules = saga.style_particules.value | default: 'aucune'
   endif
 
-  # « Gautier Durrieu de Madron », ou « A et B » s'il y a plusieurs auteurs (custom.auteur est une liste).
-  assign noms_auteurs = ''
-  for auteur in auteurs
-    if forloop.first
-      assign noms_auteurs = auteur.nom.value
-    else
-      assign noms_auteurs = noms_auteurs | append: ' et ' | append: auteur.nom.value
-    endif
-  endfor
-
-  if surtitre_gauche != blank and mention != blank
-    assign surtitre = surtitre_gauche | append: ' · ' | append: mention
-  else
-    assign surtitre = surtitre_gauche | default: mention
-  endif
-
-  if couleur != blank
-    assign halo = couleur | color_modify: 'alpha', 0.25
-    assign halo_fort = couleur | color_modify: 'alpha', 0.4
-    assign halo_doux = couleur | color_modify: 'alpha', 0.14
-    assign teinte = couleur | color_lighten: 20
-  else
-    assign halo = '#ece5d61a'
-    assign halo_fort = '#ece5d626'
-    assign halo_doux = '#ece5d60d'
-  endif
 -%}
+{%- capture surtitre %}{% render 'saga-surtitre', saga: saga %}{% endcapture -%}
+{%- capture noms_auteurs %}{% render 'saga-auteurs', saga: saga %}{% endcapture -%}
+{%- capture lien %}{% render 'saga-lien', saga: saga %}{% endcapture -%}
 
 {%- if titre != blank -%}
   <section
     class="ecran histoire"
     data-nom="{{ titre | escape }}"
-    style="--halo: {{ halo }}; --halo-fort: {{ halo_fort }}; --halo-doux: {{ halo_doux }};{% if teinte %} --teinte: {{ teinte }};{% endif %}"
+    style="{% render 'saga-halo', saga: saga %}"
   >
     {%- if fond != blank -%}
       <div class="histoire__fond fondu" style="--voile: {{ voile }};" aria-hidden="true">
@@ -136,13 +102,7 @@
       {%- if accroche != blank -%}
         <p class="histoire__accroche">{{ accroche }}</p>
       {%- endif -%}
-      {%- if tags != blank -%}
-        <ul class="histoire__tags">
-          {%- for tag in tags -%}
-            <li>{{ tag }}</li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
+      {% render 'pastilles', liste: saga.tags.value %}
       {%- if lien != blank -%}
         {% render 'bouton', libelle: libelle, url: lien, variante: 'contour' %}
       {%- endif -%}
@@ -240,23 +200,8 @@
   }
 
   /* Les tags en pastilles : sur PC seulement, le mobile est déjà plein. */
-  .histoire__tags {
+  .histoire .pastilles {
     display: none;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .histoire__tags li {
-    padding: 6px 14px;
-    border: 1px solid #ece5d633;
-    border-radius: 999px;
-    background: #ece5d60d;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gris-1);
   }
 
   .histoire__accroche {
@@ -306,7 +251,7 @@
       line-height: 1.5;
     }
 
-    .histoire__tags {
+    .histoire .pastilles {
       display: flex;
     }
 

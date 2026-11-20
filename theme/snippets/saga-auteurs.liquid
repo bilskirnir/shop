@@ -1,0 +1,10 @@
+{% comment %}
+  Les auteurs d'une saga, lus sur son premier livre (custom.auteur, une liste) : « A » ou « A et B ».
+  Usage : {% render 'saga-auteurs', saga: saga %}
+{%- endcomment -%}
+{%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
+  {%- for auteur in tome.metafields.custom.auteur.value -%}
+    {%- unless forloop.first %} et {% endunless -%}
+    {{- auteur.nom.value -}}
+  {%- endfor -%}
+{%- endfor -%}

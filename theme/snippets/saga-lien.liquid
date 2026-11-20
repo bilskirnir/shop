@@ -1,0 +1,15 @@
+{% comment %}
+  Où mène une saga : un seul livre → sa fiche ; plusieurs → la page de la saga (sinon son premier livre).
+  Usage : {% render 'saga-lien', saga: saga %}
+{%- endcomment -%}
+{%- liquid
+  assign tomes = saga.ordre_des_tomes.value
+  for tome in tomes limit: 1
+    assign premier = tome
+  endfor
+  if tomes.size == 1
+    echo premier.url
+  else
+    echo saga.system.url | default: premier.url
+  endif
+-%}

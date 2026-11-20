@@ -18,6 +18,19 @@
         "info": "Écrit tel quel, ex. « 10k+ ». Affiché à côté de la note sur l'accueil. Vide : masqué."
       },
       {
+        "type": "text",
+        "id": "note",
+        "label": "Note des lecteurs",
+        "default": "4,7/5",
+        "info": "Accueil et pages des arcs. Vide : masquée."
+      },
+      {
+        "type": "text",
+        "id": "note_source",
+        "label": "Source de la note",
+        "default": "sur Amazon"
+      },
+      {
         "type": "number",
         "id": "nouveaute_jours",
         "label": "Durée du badge Nouveauté (jours)",

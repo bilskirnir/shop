@@ -1,0 +1,12 @@
+{% comment %}
+  Des étiquettes en pilules (les tags d'une saga). Rien si la liste est vide.
+  Styles : assets/base.css (« Pastilles »).
+  Usage : {% render 'pastilles', liste: saga.tags.value %}
+{%- endcomment -%}
+{%- if liste != blank -%}
+  <ul class="pastilles">
+    {%- for element in liste -%}
+      <li>{{ element }}</li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
