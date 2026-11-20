@@ -62,9 +62,9 @@
         {%- if noms_auteurs != blank -%}
           <p class="arc__auteur">
             {%- for auteur in tome_1.metafields.custom.auteur.value limit: 1 -%}
-              {%- comment -%} Photo : champ « photo » du métaobjet auteur, s'il existe. {%- endcomment -%}
-              {%- if auteur.photo.value != blank -%}
-                {{ auteur.photo.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
+              {%- comment -%} Photo : champ « avatar » du métaobjet auteur, s'il existe. {%- endcomment -%}
+              {%- if auteur.avatar.value != blank -%}
+                {{ auteur.avatar.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
               {%- endif -%}
             {%- endfor -%}
             <span>Écrit par <strong>{{ noms_auteurs }}</strong></span>

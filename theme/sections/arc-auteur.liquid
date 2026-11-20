@@ -1,6 +1,6 @@
 {% comment %}
   Page d'un arc — l'auteur : photo, nom, présentation (métaobjet auteur du premier livre :
-  champs nom, photo, presentation), puis des chiffres réglés une fois pour tous les arcs (blocs).
+  champs nom, avatar, bio), puis des chiffres réglés une fois pour tous les arcs (blocs).
 {% endcomment %}
 {%- assign saga = metaobject -%}
 {%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
@@ -11,14 +11,14 @@
 {%- if auteur -%}
   <section class="arc-bloc arc-auteur" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-auteur__grille verre">
-      {%- if auteur.photo.value != blank -%}
-        {{ auteur.photo.value | image_url: width: 380, height: 380, crop: 'center' | image_tag: alt: auteur.nom.value, width: 190, height: 190, class: 'arc-auteur__photo', loading: 'lazy' }}
+      {%- if auteur.avatar.value != blank -%}
+        {{ auteur.avatar.value | image_url: width: 380, height: 380, crop: 'center' | image_tag: alt: auteur.nom.value, width: 190, height: 190, class: 'arc-auteur__photo', loading: 'lazy' }}
       {%- endif -%}
       <div class="arc-auteur__texte">
         <p class="surtitre">{{ section.settings.surtitre }}</p>
         <h2>{{ auteur.nom.value }}</h2>
-        {%- if auteur.presentation.value != blank -%}
-          <p>{{ auteur.presentation.value }}</p>
+        {%- if auteur.bio.value != blank -%}
+          <p>{{ auteur.bio.value }}</p>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
           <dl class="arc-auteur__chiffres">
@@ -153,7 +153,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Nom, photo et présentation viennent du métaobjet auteur du premier livre."
+      "content": "Nom, avatar et bio viennent du métaobjet auteur du premier livre."
     },
     { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "L'auteur" }
   ],

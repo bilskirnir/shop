@@ -33,6 +33,18 @@ Type : `engagement` · accès **Online Store / Storefronts** activé.
 
 ---
 
+## Metaobject : `Auteur`
+
+Relié aux produits par `custom.auteur` (liste). Clés vérifiées par sonde le 20/11/2026.
+
+| Label | Key | Type | Note |
+|---|---|---|---|
+| Nom | `nom` | Single line text | display name |
+| Avatar | `avatar` | File (image) | photo ronde, haut et carte auteur de la page Arc |
+| Bio | `bio` | Multi-line text | carte auteur de la page Arc |
+
+---
+
 ## Metaobject : `Avis` — **à créer** (20/11/2026)
 
 Un avis de lecteur, relié à une saga par son champ `avis`. Type `avis`, accès Online Store activé.
