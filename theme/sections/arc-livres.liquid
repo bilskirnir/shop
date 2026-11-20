@@ -138,7 +138,12 @@
     outline: 1px solid #d2b06a40;
   }
 
-  .arc-livres__courant a {
+  /* La zone de fond déborde de la liste ; le contenu reste aligné sur les autres lignes. */
+  .arc-livres__courant {
+    margin: 8px -16px;
+  }
+
+  .arc-livres__liste .arc-livres__courant a {
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -155,6 +160,14 @@
   }
 
   @media (min-width: 1024px) {
+    .arc-livres__courant {
+      margin: 12px -32px;
+    }
+
+    .arc-livres__liste .arc-livres__courant a {
+      padding: 36px 32px;
+    }
+
     .arc-livres__courant .arc-livres__numero {
       color: var(--or);
     }
