@@ -57,16 +57,37 @@
       <h1>{% render 'livre-titre', livre: product %}</h1>
       {%- comment -%}
         En haut, l'accroche du livre (custom.teaser_court) pour que le bloc d'achat reste au premier écran ;
-        le synopsis complet se déplie dessous et prend sa place. Sans accroche, le synopsis s'affiche directement.
+        le synopsis complet s'ouvre dans un panneau par-dessus la page (<dialog>), qui finit sur l'achat.
+        Sans accroche, le synopsis s'affiche directement.
       {%- endcomment -%}
       {%- assign accroche = product.metafields.custom.teaser_court.value -%}
       {%- if accroche != blank -%}
-        <p class="arc__synopsis livre__accroche">{{ accroche }}</p>
+        <p class="arc__synopsis">{{ accroche }}</p>
         {%- if product.description != blank -%}
-          <details class="livre__resume">
-            <summary>{{ section.settings.libelle_resume }}</summary>
-            <div class="arc__synopsis">{{ product.description }}</div>
-          </details>
+          <button type="button" class="livre__lien-synopsis" onclick="document.getElementById('livre-synopsis').showModal()">
+            {{ section.settings.libelle_resume }} <span aria-hidden="true">→</span>
+          </button>
+          <dialog class="livre__panneau" id="livre-synopsis" aria-labelledby="livre-synopsis-titre">
+            {%- if fond != blank -%}
+              <div class="livre__panneau-fond" aria-hidden="true">
+                {{- fond | image_url: width: 1400 | image_tag: widths: '700, 1000, 1400', sizes: '(min-width: 768px) 680px, 100vw', alt: '', loading: 'lazy' -}}
+              </div>
+            {%- endif -%}
+            <div class="livre__panneau-page">
+              <form method="dialog">
+                <button class="livre__panneau-fermer" aria-label="Fermer">×</button>
+              </form>
+              <p class="surtitre arc__surtitre">{{ saga.nom.value }}{% if rang > 0 %} · Livre {{ rang }}{% endif %}</p>
+              <h2 id="livre-synopsis-titre">{% render 'livre-titre', livre: product %}</h2>
+              <div class="arc__synopsis">{{ product.description }}</div>
+            </div>
+            {%- if variante.available -%}
+              <div class="livre__panneau-achat verre">
+                <p class="arc__prix">{{ variante.price | money_without_trailing_zeros }}</p>
+                {% render 'bouton', libelle: section.settings.libelle_panier, variante: 'or', formulaire: 'livre-formulaire' %}
+              </div>
+            {%- endif -%}
+          </dialog>
         {%- endif -%}
       {%- elsif product.description != blank -%}
         <div class="arc__synopsis">{{ product.description }}</div>
@@ -87,7 +108,7 @@
       {% render 'pastilles', liste: saga.tags.value %}
 
       <div class="arc__achat livre__achat verre" id="arc-achat">
-        {%- form 'product', product, class: 'livre__formulaire' -%}
+        {%- form 'product', product, id: 'livre-formulaire', class: 'livre__formulaire' -%}
           <input type="hidden" name="id" value="{{ variante.id }}">
           <div class="livre__ligne">
             <div class="arc__offre">
@@ -146,6 +167,11 @@
   {%- endif -%}
 
   <script>
+    // Un clic hors du panneau du synopsis (sur le fond) le ferme.
+    document.getElementById('livre-synopsis')?.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.currentTarget.close();
+    });
+
     // Le prénom de la dédicace n'est envoyé (champ actif) que si la case est cochée.
     document.querySelectorAll('.livre__dedicace').forEach((dedicace) => {
       const caseDedicace = dedicace.querySelector('input[type="checkbox"]');
@@ -217,59 +243,153 @@
     color: var(--ivoire);
   }
 
-  /* « Lire le synopsis » : le synopsis se déplie et remplace l'accroche. */
-  /* L'accroche se replie en fondu ; max-height plutôt que display, qui ne s'anime pas. */
-  .livre__accroche {
-    max-height: 20em;
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease;
-  }
-
-  .arc__texte:has(.livre__resume[open]) .livre__accroche {
-    max-height: 0;
-    margin-block: 0;
-    opacity: 0;
-  }
-
-  .livre__resume summary {
+  /* ---------- « Lire le synopsis » : le panneau immersif (<dialog>) ---------- */
+  .livre__lien-synopsis {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
     font-size: 15px;
     font-weight: 600;
     color: var(--or);
-    list-style: none;
     cursor: pointer;
   }
 
-  .livre__resume summary::-webkit-details-marker {
-    display: none;
+  .livre__lien-synopsis span {
+    transition: transform 0.2s;
   }
 
-  .livre__resume summary::after {
-    content: '+';
-    font-size: 18px;
-    transition: transform 0.3s;
+  .livre__lien-synopsis:hover span {
+    transform: translateX(4px);
   }
 
-  .livre__resume[open] summary::after {
-    transform: rotate(45deg);
+  /* Sur mobile, le panneau prend tout l'écran et monte du bas ; sur ordinateur, une page centrée. */
+  .livre__panneau {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #0b0c0ef2;
+    color: var(--ivoire);
+    overflow: hidden;
   }
 
-  .livre__resume[open] .arc__synopsis {
-    margin-top: 4px;
-    animation: resume-ouvre 0.5s ease-out 0.15s backwards;
+  .livre__panneau[open] {
+    display: flex;
+    flex-direction: column;
+    animation: panneau-monte 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  @keyframes resume-ouvre {
-    from { opacity: 0; transform: translateY(12px); }
+  .livre__panneau::backdrop {
+    background: #000000b3;
+    backdrop-filter: blur(6px);
+    animation: panneau-fondu 0.45s ease;
+  }
+
+  /* L'illustration de la saga en fond du panneau, assombrie pour garder le texte lisible. */
+  .livre__panneau-fond,
+  .livre__panneau-fond img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .livre__panneau-fond::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#0b0c0e80, #0b0c0ed9 70%);
+  }
+
+  .livre__panneau-achat {
+    position: relative;
+  }
+
+  .livre__panneau-page {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 72px 24px 32px;
+    overscroll-behavior: contain;
+  }
+
+  .livre__panneau h2 {
+    margin: 8px 0 24px;
+    font-size: clamp(28px, 4vw, 40px);
+  }
+
+  .livre__panneau-fermer {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ece5d633;
+    border-radius: 50%;
+    background: none;
+    font-size: 24px;
+    color: var(--ivoire);
+    cursor: pointer;
+  }
+
+  /* Le panneau finit sur l'achat : prix et Ajouter au panier, toujours visibles en bas. */
+  .livre__panneau-achat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+  }
+
+  @keyframes panneau-monte {
+    from { transform: translateY(100%); }
+  }
+
+  @keyframes panneau-fondu {
+    from { opacity: 0; }
+  }
+
+  @media (min-width: 768px) {
+    .livre__panneau {
+      width: min(680px, 92vw);
+      /* fit-content et pas auto : un dialog modal est calé haut et bas, auto l'étirerait. */
+      height: fit-content;
+      max-height: min(86svh, 900px);
+      margin: auto;
+      border: 1px solid #ece5d61f;
+      border-radius: var(--bsk-radius, 14px);
+    }
+
+    .livre__panneau-page {
+      padding: 64px 56px 40px;
+    }
+
+    .livre__panneau-achat {
+      padding: 16px 56px;
+    }
+
+    .livre__panneau[open] {
+      animation-name: panneau-apparait;
+    }
+
+    @keyframes panneau-apparait {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .livre__accroche,
-    .livre__resume[open] .arc__synopsis {
-      transition: none;
+    .livre__panneau[open],
+    .livre__panneau::backdrop {
       animation: none;
     }
   }
