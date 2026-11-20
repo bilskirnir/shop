@@ -23,14 +23,6 @@
             "texte": "dès 40 € en point relais"
           }
         },
-        "garantie-3": {
-          "type": "garantie",
-          "settings": {
-            "icone": "cadeau",
-            "titre": "Un cadeau",
-            "texte": "avec chaque arc complet"
-          }
-        },
         "garantie-4": {
           "type": "garantie",
           "settings": {
@@ -43,7 +35,6 @@
       "block_order": [
         "garantie-1",
         "garantie-2",
-        "garantie-3",
         "garantie-4"
       ],
       "settings": {}
@@ -59,13 +50,6 @@
     "colis": {
       "type": "arc-offre",
       "blocks": {
-        "offert-1": {
-          "type": "offert",
-          "settings": {
-            "libelle": "Le décapsuleur Bilskirnir",
-            "mention": "Offert"
-          }
-        },
         "offert-2": {
           "type": "offert",
           "settings": {
@@ -82,7 +66,6 @@
         }
       },
       "block_order": [
-        "offert-1",
         "offert-2",
         "offert-3"
       ],
