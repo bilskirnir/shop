@@ -57,7 +57,7 @@
           <ul class="maison__engagements">
             {%- for block in engagements -%}
               <li {{ block.shopify_attributes }}>
-                <strong>{{ block.settings.titre }}</strong>
+                {%- if block.settings.titre != blank %}<strong>{{ block.settings.titre }}</strong>{% endif %}
                 {{ block.settings.texte }}
               </li>
             {%- endfor -%}
@@ -357,6 +357,11 @@
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
       align-items: end;
       gap: 80px;
+    }
+
+    /* Sans esprit français, la présentation prend toute la ligne. */
+    .maison__gauche:only-child {
+      grid-column: 1 / -1;
     }
 
     .maison__gauche,
