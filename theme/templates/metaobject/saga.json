@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "arc": {
+      "type": "arc",
+      "settings": {}
+    }
+  },
+  "order": ["arc"]
+}
