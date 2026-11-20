@@ -2,17 +2,41 @@
   La couverture d'un livre, qui flotte doucement.
   - taille 'eventail' : deux couvertures qui se chevauchent (position 1 devant, position 2 derrière).
   - taille 'seule' : une grande couverture.
+  - verso: true : si le produit a une seconde image (le dos du livre), un clic retourne le livre.
   Un produit sans image ne rend rien. Styles : assets/base.css (« Couverture »).
 
   Usage : {% render 'couverture', produit: livre, taille: 'eventail', position: 1 %}
 {% endcomment %}
 {%- if produit.featured_image -%}
   {%- assign texte_alt = 'Couverture : ' | append: produit.title -%}
-  <div class="couverture couverture--{{ taille }} couverture--{{ position | default: 1 }}">
+  {%- assign dos = nil -%}
+  {%- if verso and produit.images.size > 1 -%}
+    {%- assign dos = produit.images[1] -%}
+  {%- endif -%}
+
+  {%- capture recto -%}
     {{-
       produit.featured_image
       | image_url: width: 900
       | image_tag: widths: '320, 480, 640, 900', sizes: '(min-width: 1024px) 420px, 210px', alt: texte_alt, loading: 'lazy'
     -}}
-  </div>
+  {%- endcapture -%}
+
+  {%- if dos -%}
+    <button
+      type="button"
+      class="couverture couverture--{{ taille }} couverture--{{ position | default: 1 }} couverture--retournable"
+      aria-pressed="false"
+      aria-label="Retourner le livre"
+      onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed') !== 'true')"
+    >
+      <span class="couverture__livre">
+        {{ recto }}
+        {{- dos | image_url: width: 900 | image_tag: widths: '320, 480, 640, 900', sizes: '(min-width: 1024px) 420px, 210px', alt: 'Dos du livre', loading: 'lazy', class: 'couverture__dos' -}}
+      </span>
+      <span class="couverture__indice" aria-hidden="true">↻ Retourner</span>
+    </button>
+  {%- else -%}
+    <div class="couverture couverture--{{ taille }} couverture--{{ position | default: 1 }}">{{ recto }}</div>
+  {%- endif -%}
 {%- endif -%}

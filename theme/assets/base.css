@@ -240,6 +240,62 @@ h2 {
   margin-top: 26px;
 }
 
+/* Couverture retournable : le livre pivote pour montrer son dos (seconde image du produit). */
+.couverture--retournable {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  perspective: 1400px;
+}
+
+.couverture__livre {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0.1, 0.2, 1);
+}
+
+/* Recto et dos occupent la même case ; chacun cache sa face arrière. */
+.couverture__livre img {
+  grid-area: 1 / 1;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+}
+
+.couverture__dos {
+  transform: rotateY(180deg);
+}
+
+.couverture--retournable[aria-pressed='true'] .couverture__livre {
+  transform: rotateY(180deg);
+}
+
+.couverture__indice {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--or);
+  text-align: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.couverture--retournable:hover .couverture__indice,
+.couverture--retournable:focus-visible .couverture__indice {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .couverture__livre {
+    transition: none;
+  }
+}
+
 /* ---------- Badge Nouveauté (snippets/badge-nouveaute.liquid) ---------- */
 .badge-nouveaute {
   align-self: flex-start;
