@@ -22,7 +22,7 @@
     "histoire-salvation": {
       "type": "histoire",
       "settings": {
-        "livre": "salvation"
+        "saga": "salvation"
       }
     },
     "histoire-crepuscule": {
@@ -35,13 +35,13 @@
     "histoire-berserker": {
       "type": "histoire",
       "settings": {
-        "livre": "berserker"
+        "saga": "berserker"
       }
     },
     "histoire-parmi": {
       "type": "histoire",
       "settings": {
-        "livre": "parmi-ces-mondes-ici-bas"
+        "saga": "parmi-ces-mondes-ici-bas"
       }
     },
     "maison": {
