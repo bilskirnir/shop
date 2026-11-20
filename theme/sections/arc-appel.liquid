@@ -41,6 +41,14 @@
     position: relative;
   }
 
+  /* Le halo derrière le texte, pas au-dessus. */
+  .arc-appel > .arc-bloc__halo {
+    position: absolute;
+    top: auto;
+    bottom: -120px;
+    height: 460px;
+  }
+
   .arc-appel h2 {
     font-size: clamp(30px, 3vw, 44px);
   }
@@ -69,6 +77,10 @@
   }
 
   @media (min-width: 1024px) {
+    .arc-appel {
+      padding-top: 140px;
+    }
+
     .arc-appel .arc-achat {
       align-self: center;
       min-width: 340px;
