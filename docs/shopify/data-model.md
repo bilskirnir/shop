@@ -52,8 +52,9 @@ Un avis de lecteur, relié à un **livre** par le champ produit `custom.avis` (l
 
 | Label | Key | Type | Required | Note |
 |---|---|---|---|---|
+| Titre | `titre` | Single line text | — | **display name** ; le titre d'origine de l'avis ; l'ancre (handle) en est tirée |
 | Texte | `texte` | Multi-line text | ✅ | recopié tel quel, jamais inventé |
-| Auteur | `auteur` | Single line text | ✅ | display name ; un prénom suffit |
+| Auteur | `auteur` | Single line text | ✅ | prénom + initiale (« Raphaël C. ») |
 | Source | `source` | Single line text | — | ex. « Amazon » |
 | Vérifié | `verifie` | True or false | — | coché seulement si la source a vérifié l'achat (ex. « Achat vérifié » Amazon) → badge « Avis vérifié » |
 

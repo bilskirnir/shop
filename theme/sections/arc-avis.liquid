@@ -1,6 +1,6 @@
 {% comment %}
   Page d'un arc — les avis des lecteurs. Un avis porte sur un livre : champ produit custom.avis
-  (liste de métaobjets « avis » : texte, auteur, source, verifie). La page réunit ceux de tous les tomes,
+  (liste de métaobjets « avis » : titre, texte, auteur, source, verifie). La page réunit ceux de tous les tomes,
   dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
   les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
   Rien si aucun tome n'a d'avis.
@@ -10,6 +10,8 @@
 {%- for tome in saga.ordre_des_tomes.value -%}
   {%- assign nombre = nombre | plus: tome.metafields.custom.avis.value.size -%}
 {%- endfor -%}
+{%- assign limite = section.settings.nombre_cartes | plus: 1 -%}
+{%- if nombre > limite %}{% assign nombre = limite %}{% endif -%}
 {%- if nombre > 0 -%}
   <section class="arc-bloc arc-avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
@@ -21,6 +23,7 @@
     {%- for tome in saga.ordre_des_tomes.value -%}
       {%- for un_avis in tome.metafields.custom.avis.value -%}
         {%- assign rang = rang | plus: 1 -%}
+        {%- if rang > nombre %}{% break %}{% endif -%}
         {%- capture legende -%}
           <figcaption>
             {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
@@ -29,6 +32,7 @@
         {%- endcapture -%}
         {%- if rang == 1 -%}
           <figure class="arc-avis__grand">
+            {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
             <blockquote>« {{ un_avis.texte.value }} »</blockquote>
             {{ legende }}
           </figure>
@@ -36,6 +40,7 @@
         {%- else -%}
           <figure class="arc-avis__carte verre">
             <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+            {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
             <blockquote>« {{ un_avis.texte.value }} »</blockquote>
             {{ legende }}
           </figure>
@@ -86,6 +91,24 @@
     font-weight: 600;
     color: var(--or);
     vertical-align: middle;
+  }
+
+  .arc-avis__titre {
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teinte, var(--or));
+  }
+
+  .arc-avis__carte .arc-avis__titre {
+    margin-bottom: 0;
+    font-family: var(--titre);
+    font-size: 17px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ivoire);
   }
 
   .arc-avis__cartes {
@@ -151,6 +174,16 @@
       "id": "libelle_verifie",
       "label": "Badge des avis vérifiés",
       "default": "Avis vérifié"
+    },
+    {
+      "type": "range",
+      "id": "nombre_cartes",
+      "label": "Avis en petites cartes",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "default": 6,
+      "info": "En plus du grand avis. Les suivants restent dans Shopify sans s'afficher."
     }
   ],
   "presets": [{ "name": "Arc — avis" }]

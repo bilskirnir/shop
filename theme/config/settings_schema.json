@@ -31,6 +31,13 @@
         "default": "sur Amazon"
       },
       {
+        "type": "text",
+        "id": "note_nombre",
+        "label": "Nombre d'avis",
+        "default": "137 avis",
+        "info": "Affiché entre la note et sa source : « 4,7/5 · 137 avis sur Amazon ». Vide : masqué."
+      },
+      {
         "type": "number",
         "id": "nouveaute_jours",
         "label": "Durée du badge Nouveauté (jours)",

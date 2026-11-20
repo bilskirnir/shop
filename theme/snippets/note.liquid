@@ -1,5 +1,5 @@
 {% comment %}
-  La note des lecteurs : « ★★★★★ 4,7/5 sur Amazon », lue dans Paramètres du thème › Bilskirnir.
+  La note des lecteurs : « ★★★★★ 4,7/5 · 137 avis sur Amazon », lue dans Paramètres du thème › Bilskirnir.
   Avec lecteurs: true, ajoute « · 10k+ lecteurs ». Rien si la note est vide.
   Usage : {% render 'note', lecteurs: true %}
 {%- endcomment -%}
@@ -7,7 +7,7 @@
   <p class="note">
     <span class="note__etoiles" aria-hidden="true">★★★★★</span>
     <span>
-      <strong>{{ settings.note }}</strong> {{ settings.note_source -}}
+      <strong>{{ settings.note }}</strong>{% if settings.note_nombre != blank %} · {{ settings.note_nombre }}{% endif %} {{ settings.note_source -}}
       {%- if lecteurs and settings.lecteurs != blank %} · <strong>{{ settings.lecteurs }}</strong> lecteurs{% endif -%}
     </span>
   </p>
