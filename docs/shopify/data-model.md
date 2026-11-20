@@ -46,7 +46,7 @@ Relié aux produits par `custom.auteur` (liste). Clés vérifiées par sonde le 
 
 ---
 
-## Metaobject : `Avis` — **à créer** (20/11/2026)
+## Metaobject : `Avis` — créé le 20/11/2026
 
 Un avis de lecteur, relié à une saga par son champ `avis`. Type `avis`, accès Online Store activé.
 
@@ -87,7 +87,7 @@ Shopify ne fournit pas de champ Name automatique — seul le `handle` est prése
 | Tags | `tags` | List of single line text | — | créé le 20/11/2026 — pastilles sur l'accueil (PC) |
 | Promesse | `promesse` | Single line text | — | créé le 20/11/2026 — page Arc, la phrase en grand (« Tout ce qu'on t'a raconté sur les dieux est vrai. ») |
 | Raisons | `raisons` | List of single line text | — | créé le 20/11/2026 — page Arc, pastilles sous la promesse |
-| Avis | `avis` | List of metaobject references (Avis) | — | **à créer** — page Arc ; le premier s'affiche en grand |
+| Avis | `avis` | List of metaobject references (Avis) | — | créé le 20/11/2026 — page Arc ; le premier s'affiche en grand |
 
 ---
 
