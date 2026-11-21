@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Bureau · Bilskirnir — Pourquoi à la française</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Buenard:wght@400;700&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>
+/* Encre et braise : ardoise froide, une seule couleur vive (la braise) réservée à l'achat. */
+body{margin:0;background:#0b0c0e;overflow-x:hidden}
+html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+a{color:#ece5d6}a:hover{color:#f5efe2}
+h1,h2{color:#ece5d6}
+.bsk-scroll::-webkit-scrollbar,.bsk-row::-webkit-scrollbar{display:none}
+.bsk-grain{position:absolute;inset:0;pointer-events:none;background:url(assets/grain.png);opacity:.16;mix-blend-mode:overlay;z-index:3}
+.bsk-coals{position:absolute;left:-30%;right:-30%;bottom:-140px;height:440px;background:radial-gradient(50% 60% at 50% 100%,#ece5d673,#b8643c26 45%,transparent 70%);filter:blur(8px);animation:bskBreath 5s ease-in-out infinite;pointer-events:none}
+@keyframes bskBreath{0%,100%{opacity:.7;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.1)}}
+.bsk-fog{position:absolute;left:-30%;width:160%;height:200px;background:radial-gradient(closest-side,#a4abb52b,transparent);filter:blur(24px);animation:bskFog 16s ease-in-out infinite alternate;pointer-events:none}
+@keyframes bskFog{from{transform:translateX(-14%)}to{transform:translateX(14%)}}
+.bsk-hero-bg{position:absolute;inset:0;background:url(assets/fond-foret.jpg) center bottom/cover no-repeat;opacity:.42;filter:saturate(.7);-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 30%,#000 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 30%,#000 100%);pointer-events:none}
+.bsk-coals-hero{position:absolute;left:-30%;right:-30%;bottom:-160px;height:320px;background:radial-gradient(50% 60% at 50% 100%,#c2411d4d,#7a1f0e26 45%,transparent 70%);filter:blur(10px);animation:bskBreath 5s ease-in-out infinite;pointer-events:none}
+.bsk-spark{position:absolute;bottom:0;border-radius:50%;background:#ffb070;box-shadow:0 0 6px 2px #ff7a2c,0 0 16px 4px #e2461e88;opacity:0;pointer-events:none}
+@keyframes bskSp0{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(-35px,-130px)}85%{opacity:.85}100%{transform:translate(-50px,-260px);opacity:0}}
+@keyframes bskSp1{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(30px,-115px)}85%{opacity:.85}100%{transform:translate(40px,-230px);opacity:0}}
+@keyframes bskSp2{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(-20px,-145px)}85%{opacity:.85}100%{transform:translate(-20px,-290px);opacity:0}}
+@keyframes bskSp3{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(42px,-125px)}85%{opacity:.85}100%{transform:translate(65px,-250px);opacity:0}}
+@keyframes bskSp4{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(-45px,-107px)}85%{opacity:.85}100%{transform:translate(-70px,-215px);opacity:0}}
+@keyframes bskSp5{0%{transform:translate(0,0);opacity:0}8%{opacity:1}50%{transform:translate(17px,-135px)}85%{opacity:.85}100%{transform:translate(15px,-270px);opacity:0}}
+@keyframes bskFlicker{from{filter:brightness(1)}to{filter:brightness(1.6)}}
+.bsk-ember{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:#ece5d6;box-shadow:0 0 8px 2px #ece5d6b3;animation-name:bskEmber;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes bskEmber{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(22px,-320px);opacity:0}}
+.bsk-giant{position:absolute;font-family:Buenard,Georgia,serif;font-weight:700;color:transparent;-webkit-text-stroke:1px #ece5d624;white-space:nowrap;line-height:.8;pointer-events:none;animation:bskSlide 20s ease-in-out infinite alternate}
+@keyframes bskSlide{from{transform:translateX(0)}to{transform:translateX(-90px)}}
+.bsk-marquee{display:flex;gap:36px;width:max-content;animation:bskMarquee 26s linear infinite}
+@keyframes bskMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.bsk-cta{position:relative;overflow:hidden;background:linear-gradient(180deg,#d2b06a,#b08a45);color:#17110a;border:0;transition:filter .25s}
+.bsk-cta:hover{filter:brightness(1.08)}
+.bsk-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 42%,#ece5d61f 50%,transparent 58%);background-size:250% 100%;animation:bskSheen 7s ease-in-out infinite;pointer-events:none}
+@keyframes bskSheen{0%,40%{background-position:130% 0}100%{background-position:-60% 0}}
+.bsk-glass{background:#14161ab3;backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border:1px solid #ece5d614}
+.bsk-float{animation:bskFloat 6s ease-in-out infinite}
+.bsk-float2{animation:bskFloat2 7s ease-in-out infinite}
+@keyframes bskFloat{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(-4deg)}}
+@keyframes bskFloat2{0%,100%{transform:translateY(0) rotate(6deg)}50%{transform:translateY(-16px) rotate(4deg)}}
+@keyframes bskGlow{0%,100%{filter:drop-shadow(0 0 0 #ece5d600)}50%{filter:drop-shadow(0 0 20px #ece5d659)}}
+.bsk-reveal{animation:bskRise linear both;animation-timeline:view();animation-range:entry 0% cover 35%}
+@keyframes bskRise{from{opacity:.2;transform:translateY(48px) scale(.96)}to{opacity:1;transform:none}}
+@supports not (animation-timeline: view()){.bsk-reveal{animation:none}}
+@keyframes bskCue{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(6px);opacity:1}}
+@media (prefers-reduced-motion: reduce){*:not(.bsk-spark){animation:none !important}}
+</style>
+</helmet>
+<div style="width: 100%; position: relative; overflow-x: hidden; background: #0b0c0e; color: #ece5d6; font-family: 'Source Sans 3', system-ui, sans-serif">
+<div class="bsk-stage" aria-hidden="true" style="position: sticky; top: 0; height: 900px; margin-bottom: -900px; overflow: hidden; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)">
+<div class="bsk-fog" aria-hidden="true" style="top: 180px"></div>
+<div class="bsk-fog" aria-hidden="true" style="top: 360px; animation-duration: 22s; animation-direction: alternate-reverse"></div>
+<div class="bsk-hero-bg" aria-hidden="true"></div>
+<svg aria-hidden="true" viewBox="0 0 390 300" preserveAspectRatio="none" style="position: absolute; left: 0; top: 300px; width: 100%; height: 420px; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%); mask-image: linear-gradient(180deg, #000 35%, transparent 95%)">
+<path d="M0 170 L40 120 L70 140 L120 70 L150 100 L190 40 L235 110 L265 85 L310 135 L350 95 L390 130 L390 300 L0 300 Z" fill="#24262c" opacity="0.5"></path>
+<path d="M0 215 L55 165 L95 190 L140 140 L185 185 L230 150 L280 195 L330 160 L390 200 L390 300 L0 300 Z" fill="#16171b" opacity="0.65"></path>
+</svg>
+<div class="bsk-coals-hero" aria-hidden="true"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 260px; overflow: hidden; pointer-events: none">
+<span class="bsk-spark" style="left: 60%; width: 2.1px; height: 3.0px; animation: bskSp5 5.5s linear -3.2s infinite, bskFlicker 0.2s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 22%; width: 3.1px; height: 4.3px; animation: bskSp5 6.2s linear -2.9s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 18%; width: 2.4px; height: 4.1px; animation: bskSp4 4.9s linear -1.9s infinite, bskFlicker 0.2s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 58%; width: 2.7px; height: 2.8px; animation: bskSp2 7.0s linear -5.5s infinite, bskFlicker 0.4s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 70%; width: 2.5px; height: 3.9px; animation: bskSp3 7.5s linear -3.0s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 7%; width: 3.1px; height: 3.4px; animation: bskSp3 5.5s linear -1.2s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 81%; width: 2.9px; height: 4.9px; animation: bskSp4 5.7s linear -2.0s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 89%; width: 2.6px; height: 4.5px; animation: bskSp2 6.7s linear -6.7s infinite, bskFlicker 0.3s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 57%; width: 2.8px; height: 3.5px; animation: bskSp0 6.2s linear -4.4s infinite, bskFlicker 0.3s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 15%; width: 2.7px; height: 4.8px; animation: bskSp3 5.1s linear -4.3s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 18%; width: 1.9px; height: 3.1px; animation: bskSp2 5.6s linear -2.4s infinite, bskFlicker 0.5s ease-in-out infinite alternate"></span>
+<span class="bsk-spark" style="left: 8%; width: 3.0px; height: 3.1px; animation: bskSp5 6.5s linear -3.8s infinite, bskFlicker 0.4s ease-in-out infinite alternate"></span>
+</div>
+</div>
+<div class="bsk-grain" aria-hidden="true"></div>
+<div style="position: relative; z-index: 1">
+
+<header class="bsk-glass" style="z-index: 5; height: 60px; margin: 16px 40px 0; top: 16px; position: sticky; border-radius: 999px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 10px 0 28px">
+<a href="Main-Desktop.dc.html" style="text-decoration: none; font-family: Buenard, Georgia, serif; font-weight: 700; letter-spacing: 0.22em; font-size: 16px; color: #ece5d6">BILSKIRNIR</a>
+<nav style="display: flex; gap: 36px"><a href="Main-Desktop.dc.html#histoires" style="color: #c9c7c2; text-decoration: none; font-size: 15px; font-weight: 600">Nos histoires</a><a href="#" style="color: #c9c7c2; text-decoration: none; font-size: 15px; font-weight: 600">Au Nom des Dieux</a><a href="#" style="color: #c9c7c2; text-decoration: none; font-size: 15px; font-weight: 600">Salons</a><a href="Valeurs-Desktop.dc.html" style="color: #c9c7c2; text-decoration: none; font-size: 15px; font-weight: 600">La maison</a></nav>
+<a href="Panier-Desktop.dc.html" aria-label="Panier" style="justify-self: end; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ece5d6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></a>
+</header>
+
+<section style="min-height: 760px; padding: 80px 120px 64px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; text-align: center">
+<img src="assets/logo-ivoire.svg" alt="" aria-hidden="true" style="width: 120px; opacity: 0.55">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #d2b06a">Pourquoi « à la française » ?</span>
+<h1 style="margin: 0; font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 64px; line-height: 1.02; text-wrap: balance; max-width: 980px">Entre grandeur et abnégation, des romans imprégnés d'esprit français</h1>
+<p style="margin: 0; font-size: 21px; line-height: 1.5; color: #c9c7c2; text-wrap: balance; max-width: 640px">Des héros. Des mythes. Des mondes à découvrir. Des romans pour ceux qui veulent encore rêver grand.</p>
+</section>
+
+<section style="padding: 0 120px 96px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+<span style="grid-column: 1 / -1; margin-bottom: 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #a7a6a2">Nos engagements</span>
+<div class="bsk-glass bsk-reveal" style="border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start"><span aria-hidden="true" style="width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; background: #d2b06a1f; border: 1px solid #d2b06a40; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path></svg></span><div style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 28px; line-height: 1.1">100 % indépendants</span><span style="font-size: 17px; line-height: 1.55; color: #c9c7c2">Une structure libre de toute contrainte et de tout agenda. On publie les histoires qu'on a envie de lire.</span></div></div>
+<div class="bsk-glass bsk-reveal" style="border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start"><span aria-hidden="true" style="width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; background: #d2b06a1f; border: 1px solid #d2b06a40; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"></path><path d="M4 4h12l-2 4 2 4H4"></path></svg></span><div style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 28px; line-height: 1.1">Faits et pensés en France</span><span style="font-size: 17px; line-height: 1.55; color: #c9c7c2">Des romans originaux, épiques et déjantés, écrits en France.</span></div></div>
+<div class="bsk-glass bsk-reveal" style="border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start"><span aria-hidden="true" style="width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; background: #d2b06a1f; border: 1px solid #d2b06a40; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 14h6l-1 7 8-11h-6z"></path></svg></span><div style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 28px; line-height: 1.1">Jamais ennuyeux</span><span style="font-size: 17px; line-height: 1.55; color: #c9c7c2">Loin de ce qui rend tant d'œuvres modernes ennuyeuses : des histoires qui se dévorent comme les meilleures séries.</span></div></div>
+<div class="bsk-glass bsk-reveal" style="border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start"><span aria-hidden="true" style="width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; background: #d2b06a1f; border: 1px solid #d2b06a40; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"></path></svg></span><div style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 28px; line-height: 1.1">Héroïsme, bravoure, abnégation</span><span style="font-size: 17px; line-height: 1.55; color: #c9c7c2">Des histoires où ces mots ont encore un sens.</span></div></div>
+</section>
+
+<div style="padding: 0 120px 96px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 64px; align-items: start">
+<section class="bsk-reveal" style="display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 44px; line-height: 1.05; text-wrap: balance">Ce qui vous attend</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #c9c7c2">Bilskirnir, le Hall de Force, est <b style="color: #ece5d6">le</b> spécialiste des histoires épiques et héroïques de France : des romans originaux, des aventures époustouflantes et des personnages charismatiques.</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 18px; line-height: 1.5; color: #c9c7c2">
+<li style="display: flex; gap: 12px; align-items: flex-start"><span aria-hidden="true" style="flex: 0 0 auto; width: 6px; height: 6px; margin-top: 11px; border-radius: 50%; background: #d2b06a"></span><span>Embarquez aux côtés de demi-dieux légendaires pour sauver une Humanité à la dérive.</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start"><span aria-hidden="true" style="flex: 0 0 auto; width: 6px; height: 6px; margin-top: 11px; border-radius: 50%; background: #d2b06a"></span><span>Chevauchez avec des cavaliers celtes pour défendre la Gaule envahie par Rome.</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start"><span aria-hidden="true" style="flex: 0 0 auto; width: 6px; height: 6px; margin-top: 11px; border-radius: 50%; background: #d2b06a"></span><span>Repoussez des hordes d'infectés dans l'un des derniers bastions de France.</span></li>
+</ul>
+<p style="margin: 0; font-size: 18px; line-height: 1.5; color: #ece5d6">Et découvrez de nombreux univers originaux.</p>
+</section>
+
+<section class="bsk-reveal">
+<div class="bsk-glass" style="border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+<span style="font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #a7a6a2">Qui est derrière ?</span>
+<div style="display: flex; align-items: center; gap: 14px"><img src="assets/avatar-gautier.jpg" alt="Gautier Durrieu de Madron" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 1px solid #d2b06a66"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 28px; line-height: 1.1">Gautier Durrieu de Madron</span><span style="font-size: 13px; color: #a7a6a2">Fondateur, écrivain et conférencier</span></span></div>
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #c9c7c2">Bilskirnir a été fondé en 2018 par Gautier. Spécialiste des mythologies, designer narratif dans le jeu vidéo, conteur et entrepreneur, il anime aujourd'hui une chaîne TikTok populaire et parcourt la France pour faire connaître Bilskirnir et son envie de réinsuffler de l'héroïsme.</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #c9c7c2">Nordique d'apparence mais sudiste d'état (Saint-Raphaël), il tient la ligne de Bilskirnir et s'attelle à terminer les quatre derniers tomes de la saga Au Nom des Dieux.</p>
+</div>
+</section>
+</div>
+
+<section style="padding: 0 120px 96px; display: flex; flex-direction: column; gap: 22px; align-items: center">
+<p style="margin: 0; text-align: center; font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 44px">Prêts pour l'aventure ?</p>
+<a href="Main-Desktop.dc.html#histoires" class="bsk-cta" style="min-width: 340px; min-height: 58px; padding: 0 7px 0 26px; gap: 24px; display: flex; align-items: center; justify-content: space-between; border-radius: 999px; font-weight: 600; font-size: 17px; text-decoration: none">Découvrir nos histoires<span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 50%; background: #17110a; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+</section>
+
+<div style="padding: 0 120px 32px"><nav style="position: relative; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #ece5d61a; font-size: 13px">
+<div style="display: flex; gap: 22px; font-size: 15px; font-weight: 600"><a href="#" style="color: #ece5d6; text-decoration: none">TikTok</a><a href="#" style="color: #ece5d6; text-decoration: none">Instagram</a></div>
+<div style="display: flex; gap: 20px"><a href="#" style="color: #8d8b86; text-decoration: none">Livraison</a><a href="#" style="color: #8d8b86; text-decoration: none">CGV</a><a href="#" style="color: #8d8b86; text-decoration: none">Mentions légales</a><span style="color: #6f6d69">© Bilskirnir</span></div>
+</nav></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

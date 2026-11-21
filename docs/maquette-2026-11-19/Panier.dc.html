@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Panier</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Buenard:wght@400;700&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0;background:#0b0c0e;overflow-x:hidden}
+html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+a{color:#ece5d6}a:hover{color:#f5efe2}
+h1,h2{color:#ece5d6}
+.bsk-grain{position:absolute;inset:0;pointer-events:none;background:url(assets/grain.png);opacity:.16;mix-blend-mode:overlay;z-index:3}
+.bsk-cta{position:relative;overflow:hidden;background:linear-gradient(180deg,#d2b06a,#b08a45);color:#17110a;border:0;transition:filter .25s}
+.bsk-cta:hover{filter:brightness(1.08)}
+.bsk-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 42%,#ece5d61f 50%,transparent 58%);background-size:250% 100%;animation:bskSheen 7s ease-in-out infinite;pointer-events:none}
+@keyframes bskSheen{0%,40%{background-position:130% 0}100%{background-position:-60% 0}}
+.bsk-glass{background:#14161ad9;backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border:1px solid #ece5d617}
+.bsk-hero-bg{position:absolute;inset:0;background:url(assets/fond-foret.jpg) center bottom/cover no-repeat;opacity:.38;filter:saturate(.7);pointer-events:none}
+.bsk-bar{height:6px;border-radius:999px;background:linear-gradient(90deg,#b08a45,#d2b06a);box-shadow:0 0 12px #d2b06a66;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes bskSlideUp{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+@keyframes bskPop{0%{transform:scale(.96);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 390px; height: 844px; position: relative; overflow: hidden; background: #0b0c0e; color: #ece5d6; font-family: 'Source Sans 3', system-ui, sans-serif">
+<div class="bsk-hero-bg" aria-hidden="true"></div>
+<div aria-hidden="true" style="position: absolute; left: -40%; top: -80px; width: 180%; height: 420px; background: radial-gradient(closest-side, #d2b06a1f, transparent 72%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: #00000080"></div>
+<div class="bsk-grain" aria-hidden="true"></div>
+
+<div role="dialog" aria-label="Panier" class="bsk-glass" style="position: absolute; left: 0; right: 0; bottom: 0; height: 730px; z-index: 4; border-radius: 22px 22px 0 0; display: flex; flex-direction: column; animation: bskSlideUp 0.5s cubic-bezier(.2,.8,.2,1)">
+<div aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 2px; background: #ece5d64d; margin-top: 10px"></div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 8px 24px">
+<h1 style="margin: 0; font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 30px">Ton panier</h1>
+<a href="Livre.dc.html" aria-label="Fermer le panier" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ece5d6" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</a>
+</div>
+
+<div style="padding: 4px 24px 18px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 15px; font-weight: 700; color: {{barText}}">{{shippingMsg}}</span>
+<span style="font-size: 13px; color: #a7a6a2">40 €</span>
+</div>
+<div style="height: 6px; border-radius: 999px; background: #ece5d61a">
+<div class="bsk-bar" style="width: {{pct}}%"></div>
+</div>
+</div>
+
+<div style="flex: 1; overflow-y: auto; padding: 0 24px; display: flex; flex-direction: column">
+<div style="display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid #ece5d61f">
+<img src="assets/cover-sang-1.jpg" alt="Couverture : Destinée manifeste" style="display: block; width: {{lineW}}px; height: auto; border-radius: 3px; box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 18px">Destinée manifeste</span>
+<span style="font-size: 14px; color: #a7a6a2">De l'Eau et du Sang · Livre 1</span>
+</div>
+<span style="font-weight: 700; font-size: 16px">25 €</span>
+</div>
+
+<sc-if value="{{added}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid #ece5d61f; animation: bskPop 0.45s ease-out">
+<img src="assets/cover-sang-2.jpg" alt="Couverture : Volonté inébranlable" style="display: block; width: {{lineW}}px; height: auto; border-radius: 3px; box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 18px">Volonté inébranlable</span>
+<span style="font-size: 14px; color: #a7a6a2">De l'Eau et du Sang · Livre 2</span>
+<span style="font-size: 14px; font-weight: 700; color: #d2b06a">Arc complet · décapsuleur offert</span>
+</div>
+<span style="font-weight: 700; font-size: 16px">26 €</span>
+</div>
+</sc-if>
+
+<sc-if value="{{notAdded}}" hint-placeholder-val="{{true}}">
+<div style="margin-top: 8px; padding: 16px; border-radius: 16px; background: #d2b06a14; border: 1px solid #d2b06a4d; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden">
+<div aria-hidden="true" style="position: absolute; right: -30%; top: -50%; width: 90%; height: 200%; background: radial-gradient(closest-side, #d2b06a26, transparent)"></div>
+<span style="position: relative; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #d2b06a">Termine l'arc</span>
+<div style="position: relative; display: flex; gap: 14px; align-items: center">
+<img src="assets/cover-sang-2.jpg" alt="Couverture : Volonté inébranlable" style="display: block; width: {{lineW}}px; height: auto; border-radius: 3px; box-shadow: 0 14px 30px -10px #000000d9, 0 0 0 1px #ece5d614">
+<p style="margin: 0; flex: 1; font-size: 15px; line-height: 1.45">Ajoute le Livre 2 (26 €) : l'arc complet, la livraison en point relais offerte et un décapsuleur en cadeau.</p>
+</div>
+<button type="button" onClick="{{addTome2}}" class="bsk-cta" style="position: relative; min-height: 46px; padding: 0 5px 0 20px; display: flex; align-items: center; justify-content: space-between; border-radius: 999px; font-weight: 600; font-size: 15px; font-family: 'Source Sans 3', sans-serif; cursor: pointer">Ajouter le Livre 2 · 26 €<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 50%; background: #17110a; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></button>
+</div>
+</sc-if>
+</div>
+
+<div style="padding: 16px 24px 24px; border-top: 1px solid #ece5d61f; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #a7a6a2"><span>Livraison</span><span>{{shippingPrice}}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 17px">Total</span><span style="font-family: Buenard, Georgia, serif; font-weight: 700; font-size: 30px; font-variant-numeric: tabular-nums">{{total}} €</span></div>
+<a href="#" class="bsk-cta" style="min-height: 52px; padding: 0 6px 0 22px; display: flex; align-items: center; justify-content: space-between; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none">Payer {{total}} €<span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 50%; background: #17110a; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d2b06a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<div style="display: flex; gap: 8px">
+<a href="#" style="flex: 1; min-height: 46px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #5a31f4; color: #ffffff; font-weight: 700; text-decoration: none">Shop Pay</a>
+<a href="#" style="flex: 1; min-height: 46px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #000000; border: 1px solid #ece5d64d; color: #ffffff; font-weight: 700; text-decoration: none">Apple Pay</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { added: false };
+}
+renderVals() {
+var added = this.state.added;
+var books = added ? 51 : 25;
+var free = books >= 40;
+var shipping = free ? 0 : 0;
+var total = (books + shipping).toFixed(2).replace('.', ',');
+return {
+lineW: 64,
+added: added,
+notAdded: !added,
+pct: Math.min(100, Math.round(books / 40 * 100)),
+shippingMsg: free ? 'Livraison en point relais offerte' : 'Plus que ' + (40 - books) + ' € pour la livraison offerte',
+barText: free ? '#d2b06a' : '#ece5d6',
+shippingPrice: free ? 'Offerte · point relais' : 'Calculée à l\'étape suivante',
+total: total,
+addTome2: () => this.setState({ added: true })
+};
+}
+}
+</script>
+</body>
+</html>

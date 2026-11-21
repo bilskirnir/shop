@@ -45,3 +45,4 @@ yarn-error.log*
 
 # Brainstorming mockups (ephemeral working files, spec is the source of truth)
 .superpowers/
+.mcp.json
