@@ -1,24 +1,28 @@
 {% comment %}
   Le catalogue (/collections/all) et toute page de collection : les livres rangés par histoire,
-  de la plus ancienne à la plus récente (date de parution de son premier livre, custom.date_parution),
+  de la plus récente à la plus ancienne (date de parution de son premier livre, custom.date_parution),
   avec ses années de parution à gauche. Une histoire sans date passe en dernier.
   Sur une autre collection que « all », seules les histoires dont un livre est dans la collection s'affichent.
   Maquette validée le 21/11/2026 : https://claude.ai/artifact/5WVfrNr4NNYeFgWHW7koaK
 {% endcomment %}
 {%- liquid
-  # Chaque saga en « date du premier livre|handle », triées : l'ordre par ancienneté.
+  # Chaque saga en « date du premier livre|handle », triées puis inversées : la plus récente en haut.
+  # Sans date, '0000-…' la fait passer en dernier.
   assign cles = ''
   for saga in shop.metaobjects.saga.values
-    assign premiere = '9999-12-31'
+    assign premiere = ''
     for tome in saga.ordre_des_tomes.value
       assign d = tome.metafields.custom.date_parution.value | date: '%Y-%m-%d'
-      if d != blank and d < premiere
-        assign premiere = d
+      if d != blank
+        if premiere == blank or d < premiere
+          assign premiere = d
+        endif
       endif
     endfor
+    assign premiere = premiere | default: '0000-00-00'
     assign cles = cles | append: premiere | append: '|' | append: saga.system.handle | append: ','
   endfor
-  assign cles = cles | split: ',' | sort
+  assign cles = cles | split: ',' | sort | reverse
 
   assign tout = false
   if collection.handle == 'all'
@@ -265,7 +269,7 @@
       "type": "text",
       "id": "accroche",
       "label": "Accroche",
-      "default": "Rangés par histoire, de la plus ancienne à la plus récente."
+      "default": "Rangés par histoire, de la plus récente à la plus ancienne."
     },
     { "type": "text", "id": "libelle_arc", "label": "Lien d'une saga", "default": "Découvrir l'arc" },
     { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" }
