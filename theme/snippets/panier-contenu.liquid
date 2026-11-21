@@ -35,6 +35,7 @@
         if tome.available
           assign propose = tome
           assign propose_rang = forloop.index
+          assign propose_total = forloop.length
           break
         endif
       endunless
@@ -128,7 +129,7 @@
       {%- if propose -%}
         {%- assign apres = cart.item_count | plus: 1 -%}
         <div class="panier__arc">
-          <p class="surtitre">{{ textes.surtitre_arc }}</p>
+          <p class="surtitre">{{ textes.surtitre_arc | replace: '[n]', propose_total }}</p>
           <div class="panier__arc-livre">
             {%- if propose.featured_image -%}
               {{- propose.featured_image | image_url: width: 160 | image_tag: alt: '', width: 64, loading: 'lazy' -}}
