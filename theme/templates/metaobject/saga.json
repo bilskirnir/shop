@@ -17,7 +17,7 @@
           "settings": {
             "icone": "livraison",
             "titre": "Livraison offerte",
-            "texte": "dès 40 € en point relais"
+            "texte": "dès 3 livres, en point relais"
           }
         },
         "garantie-4": {
@@ -89,7 +89,7 @@
           "type": "question",
           "settings": {
             "question": "Combien coûte la livraison ?",
-            "reponse": "<p>Elle est offerte dès 40 € en point relais. En dessous, son prix est calculé au paiement.</p>"
+            "reponse": "<p>Elle est offerte en point relais dès 3 livres. En dessous, son prix est calculé au paiement.</p>"
           }
         }
       },

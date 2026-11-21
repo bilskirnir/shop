@@ -1,6 +1,6 @@
 {% comment %}
   Le contenu du panier, partagé par le tiroir (sections/panier.liquid) et la page /cart (sections/cart.liquid).
-  Jauge vers la livraison offerte (réglage du thème « Livraison offerte dès »), lignes avec couverture,
+  Jauge vers la livraison offerte (réglage du thème « Livraison offerte dès (livres) »), lignes avec couverture,
   « Saga · Livre n », prénom de la dédicace et badge « Arc complet », bloc « Termine l'arc » qui propose
   le premier tome manquant d'une saga entamée, puis livraison, total et paiement.
   Les formulaires marchent sans JavaScript ; assets/panier.js les fait passer par l'API Ajax.
@@ -8,13 +8,14 @@
   Usage : {% render 'panier-contenu', textes: section.settings, tiroir: true %}
 {% endcomment %}
 {%- liquid
-  assign seuil = settings.livraison_seuil | default: 40 | times: 100
+  # La livraison en point relais est offerte dès un nombre d'articles, pas un montant (port lourd, 21/11/2026).
+  assign seuil = settings.livraison_articles | default: 3
   assign offerte = false
-  if cart.total_price >= seuil
+  if cart.item_count >= seuil
     assign offerte = true
   endif
-  assign reste = seuil | minus: cart.total_price
-  assign pourcent = cart.total_price | times: 100 | divided_by: seuil
+  assign reste = seuil | minus: cart.item_count
+  assign pourcent = cart.item_count | times: 100 | divided_by: seuil
   if pourcent > 100
     assign pourcent = 100
   endif
@@ -67,10 +68,10 @@
           {%- if offerte -%}
             {{ textes.livraison_offerte }}
           {%- else -%}
-            Plus que {{ reste | money_without_trailing_zeros }} pour la livraison offerte
+            Plus que {{ reste }} livre{% if reste > 1 %}s{% endif %} pour la livraison offerte
           {%- endif -%}
         </strong>
-        <span>{{ seuil | money_without_trailing_zeros }}</span>
+        <span>{{ seuil }} livres</span>
       </p>
       <div class="panier__barre"><div style="width: {{ pourcent }}%"></div></div>
     </div>
@@ -125,7 +126,7 @@
       {%- endfor -%}
 
       {%- if propose -%}
-        {%- assign apres = cart.total_price | plus: propose.price -%}
+        {%- assign apres = cart.item_count | plus: 1 -%}
         <div class="panier__arc">
           <p class="surtitre">{{ textes.surtitre_arc }}</p>
           <div class="panier__arc-livre">

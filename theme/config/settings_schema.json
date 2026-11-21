@@ -46,10 +46,10 @@
       },
       {
         "type": "number",
-        "id": "livraison_seuil",
-        "label": "Livraison offerte dès (€)",
-        "default": 40,
-        "info": "Jauge du panier. Doit correspondre au tarif d'expédition réglé dans Paramètres › Expédition."
+        "id": "livraison_articles",
+        "label": "Livraison offerte dès (livres)",
+        "default": 3,
+        "info": "Jauge du panier, en point relais. Doit correspondre à la réduction « livraison gratuite » réglée dans Réductions."
       },
       {
         "type": "metaobject_list",
