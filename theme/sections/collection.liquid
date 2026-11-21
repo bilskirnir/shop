@@ -1,14 +1,24 @@
 {% comment %}
   Le catalogue (/collections/all) et toute page de collection : les livres rangés par histoire,
-  dans l'ordre choisi dans l'éditeur (« Histoires, dans l'ordre ») ; à défaut, toutes les sagas.
+  de la plus ancienne à la plus récente (date de parution de son premier livre, custom.date_parution),
+  avec ses années de parution à gauche. Une histoire sans date passe en dernier.
   Sur une autre collection que « all », seules les histoires dont un livre est dans la collection s'affichent.
   Maquette validée le 21/11/2026 : https://claude.ai/artifact/5WVfrNr4NNYeFgWHW7koaK
 {% endcomment %}
 {%- liquid
-  assign histoires = section.settings.histoires
-  if histoires == blank
-    assign histoires = shop.metaobjects.saga.values
-  endif
+  # Chaque saga en « date du premier livre|handle », triées : l'ordre par ancienneté.
+  assign cles = ''
+  for saga in shop.metaobjects.saga.values
+    assign premiere = '9999-12-31'
+    for tome in saga.ordre_des_tomes.value
+      assign d = tome.metafields.custom.date_parution.value | date: '%Y-%m-%d'
+      if d != blank and d < premiere
+        assign premiere = d
+      endif
+    endfor
+    assign cles = cles | append: premiere | append: '|' | append: saga.system.handle | append: ','
+  endfor
+  assign cles = cles | split: ',' | sort
 
   assign tout = false
   if collection.handle == 'all'
@@ -31,9 +41,34 @@
     {%- endif -%}
   </div>
 
-  {%- for saga in histoires -%}
+  {%- for cle_saga in cles -%}
     {%- liquid
+      assign handle = cle_saga | split: '|' | last
+      assign saga = shop.metaobjects.saga[handle]
       assign tomes = saga.ordre_des_tomes.value
+
+      # Années de parution : « 2019 – 2023 », ou une seule année.
+      assign annee_min = '9999'
+      assign annee_max = ''
+      for tome in tomes
+        assign a = tome.metafields.custom.date_parution.value | date: '%Y'
+        if a != blank
+          if a < annee_min
+            assign annee_min = a
+          endif
+          if a > annee_max
+            assign annee_max = a
+          endif
+        endif
+      endfor
+      assign annees = ''
+      if annee_max != blank
+        assign annees = annee_min
+        if annee_max != annee_min
+          assign annees = annee_min | append: ' – ' | append: annee_max
+        endif
+      endif
+
       assign montrer = tout
       unless tout
         for tome in tomes
@@ -48,6 +83,7 @@
     {%- if montrer and tomes.size > 0 -%}
       <section class="catalogue__histoire" style="{% render 'saga-halo', saga: saga %}" data-reveal>
         <div class="catalogue__nom">
+          {%- if annees != blank %}<p class="catalogue__annees">{{ annees }}</p>{% endif %}
           <p class="surtitre">{% render 'saga-surtitre', saga: saga %}</p>
           <h2>{{ saga.nom.value | default: saga.system.handle }}</h2>
           <a class="catalogue__lien" href="{% render 'saga-lien', saga: saga %}">
@@ -117,6 +153,14 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+  }
+
+  .catalogue__annees {
+    margin-bottom: 4px;
+    font-family: var(--titre);
+    font-size: clamp(20px, 2vw, 24px);
+    font-variant-numeric: tabular-nums;
+    color: var(--gris-2);
   }
 
   .catalogue__nom .surtitre,
@@ -215,21 +259,13 @@
 {
   "name": "Catalogue",
   "settings": [
-    {
-      "type": "metaobject_list",
-      "id": "histoires",
-      "label": "Histoires, dans l'ordre",
-      "metaobject_type": "saga",
-      "limit": 20,
-      "info": "Vide : toutes les sagas."
-    },
     { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Le catalogue" },
     { "type": "text", "id": "titre", "label": "Titre (tous les livres)", "default": "Tous nos livres" },
     {
       "type": "text",
       "id": "accroche",
       "label": "Accroche",
-      "default": "Rangés par histoire, dans l'ordre où les lire."
+      "default": "Rangés par histoire, de la plus ancienne à la plus récente."
     },
     { "type": "text", "id": "libelle_arc", "label": "Lien d'une saga", "default": "Découvrir l'arc" },
     { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" }
