@@ -1,47 +1,238 @@
 {% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+  Le catalogue (/collections/all) et toute page de collection : les livres rangés par histoire,
+  dans l'ordre choisi dans l'éditeur (« Histoires, dans l'ordre ») ; à défaut, toutes les sagas.
+  Sur une autre collection que « all », seules les histoires dont un livre est dans la collection s'affichent.
+  Maquette validée le 21/11/2026 : https://claude.ai/artifact/5WVfrNr4NNYeFgWHW7koaK
 {% endcomment %}
+{%- liquid
+  assign histoires = section.settings.histoires
+  if histoires == blank
+    assign histoires = shop.metaobjects.saga.values
+  endif
 
-<h1>{{ collection.title }}</h1>
+  assign tout = false
+  if collection.handle == 'all'
+    assign tout = true
+  endif
 
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
+  # Les produits de la collection, en « ,id,id, ».
+  # shortcut: lit les 50 premiers produits de la collection, à paginer si le catalogue dépasse 50 livres.
+  assign ids = collection.products | map: 'id' | join: ','
+  assign ids = ',' | append: ids | append: ','
+-%}
+<section class="catalogue">
+  <div class="catalogue__tete" data-reveal>
+    <p class="surtitre">{{ section.settings.surtitre }}</p>
+    <h1>{% if tout %}{{ section.settings.titre }}{% else %}{{ collection.title }}{% endif %}</h1>
+    {%- if tout or collection.description == blank -%}
+      <p class="catalogue__accroche">{{ section.settings.accroche }}</p>
+    {%- else -%}
+      <div class="catalogue__accroche">{{ collection.description }}</div>
+    {%- endif -%}
+  </div>
+
+  {%- for saga in histoires -%}
+    {%- liquid
+      assign tomes = saga.ordre_des_tomes.value
+      assign montrer = tout
+      unless tout
+        for tome in tomes
+          assign cle = ',' | append: tome.id | append: ','
+          if ids contains cle
+            assign montrer = true
+            break
+          endif
+        endfor
+      endunless
+    -%}
+    {%- if montrer and tomes.size > 0 -%}
+      <section class="catalogue__histoire" style="{% render 'saga-halo', saga: saga %}" data-reveal>
+        <div class="catalogue__nom">
+          <p class="surtitre">{% render 'saga-surtitre', saga: saga %}</p>
+          <h2>{{ saga.nom.value | default: saga.system.handle }}</h2>
+          <a class="catalogue__lien" href="{% render 'saga-lien', saga: saga %}">
+            {%- if tomes.size > 1 %}{{ section.settings.libelle_arc }}{% else %}{{ section.settings.libelle_livre }}{% endif %} <span aria-hidden="true">→</span>
+          </a>
         </div>
-      </div>
-    {% endfor %}
-
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
-</div>
+        <ul class="catalogue__livres">
+          {%- for tome in tomes -%}
+            <li>
+              <a class="catalogue__livre" href="{{ tome.url }}">
+                {%- if tome.featured_image -%}
+                  {%- capture texte_alt %}Couverture : {% render 'livre-titre', livre: tome %}{% endcapture -%}
+                  {{- tome.featured_image | image_url: width: 600 | image_tag: widths: '240, 360, 480, 600', sizes: '(min-width: 1024px) 220px, 45vw', alt: texte_alt, loading: 'lazy' -}}
+                {%- endif -%}
+                <strong>{% render 'livre-titre', livre: tome %}</strong>
+                <span>
+                  {%- if tomes.size > 1 %}Livre {{ forloop.index }} · {% endif -%}
+                  {%- if tome.available %}{{ tome.price | money_without_trailing_zeros }}{% else %}À paraître{% endif -%}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+  {%- endfor -%}
+</section>
 
 {% stylesheet %}
-  .collection-products {
+  .catalogue {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(48px, 5vw, 56px);
+    padding: clamp(110px, 12vw, 160px) var(--marge-centre) 96px;
+  }
+
+  .catalogue__tete {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .catalogue__tete .surtitre {
+    color: var(--gris-2);
+  }
+
+  .catalogue__tete h1 {
+    font-size: clamp(44px, 5vw, 72px);
+    line-height: 0.95;
+  }
+
+  .catalogue__accroche {
+    max-width: 640px;
+    font-size: clamp(17px, 1.4vw, 19px);
+    line-height: 1.5;
+    color: var(--gris-1);
+  }
+
+  .catalogue__histoire {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 18px;
+    padding-top: clamp(28px, 3vw, 40px);
+    border-top: 1px solid #ece5d61f;
+  }
+
+  .catalogue__nom {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .catalogue__nom .surtitre,
+  .catalogue__lien {
+    color: var(--teinte, var(--gris-2));
+  }
+
+  .catalogue__nom h2 {
+    font-size: clamp(30px, 3vw, 40px);
+    line-height: 1.05;
+  }
+
+  .catalogue__lien {
+    align-self: flex-start;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .catalogue__livres {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .catalogue__livre {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .catalogue__livre img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 18px 36px -12px #000000e6, 0 0 0 1px #ece5d614;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .catalogue__livre:hover img {
+    transform: translateY(-4px);
+  }
+
+  .catalogue__livre strong {
+    font-family: var(--titre);
+    font-size: 17px;
+    line-height: 1.2;
+  }
+
+  .catalogue__livre span {
+    margin-top: -8px;
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  @media (min-width: 1024px) {
+    .catalogue__histoire {
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 48px;
+    }
+
+    .catalogue__lien {
+      font-size: 16px;
+    }
+
+    .catalogue__livres {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    .catalogue__livre strong {
+      font-size: 19px;
+    }
+
+    .catalogue__livre span {
+      font-size: 15px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .catalogue__livre img {
+      transition: none;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.collection",
-  "settings": []
+  "name": "Catalogue",
+  "settings": [
+    {
+      "type": "metaobject_list",
+      "id": "histoires",
+      "label": "Histoires, dans l'ordre",
+      "metaobject_type": "saga",
+      "limit": 20,
+      "info": "Vide : toutes les sagas."
+    },
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Le catalogue" },
+    { "type": "text", "id": "titre", "label": "Titre (tous les livres)", "default": "Tous nos livres" },
+    {
+      "type": "text",
+      "id": "accroche",
+      "label": "Accroche",
+      "default": "Rangés par histoire, dans l'ordre où les lire."
+    },
+    { "type": "text", "id": "libelle_arc", "label": "Lien d'une saga", "default": "Découvrir l'arc" },
+    { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" }
+  ]
 }
 {% endschema %}
