@@ -89,7 +89,12 @@
     {{ grands }}
     {%- if nombre > 1 -%}
       {%- if product -%}
-        <div class="arc-avis__defile" data-defile><div class="arc-avis__piste" data-cartes="250">{{ cartes }}</div></div>
+        {%- comment -%} Moins de 8 avis : rangée centrée et immobile ; à partir de 8, la bande qui défile. {%- endcomment -%}
+        {%- if nombre >= 8 -%}
+          <div class="arc-avis__defile" data-defile><div class="arc-avis__piste" data-cartes="250">{{ cartes }}</div></div>
+        {%- else -%}
+          <div class="arc-avis__rangee" data-cartes="250">{{ cartes }}</div>
+        {%- endif -%}
       {%- else -%}
         <div class="arc-avis__cartes" data-cartes="{{ section.settings.nombre_cartes }}">{{ cartes }}</div>
       {%- endif -%}
@@ -453,6 +458,19 @@
 
   .arc-avis__defile.est-tiree {
     cursor: grabbing;
+  }
+
+  .arc-avis__rangee {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 50px;
+  }
+
+  .arc-avis__rangee .arc-avis__carte {
+    flex: 0 1 320px;
   }
 
   .arc-avis__piste {
