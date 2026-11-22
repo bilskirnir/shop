@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "avis-lecteur",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
