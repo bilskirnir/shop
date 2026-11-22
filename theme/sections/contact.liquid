@@ -621,6 +621,16 @@
     font-weight: 600;
   }
 
+  .contact__collab a {
+    color: inherit;
+    text-decoration-color: #ece5d659;
+    text-underline-offset: 3px;
+  }
+
+  .contact__collab a:hover {
+    text-decoration-color: var(--or);
+  }
+
   .contact__collab img {
     flex: none;
     width: 40px;
@@ -710,7 +720,7 @@
     { "type": "text", "id": "conference_titre", "label": "Titre", "default": "Gautier en conférence" },
     { "type": "textarea", "id": "conference_texte", "label": "Texte", "default": "Médiathèques, collèges, lycées, festivals, entreprises. Une heure de récit, une demi-heure de questions." },
     { "type": "image_picker", "id": "collab_logo", "label": "Logo de la collaboration" },
-    { "type": "inline_richtext", "id": "collab_texte", "label": "Texte de la collaboration", "default": "Plusieurs collaborations avec la chaîne YouTube <strong>Gamology</strong>." },
+    { "type": "inline_richtext", "id": "collab_texte", "label": "Texte de la collaboration", "default": "Plusieurs collaborations avec la chaîne YouTube <a href=\"https://www.youtube.com/@gamologyfrance\"><strong>Gamology</strong></a>." },
     { "type": "textarea", "id": "conference_sujets", "label": "Sujets", "info": "Un sujet par ligne.", "default": "Les mythologies nordiques, sans le folklore\nPourquoi on a encore besoin de héros\nÉcrire une saga : de l'idée au tome 8\nLes dieux dans le jeu vidéo et la pop culture" },
     { "type": "header", "content": "Colonne : écrire directement" },
     { "type": "text", "id": "email", "label": "Email", "info": "Vide : la ligne disparaît." },

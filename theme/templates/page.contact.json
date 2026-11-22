@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -21,13 +30,46 @@
           "type": "question",
           "settings": {
             "question": "Combien de temps pour un manuscrit ?",
-            "reponse": "<p>La lecture prend du temps : compte jusqu'à trois mois. Chaque manuscrit reçoit une réponse.</p>"
+            "reponse": "<p>La lecture prend du temps : compte jusqu'à six mois. Chaque manuscrit reçoit une réponse.</p>"
           }
         }
       },
-      "block_order": ["commande", "dedicace", "manuscrit"],
-      "settings": {}
+      "block_order": [
+        "commande",
+        "dedicace",
+        "manuscrit"
+      ],
+      "settings": {
+        "surtitre": "Contact",
+        "titre": "Frappe à la porte du hall.",
+        "chapeau": "Une question sur un livre, une conférence à organiser, un salon, une idée à mener ensemble ou un manuscrit : dis-nous pourquoi tu écris, le message arrive au bon endroit.",
+        "signature_titre": "Gautier lit chaque message lui-même.",
+        "signature_texte": "Réponse en général sous une semaine.",
+        "aide_question": "Un livre, une commande, une dédicace.",
+        "aide_conference": "Mythologies, héroïsme, écriture...",
+        "aide_stand": "Salon, festival, librairie : inviter Bilskirnir.",
+        "aide_collaboration": "Illustration, presse, créateurs, partenariats.",
+        "aide_manuscrit": "Tu as écrit un roman épique.",
+        "intro_question": "Sur un livre, une commande ou une dédicace. Si c'est une commande, donne son numéro.",
+        "intro_conference": "Dis-nous qui vous êtes et ce que vous imaginez. Gautier revient vers toi avec ses disponibilités et ses conditions.",
+        "intro_stand": "Bilskirnir tient des stands en salon, en festival et en librairie. Dis-nous où et quand.",
+        "intro_collaboration": "Illustrateurs, créateurs de contenu, journalistes, marques, autres maisons : montre-nous ton travail.",
+        "intro_manuscrit": "Bilskirnir publie peu, et le lit en entier. Avant d'envoyer, vérifie que ton texte est dans la ligne de la maison.",
+        "charte_manuscrit": "<p><strong>Ce que Bilskirnir publie :</strong> des romans épiques. Fantasy, mythologies, urban fantasy, aventure, histoire revisitée. Pas de poésie, pas d'essai, pas de jeunesse illustrée.</p><ul><li>Un roman terminé, en français</li><li>Un synopsis d'une page, fin comprise</li><li>Le texte complet en PDF, via un lien de partage</li></ul>",
+        "mention": "Ton adresse sert seulement à te répondre. Rien n'est ajouté à la newsletter sans ton accord.",
+        "merci_titre": "Message envoyé.",
+        "merci_texte": "Gautier te répond à ton adresse email, en général sous une semaine.",
+        "conference_titre": "Gautier en conférence",
+        "conference_texte": "Médiathèques, collèges, lycées, festivals, entreprises. Une heure de récit, une demi-heure de questions.",
+        "collab_texte": "Plusieurs collaborations avec la chaîne YouTube <a href=\"https://www.youtube.com/@gamologyfrance\"><strong>Gamology</strong></a>.",
+        "conference_sujets": "Les mythologies nordiques, sans le folklore\nPourquoi on a encore besoin de héros\nÉcrire une saga : de l'idée au tome 8\nLes dieux dans le jeu vidéo et la pop culture",
+        "email": "contact@bilskrinir.fr",
+        "tiktok": "",
+        "lieu": "Saint-Raphaël (83)"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
