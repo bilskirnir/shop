@@ -51,6 +51,27 @@ export function trouverLivre(valeur, livres) {
 }
 
 /**
+ * Ce que l'application écrit sur chaque livre et sur la boutique, à partir de tous les avis publiés.
+ * `avis` : [{id, livreId, note}] (note : nombre 1 à 5, ou null). Renvoie {livres: {idLivre: chiffres}, boutique: chiffres},
+ * où chiffres = {ids: [ids des avis], nombre, notes (avis notés), somme (des notes)}.
+ * Le thème en tire les moyennes exactes (somme / notes), y compris pour une saga (en additionnant ses tomes).
+ */
+export function regrouper(avis) {
+  const vide = () => ({ids: [], nombre: 0, notes: 0, somme: 0});
+  const livres = {};
+  const boutique = vide();
+  for (const a of avis) {
+    const cibles = a.livreId ? [(livres[a.livreId] ||= vide()), boutique] : [boutique];
+    for (const c of cibles) {
+      if (c !== boutique) c.ids.push(a.id);
+      c.nombre++;
+      if (a.note) { c.notes++; c.somme += a.note; }
+    }
+  }
+  return {livres, boutique};
+}
+
+/**
  * Prépare chaque ligne pour l'envoi : livre retrouvé, handle, nouveau ou mise à jour, erreurs en clair.
  * `livres` : [{id, handle, titre}] ; `existants` : handles des avis déjà dans la boutique.
  */

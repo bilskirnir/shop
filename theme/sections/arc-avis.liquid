@@ -1,14 +1,14 @@
 {% comment %}
   Page d'un arc — les avis des lecteurs. Chaque métaobjet « avis » désigne son livre : champ livre (référence produit),
   plus note (1 à 5, les vraies étoiles de la carte), titre, texte, auteur, source, verifie. Le lien va de l'avis au livre : ajouter un avis = choisir son livre.
-  shortcut: lit 250 avis au plus dans la boutique (paginate) ; au-delà, passer par une recherche de métaobjets. La page réunit ceux de tous les tomes,
-  dans l'ordre des tomes. L'un d'eux, tiré au hasard, s'affiche en grand dans le halo, les suivants en petites cartes.
+  Chaque livre porte la liste de ses avis (champ produit custom.avis), tenue à jour par l'application Import Avis :
+  le thème ne parcourt jamais tous les avis de la boutique, donc pas de limite à leur nombre total.
+  shortcut: Liquid ne rend que les 50 premiers avis d'un livre ; paginer la liste si un livre doit en montrer plus.
+  La page réunit ceux de tous les tomes, dans l'ordre des tomes. L'un d'eux, tiré au hasard, s'affiche en grand dans le halo, les suivants en petites cartes.
   Un avis long est coupé à ses premiers mots ; « Voir l'avis en entier » l'ouvre dans une fenêtre de lecture. Un avis « Vérifié » porte le badge « Avis vérifié ».
   Sur la fiche d'un livre : le même grand avis tiré au hasard, puis tous les autres avis du livre en petites cartes,
   dans une bande de bord à bord qui défile seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
-{%- comment -%} Sans paginate, Shopify ne donne que les 50 premiers avis (par ordre alphabétique) ; avec, jusqu'à 250. {%- endcomment -%}
-{%- paginate shop.metaobjects.avis.values by 250 -%}
 {%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
 {%- liquid
   assign saga = metaobject | default: product.metafields.custom.saga.value
@@ -19,12 +19,10 @@
     if product and tome.id != product.id
       continue
     endif
-    for un_avis in shop.metaobjects.avis.values
-      if un_avis.livre.value.id == tome.id
-        assign nombre = nombre | plus: 1
-        if grand_defaut == ''
-          assign grand_defaut = un_avis.system.handle
-        endif
+    for un_avis in tome.metafields.custom.avis.value
+      assign nombre = nombre | plus: 1
+      if grand_defaut == ''
+        assign grand_defaut = un_avis.system.handle
       endif
     endfor
   endfor
@@ -40,8 +38,7 @@
     {%- assign rang_carte = 0 -%}
     {%- for tome in saga.ordre_des_tomes.value -%}
       {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
-      {%- for un_avis in shop.metaobjects.avis.values -%}
-        {%- if un_avis.livre.value.id != tome.id %}{% continue %}{% endif -%}
+      {%- for un_avis in tome.metafields.custom.avis.value -%}
         {%- assign handle = un_avis.system.handle -%}
         {%- capture legende -%}
           <figcaption>
@@ -102,7 +99,6 @@
     </dialog>
   </section>
 {%- endif -%}
-{%- endpaginate -%}
 
 {% javascript %}
   // « Voir l'avis en entier » (snippets/avis-texte.liquid) : ouvre l'avis complet dans la fenêtre de lecture.

@@ -1,7 +1,7 @@
 import {render} from 'preact';
 import {useEffect, useState} from 'preact/hooks';
 
-import {decoder, lireCsv, preparer} from './avis.js';
+import {decoder, lireCsv, preparer, regrouper} from './avis.js';
 
 // Page « Avis Bilskirnir » dans l'admin (Applications › Import Avis) : Gautier glisse un CSV d'avis,
 // voit l'aperçu ligne par ligne, puis publie. Les avis sont des métaobjets « avis », lus par le thème.
@@ -16,15 +16,98 @@ async function graphql(query, variables = {}) {
   return data;
 }
 
+/** Toutes les pages d'une liste (250 par page) : `connexion` = 'products' ou 'metaobjects', `selection` = champs voulus. */
+async function tout(connexion, arguments_, selection) {
+  const noeuds = [];
+  let apres = null;
+  do {
+    const data = await graphql(
+      `query($apres: String) { ${connexion}(first: 250, after: $apres${arguments_}) {
+         nodes { ${selection} } pageInfo { hasNextPage endCursor } } }`,
+      {apres},
+    );
+    noeuds.push(...data[connexion].nodes);
+    apres = data[connexion].pageInfo.hasNextPage ? data[connexion].pageInfo.endCursor : null;
+  } while (apres);
+  return noeuds;
+}
+
 async function chargerBoutique() {
-  const data = await graphql(`{
-    products(first: 250, sortKey: TITLE) { nodes { id handle title } }
-    metaobjects(type: "avis", first: 250) { nodes { handle } }
-  }`);
+  const [produits, avis] = await Promise.all([
+    tout('products', ', sortKey: TITLE', 'id handle title'),
+    tout('metaobjects', ', type: "avis"', 'handle'),
+  ]);
   return {
-    livres: data.products.nodes.map((p) => ({id: p.id, handle: p.handle, titre: p.title})),
-    existants: new Set(data.metaobjects.nodes.map((m) => m.handle)),
+    livres: produits.map((p) => ({id: p.id, handle: p.handle, titre: p.title})),
+    existants: new Set(avis.map((m) => m.handle)),
   };
+}
+
+/**
+ * Écrit sur chaque livre la liste de ses avis et ses chiffres (custom.avis, avis_nombre, avis_notes, avis_somme),
+ * et les chiffres de tout le site sur la boutique. Le thème lit ces champs au lieu de parcourir tous les avis :
+ * pas de limite au nombre d'avis de la boutique, moyennes exactes. À relancer après tout changement d'avis.
+ */
+async function mettreAJourLivres() {
+  await creerChampAvis();
+  const [avis, produits, {shop}] = await Promise.all([
+    tout('metaobjects', ', type: "avis"', 'id livre: field(key: "livre") { value } note: field(key: "note") { value }'),
+    tout('products', '', 'id'),
+    graphql('{ shop { id } }'),
+  ]);
+  const {livres, boutique} = regrouper(avis.map((a) => ({
+    id: a.id, livreId: a.livre?.value || null, note: a.note?.value ? Number(a.note.value) : null,
+  })));
+
+  const chiffres = (proprietaire, c) => [
+    {ownerId: proprietaire, namespace: 'custom', key: 'avis_nombre', type: 'number_integer', value: String(c.nombre)},
+    {ownerId: proprietaire, namespace: 'custom', key: 'avis_notes', type: 'number_integer', value: String(c.notes)},
+    {ownerId: proprietaire, namespace: 'custom', key: 'avis_somme', type: 'number_integer', value: String(c.somme)},
+  ];
+  const aEcrire = chiffres(shop.id, boutique);
+  const aEffacer = [];
+  for (const {id} of produits) {
+    const c = livres[id];
+    if (c) {
+      aEcrire.push({ownerId: id, namespace: 'custom', key: 'avis', type: 'list.metaobject_reference', value: JSON.stringify(c.ids)}, ...chiffres(id, c));
+    } else {
+      aEffacer.push(...['avis', 'avis_nombre', 'avis_notes', 'avis_somme'].map((key) => ({ownerId: id, namespace: 'custom', key})));
+    }
+  }
+
+  // Shopify accepte 25 champs par envoi.
+  for (let i = 0; i < aEcrire.length; i += 25) {
+    const data = await graphql(
+      `mutation($champs: [MetafieldsSetInput!]!) { metafieldsSet(metafields: $champs) { userErrors { field message } } }`,
+      {champs: aEcrire.slice(i, i + 25)},
+    );
+    const refus = data.metafieldsSet.userErrors;
+    if (refus.length) throw new Error(refus.map((e) => e.message).join(' ; '));
+  }
+  for (let i = 0; i < aEffacer.length; i += 25) {
+    await graphql(
+      `mutation($champs: [MetafieldIdentifierInput!]!) { metafieldsDelete(metafields: $champs) { userErrors { message } } }`,
+      {champs: aEffacer.slice(i, i + 25)},
+    );
+  }
+  return {avis: boutique.nombre, livres: Object.keys(livres).length};
+}
+
+/** Crée une fois la définition du champ produit « Avis » (liste de métaobjets avis), pour qu'il apparaisse dans l'admin. */
+async function creerChampAvis() {
+  const {product} = await graphql(`{ product: metafieldDefinitions(ownerType: PRODUCT, namespace: "custom", key: "avis", first: 1) { nodes { id } } }`);
+  if (product.nodes.length) return;
+  const {metaobjectDefinitionByType} = await graphql('{ metaobjectDefinitionByType(type: "avis") { id } }');
+  const data = await graphql(
+    `mutation($definition: MetafieldDefinitionInput!) { metafieldDefinitionCreate(definition: $definition) { userErrors { message } } }`,
+    {definition: {
+      name: 'Avis (rempli par Import Avis)', namespace: 'custom', key: 'avis', ownerType: 'PRODUCT',
+      type: 'list.metaobject_reference', description: "Ne pas modifier : l'application Import Avis le remplit.",
+      validations: [{name: 'metaobject_definition_id', value: metaobjectDefinitionByType.id}],
+    }},
+  );
+  const refus = data.metafieldDefinitionCreate.userErrors;
+  if (refus.length) throw new Error(`Champ produit « Avis » : ${refus.map((e) => e.message).join(' ; ')}`);
 }
 
 async function publier(avis) {
@@ -54,6 +137,16 @@ function Import() {
   const [fichier, setFichier] = useState('');
   const [lignes, setLignes] = useState([]);
   const [envoi, setEnvoi] = useState(null); // null, puis {fait, total, refus: [{handle, message}]}
+  const [maj, setMaj] = useState(null); // null, 'en cours', {avis, livres} ou {erreur}
+
+  async function relancerLivres() {
+    setMaj('en cours');
+    try {
+      setMaj(await mettreAJourLivres());
+    } catch (e) {
+      setMaj({erreur: e.message});
+    }
+  }
 
   useEffect(() => {
     chargerBoutique().then(setBoutique).catch((e) => setProbleme(`La boutique ne répond pas : ${e.message}`));
@@ -89,8 +182,15 @@ function Import() {
       suivi.fait++;
       setEnvoi({...suivi});
     }
+    await relancerLivres(); // le site lit les avis par livre : sans ça, les nouveaux n'apparaîtraient pas
     setBoutique(await chargerBoutique()); // les avis publiés comptent désormais comme existants
   }
+
+  const majBandeau = maj === 'en cours'
+    ? <s-paragraph>Mise à jour des livres…</s-paragraph>
+    : maj?.erreur
+      ? <s-banner tone="critical">Les livres n'ont pas été mis à jour : {maj.erreur}</s-banner>
+      : maj && <s-banner tone="success">Livres à jour : {maj.avis} avis répartis sur {maj.livres} livres. Le site les affiche d'ici quelques minutes.</s-banner>;
 
   const valides = lignes.filter((l) => l.etat !== 'erreur').length;
   const erreurs = lignes.length - valides;
@@ -160,15 +260,26 @@ function Import() {
               </s-button>
             )}
             {enCours && <s-paragraph>Envoi en cours : {envoi.fait} / {envoi.total}…</s-paragraph>}
-            {termine && envoi.refus.length === 0 && (
-              <s-banner tone="success">{envoi.total} avis publiés. Ils apparaissent sur le site d'ici quelques minutes.</s-banner>
-            )}
+            {termine && envoi.refus.length === 0 && <s-banner tone="success">{envoi.total} avis publiés.</s-banner>}
             {termine && envoi.refus.length > 0 && (
               <s-banner tone="warning">
                 {envoi.total - new Set(envoi.refus.map((r) => r.handle)).size} avis publiés, refusés par Shopify :{' '}
                 {envoi.refus.map((r) => `${r.handle} (${r.message})`).join(' ; ')}
               </s-banner>
             )}
+            {termine && majBandeau}
+          </s-stack>
+        </s-section>
+      )}
+
+      {boutique && !lignes.length && (
+        <s-section heading="Un avis changé à la main ?">
+          <s-stack gap="base">
+            <s-paragraph>
+              Si tu ajoutes, corriges ou supprimes un avis dans Contenu › Métaobjets plutôt qu'ici, clique ce bouton pour que le site le prenne en compte.
+            </s-paragraph>
+            <s-button onClick={relancerLivres} disabled={maj === 'en cours'}>Mettre les livres à jour</s-button>
+            {majBandeau}
           </s-stack>
         </s-section>
       )}

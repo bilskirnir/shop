@@ -1,6 +1,6 @@
 // node extensions/page-avis/test/avis.test.mjs
 import assert from 'node:assert/strict';
-import {decoder, lireCsv, fabriquerHandle, trouverLivre, preparer} from '../src/avis.js';
+import {decoder, lireCsv, fabriquerHandle, trouverLivre, preparer, regrouper} from '../src/avis.js';
 
 // Excel français : points-virgules, Windows-1252, fin de ligne Windows.
 const excel = new Uint8Array([...'livre;note;texte\r\nsalvation;5;Épique\r\n'].map((c) => (c === 'É' ? 0xc9 : c.charCodeAt(0))));
@@ -30,5 +30,15 @@ assert.equal(bon.verifie, true);
 assert.equal(maj.etat, 'mise à jour');
 assert.deepEqual(faux.erreurs, ['livre inconnu « x »', 'note « 7 » : il faut 1 à 5', 'le texte manque']);
 assert.equal(double.etat, 'erreur');
+
+const chiffres = regrouper([
+  {id: 'a1', livreId: 'L1', note: 5},
+  {id: 'a2', livreId: 'L1', note: 4},
+  {id: 'a3', livreId: 'L2', note: null},
+  {id: 'a4', livreId: null, note: 3},
+]);
+assert.deepEqual(chiffres.livres.L1, {ids: ['a1', 'a2'], nombre: 2, notes: 2, somme: 9});
+assert.deepEqual(chiffres.livres.L2, {ids: ['a3'], nombre: 1, notes: 0, somme: 0});
+assert.deepEqual(chiffres.boutique, {ids: [], nombre: 4, notes: 3, somme: 12});
 
 console.log('ok');

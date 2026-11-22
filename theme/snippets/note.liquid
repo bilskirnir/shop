@@ -1,42 +1,36 @@
 {% comment %}
-  La note des lecteurs, calculée sur les avis publiés du site (métaobjets « avis » : champs livre et note, 1 à 5).
+  La note des lecteurs, calculée sur les avis publiés du site. Les chiffres sont tenus à jour par l'application
+  Import Avis sur chaque livre et sur la boutique (custom.avis_nombre, avis_notes = avis notés, avis_somme = somme des notes) :
+  la moyenne est exacte quel que soit le nombre d'avis.
   - Sans livre ni saga (l'accueil) : tous les avis du site. Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
   - Avec livre (un produit) ou saga : les avis de ce livre, ou de tous les tomes de la saga ; lien vers le bloc des avis (#avis).
   « ★★★★★ 4,8/5 · 7 avis de lecteurs ». La moyenne ne compte que les avis notés ; rien si aucun avis.
-  shortcut: lit 250 avis au plus (paginate ; sans lui, Shopify n'en donne que 50).
   Usage : {% render 'note', lecteurs: true %}
           {% render 'note', livre: product %}
           {% render 'note', saga: saga %}
 {%- endcomment -%}
-{%- paginate shop.metaobjects.avis.values by 250 -%}
 {%- liquid
-  # Les livres concernés, en « ,id,id, » ; vide = tout le site.
-  assign ids = ''
-  if livre
-    assign ids = ',' | append: livre.id | append: ','
-  elsif saga
-    assign ids = ','
-    for tome in saga.ordre_des_tomes.value
-      assign ids = ids | append: tome.id | append: ','
-    endfor
-  endif
-
   assign nombre = 0
   assign notes = 0
   assign total = 0
-  for un_avis in shop.metaobjects.avis.values
-    if ids != blank
-      assign cle = ',' | append: un_avis.livre.value.id | append: ','
-      unless ids contains cle
-        continue
-      endunless
-    endif
-    assign nombre = nombre | plus: 1
-    if un_avis.note.value
-      assign notes = notes | plus: 1
-      assign total = total | plus: un_avis.note.value
-    endif
-  endfor
+  assign propre = false
+  if livre
+    assign nombre = livre.metafields.custom.avis_nombre.value | default: 0
+    assign notes = livre.metafields.custom.avis_notes.value | default: 0
+    assign total = livre.metafields.custom.avis_somme.value | default: 0
+    assign propre = true
+  elsif saga
+    for tome in saga.ordre_des_tomes.value
+      assign nombre = nombre | plus: tome.metafields.custom.avis_nombre.value
+      assign notes = notes | plus: tome.metafields.custom.avis_notes.value
+      assign total = total | plus: tome.metafields.custom.avis_somme.value
+    endfor
+    assign propre = true
+  else
+    assign nombre = shop.metafields.custom.avis_nombre.value | default: 0
+    assign notes = shop.metafields.custom.avis_notes.value | default: 0
+    assign total = shop.metafields.custom.avis_somme.value | default: 0
+  endif
 -%}
 {%- if nombre > 0 -%}
   <p class="note">
@@ -47,7 +41,7 @@
     {%- endif -%}
     <span>
       {%- if notes > 0 %}<strong>{{ moyenne | append: '' | replace: '.', ',' }}/5</strong> · {% endif -%}
-      {%- if ids != blank -%}
+      {%- if propre -%}
         <a href="#avis">{{ nombre }} avis de lecteur{% if nombre > 1 %}s{% endif %} <span aria-hidden="true">↓</span></a>
       {%- else -%}
         {{ nombre }} avis
@@ -56,4 +50,3 @@
     </span>
   </p>
 {%- endif -%}
-{%- endpaginate -%}
