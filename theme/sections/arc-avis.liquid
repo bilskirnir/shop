@@ -4,7 +4,8 @@
   shortcut: shop.metaobjects.avis.values lit les 50 premiers avis de la boutique ; paginer au-delà. La page réunit ceux de tous les tomes,
   dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
   les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
-  Sur la fiche d'un livre, seulement les avis de ce livre. Rien si aucun n'a d'avis.
+  Sur la fiche d'un livre : tous les avis de ce livre, en petites cartes, dans une bande de bord à bord qui défile
+  seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
 {%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
 {%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
@@ -16,7 +17,7 @@
   {%- endfor -%}
 {%- endfor -%}
 {%- assign limite = section.settings.nombre_cartes | plus: 1 -%}
-{%- if nombre > limite %}{% assign nombre = limite %}{% endif -%}
+{%- if nombre > limite and product == blank %}{% assign nombre = limite %}{% endif -%}
 {%- if nombre > 0 -%}
   <section class="arc-bloc arc-avis" id="avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
@@ -36,7 +37,10 @@
             {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
           </figcaption>
         {%- endcapture -%}
-        {%- if rang == 1 -%}
+        {%- if product and rang == 1 -%}
+          <div class="arc-avis__defile" data-defile><div class="arc-avis__piste">
+        {%- endif -%}
+        {%- if rang == 1 and product == blank -%}
           <figure class="arc-avis__grand">
             {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
             {% render 'avis-texte', texte: un_avis.texte.value %}
@@ -53,8 +57,9 @@
             {% render 'avis-texte', texte: un_avis.texte.value %}
             {{ legende }}
           </figure>
-          {%- if rang == nombre %}</div>{% endif -%}
+          {%- if rang == nombre and product == blank %}</div>{% endif -%}
         {%- endif -%}
+        {%- if product and rang == nombre %}</div></div>{% endif -%}
       {%- endfor -%}
     {%- endfor -%}
   </section>
@@ -71,6 +76,76 @@
     citation.querySelector('[data-long]').hidden = ouvert;
     bouton.setAttribute('aria-expanded', String(!ouvert));
     bouton.textContent = ouvert ? 'Voir plus' : 'Voir moins';
+  });
+
+  // Fiche livre : la bande d'avis défile seule (en boucle si elle dépasse l'écran) et se tire à la souris.
+  // Au doigt, le défilement natif prend le relais. Pause au survol, pendant le glisser, et quand on lit (« Voir plus »).
+  document.querySelectorAll('[data-defile]').forEach((bande) => {
+    const piste = bande.firstElementChild;
+    const vitesse = 30; // pixels par seconde
+    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let survol = false, tire = null, avance = 0, precedent = 0, boucle = false;
+
+    // Un second jeu de cartes, caché aux lecteurs d'écran, rend la boucle continue.
+    const cartes = [...piste.children];
+    if (!calme && piste.scrollWidth > bande.clientWidth) {
+      cartes.forEach((carte) => {
+        const copie = carte.cloneNode(true);
+        copie.setAttribute('aria-hidden', 'true');
+        copie.inert = true;
+        piste.append(copie);
+      });
+      boucle = true;
+    }
+    // Longueur d'un tour : de la première carte à sa copie (la marge de gauche n'en fait pas partie).
+    const moitie = () => piste.children[cartes.length].offsetLeft - cartes[0].offsetLeft;
+
+    function tour(temps) {
+      const ecart = precedent ? (temps - precedent) / 1000 : 0;
+      precedent = temps;
+      const lit = bande.querySelector('.arc-avis__plus[aria-expanded="true"]');
+      if (boucle && !survol && !tire && !lit) {
+        avance += vitesse * Math.min(ecart, 0.1);
+        bande.scrollLeft = avance;
+      } else {
+        avance = bande.scrollLeft;
+      }
+      if (boucle && bande.scrollLeft >= moitie()) {
+        avance -= moitie();
+        bande.scrollLeft = avance;
+      }
+      requestAnimationFrame(tour);
+    }
+    if (boucle) requestAnimationFrame(tour);
+
+    bande.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') survol = true; });
+    bande.addEventListener('pointerleave', () => { survol = false; });
+    bande.addEventListener('touchstart', () => { survol = true; }, {passive: true});
+    bande.addEventListener('touchend', () => setTimeout(() => { survol = false; }, 1500), {passive: true});
+
+    // Glisser à la souris. Un vrai glisser (plus de 5 px) annule le clic qui suit, pour ne pas ouvrir « Voir plus » par erreur.
+    bande.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      tire = {x: e.clientX, depart: bande.scrollLeft, bouge: false};
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!tire) return;
+      const dx = e.clientX - tire.x;
+      if (Math.abs(dx) > 5 && !tire.bouge) {
+        tire.bouge = true;
+        bande.classList.add('est-tiree');
+      }
+      if (!tire.bouge) return;
+      let cible = tire.depart - dx;
+      if (boucle) cible = ((cible % moitie()) + moitie()) % moitie();
+      bande.scrollLeft = cible;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!tire) return;
+      if (tire.bouge) bande.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); }, {capture: true, once: true});
+      bande.classList.remove('est-tiree');
+      tire = null;
+    });
   });
 {% endjavascript %}
 
@@ -193,6 +268,39 @@
   .arc-avis__carte figcaption {
     font-size: 13px;
     font-weight: 600;
+  }
+
+  /* Fiche livre : bande de bord à bord. Le texte sélectionnable gênerait le glisser. */
+  .arc-avis__defile {
+    /* Bord à bord : la marge négative se règle sur l'écran (100vw), pas sur la colonne du bloc. */
+    margin-inline: calc(50% - 50vw);
+    padding-block: 8px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .arc-avis__defile::-webkit-scrollbar {
+    display: none;
+  }
+
+  .arc-avis__defile.est-tiree {
+    cursor: grabbing;
+  }
+
+  .arc-avis__piste {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: max-content;
+    padding-inline: var(--marge-centre);
+  }
+
+  .arc-avis__defile .arc-avis__carte {
+    flex: 0 0 min(320px, 78vw);
   }
 
   @media (min-width: 1024px) {
