@@ -57,6 +57,13 @@
                 {%- when 'CAD' -%}{%- assign nom_devise = 'Dollar canadien' -%}
                 {%- when 'USD' -%}{%- assign nom_devise = 'Dollar américain' -%}
                 {%- when 'GBP' -%}{%- assign nom_devise = 'Livre sterling' -%}
+                {%- when 'CZK' -%}{%- assign nom_devise = 'Couronne tchèque' -%}
+                {%- when 'DKK' -%}{%- assign nom_devise = 'Couronne danoise' -%}
+                {%- when 'SEK' -%}{%- assign nom_devise = 'Couronne suédoise' -%}
+                {%- when 'NOK' -%}{%- assign nom_devise = 'Couronne norvégienne' -%}
+                {%- when 'HUF' -%}{%- assign nom_devise = 'Forint hongrois' -%}
+                {%- when 'PLN' -%}{%- assign nom_devise = 'Złoty polonais' -%}
+                {%- when 'RON' -%}{%- assign nom_devise = 'Leu roumain' -%}
                 {%- else -%}{%- assign nom_devise = pays.currency.name -%}
               {%- endcase -%}
               <span>{{ code }}</span>{{ nom_devise }}<span>{{ pays.currency.symbol }}</span>
