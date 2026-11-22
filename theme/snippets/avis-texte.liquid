@@ -1,14 +1,13 @@
 {% comment %}
-  Le texte d'un avis entre guillemets, coupé à 144 caractères (ou `limite`) avec « Voir plus » s'il est plus long.
-  Le bouton déplie le texte sur place (script de sections/arc-avis.liquid).
-  Usage : {% render 'avis-texte', texte: un_avis.texte.value %}  ·  grand avis : limite: 255
+  Le texte d'un avis entre guillemets, coupé aux `mots` premiers mots (25 par défaut) s'il est plus long.
+  Le texte complet attend dans un <template> ; « Voir l'avis en entier » l'ouvre dans une fenêtre de lecture
+  (script et fenêtre dans sections/arc-avis.liquid).
+  Usage : {% render 'avis-texte', texte: un_avis.texte.value %}  ·  grand avis : mots: 30
 {%- endcomment -%}
-{%- assign limite = limite | default: 144 -%}
-{%- if texte.size > limite -%}
-  <blockquote>
-    « <span data-court>{{ texte | truncate: limite, '…' }}</span><span data-long hidden>{{ texte }}</span> »
-  </blockquote>
-  <button class="arc-avis__plus" type="button" aria-expanded="false">Voir plus</button>
-{%- else -%}
-  <blockquote>« {{ texte }} »</blockquote>
+{%- assign mots = mots | default: 25 -%}
+{%- assign nombre_mots = texte | strip_newlines | split: ' ' | size -%}
+<blockquote>« {{ texte | escape | truncatewords: mots, '…' }} »</blockquote>
+{%- if nombre_mots > mots -%}
+  <template data-entier>{{ texte | escape | newline_to_br }}</template>
+  <button class="arc-avis__plus" type="button" aria-haspopup="dialog">Voir l'avis en entier</button>
 {%- endif -%}

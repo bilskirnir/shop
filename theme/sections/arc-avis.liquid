@@ -2,8 +2,8 @@
   Page d'un arc — les avis des lecteurs. Chaque métaobjet « avis » désigne son livre : champ livre (référence produit),
   plus note (1 à 5, les vraies étoiles de la carte), titre, texte, auteur, source, verifie. Le lien va de l'avis au livre : ajouter un avis = choisir son livre.
   shortcut: lit 250 avis au plus dans la boutique (paginate) ; au-delà, passer par une recherche de métaobjets. La page réunit ceux de tous les tomes,
-  dans l'ordre des tomes. L'un d'eux, tiré au hasard parmi les avis de 80 à 255 caractères, s'affiche en grand
-  dans le halo, les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
+  dans l'ordre des tomes. L'un d'eux, tiré au hasard, s'affiche en grand dans le halo, les suivants en petites cartes.
+  Un avis long est coupé à ses premiers mots ; « Voir l'avis en entier » l'ouvre dans une fenêtre de lecture. Un avis « Vérifié » porte le badge « Avis vérifié ».
   Sur la fiche d'un livre : le même grand avis tiré au hasard, puis tous les autres avis du livre en petites cartes,
   dans une bande de bord à bord qui défile seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
@@ -12,13 +12,9 @@
 {%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
 {%- liquid
   assign saga = metaobject | default: product.metafields.custom.saga.value
-  # Le grand avis est tiré au hasard (script plus bas) parmi les avis de taille moyenne : assez longs pour dire
-  # quelque chose, assez courts pour s'afficher en entier. Sans script, ou sans avis de cette taille, le premier avis.
-  assign court_min = 80
-  assign court = 255
+  # Le grand avis est tiré au hasard parmi tous (script plus bas) ; sans script, c'est le premier.
   assign nombre = 0
   assign grand_defaut = ''
-  assign premier = ''
   for tome in saga.ordre_des_tomes.value
     if product and tome.id != product.id
       continue
@@ -26,20 +22,12 @@
     for un_avis in shop.metaobjects.avis.values
       if un_avis.livre.value.id == tome.id
         assign nombre = nombre | plus: 1
-        if premier == ''
-          assign premier = un_avis.system.handle
-        endif
-        if grand_defaut == '' and un_avis.texte.value.size >= court_min and un_avis.texte.value.size <= court
+        if grand_defaut == ''
           assign grand_defaut = un_avis.system.handle
         endif
       endif
     endfor
   endfor
-  if grand_defaut == ''
-    assign grand_defaut = premier
-    assign court_min = 0
-    assign court = 100000
-  endif
 -%}
 {%- if nombre > 0 -%}
   <section class="arc-bloc arc-avis" id="avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
@@ -62,15 +50,13 @@
           </figcaption>
         {%- endcapture -%}
 
-        {%- if un_avis.texte.value.size >= court_min and un_avis.texte.value.size <= court -%}
-          {%- capture grand -%}
-            <figure class="arc-avis__grand" data-grand="{{ handle }}"{% if handle != grand_defaut %} hidden{% endif %}>
-              {% render 'avis-texte', texte: un_avis.texte.value, limite: court %}
-              {{ legende }}
-            </figure>
-          {%- endcapture -%}
-          {%- assign grands = grands | append: grand -%}
-        {%- endif -%}
+        {%- capture grand -%}
+          <figure class="arc-avis__grand" data-grand="{{ handle }}"{% if handle != grand_defaut %} hidden{% endif %}>
+            {% render 'avis-texte', texte: un_avis.texte.value, mots: 30 %}
+            {{ legende }}
+          </figure>
+        {%- endcapture -%}
+        {%- assign grands = grands | append: grand -%}
 
         {%- comment -%}
           Les petites cartes, sans le grand avis. Page Arc : nombre_cartes au plus ; fiche livre : toutes (bande).
@@ -106,24 +92,47 @@
         <div class="arc-avis__cartes" data-cartes="{{ section.settings.nombre_cartes }}">{{ cartes }}</div>
       {%- endif -%}
     {%- endif -%}
+
+    {%- comment -%} La fenêtre de lecture d'un avis long, remplie par le script. {%- endcomment -%}
+    <dialog class="avis-lecture verre" aria-label="Avis d'un lecteur">
+      <button class="avis-lecture__fermer" type="button" aria-label="Fermer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="avis-lecture__contenu"></div>
+    </dialog>
   </section>
 {%- endif -%}
 {%- endpaginate -%}
 
 {% javascript %}
-  // « Voir plus » d'un avis (snippets/avis-texte.liquid) : déplie le texte complet sur place.
+  // « Voir l'avis en entier » (snippets/avis-texte.liquid) : ouvre l'avis complet dans la fenêtre de lecture.
+  // On part de la carte de l'avis (étoiles, titre, auteur) ; le grand avis n'a pas les siennes, sa carte cachée les a.
   document.addEventListener('click', (e) => {
     const bouton = e.target.closest('.arc-avis__plus');
     if (!bouton) return;
-    const ouvert = bouton.getAttribute('aria-expanded') === 'true';
-    const citation = bouton.previousElementSibling;
-    citation.querySelector('[data-court]').hidden = !ouvert;
-    citation.querySelector('[data-long]').hidden = ouvert;
-    bouton.setAttribute('aria-expanded', String(!ouvert));
-    bouton.textContent = ouvert ? 'Voir plus' : 'Voir moins';
+    const bloc = bouton.closest('.arc-avis');
+    const avis = bouton.closest('figure');
+    const handle = avis.dataset.grand || avis.dataset.avis;
+    const source = bloc.querySelector(`[data-avis="${handle}"]`) || avis;
+    const copie = source.cloneNode(true);
+    copie.removeAttribute('hidden');
+    copie.removeAttribute('aria-hidden');
+    copie.className = 'avis-lecture__avis';
+    copie.querySelector('blockquote').innerHTML = `« ${source.querySelector('template[data-entier]').innerHTML} »`;
+    copie.querySelectorAll('template, .arc-avis__plus').forEach((el) => el.remove());
+    const fenetre = bloc.querySelector('.avis-lecture');
+    fenetre.querySelector('.avis-lecture__contenu').replaceChildren(copie);
+    fenetre.showModal();
   });
 
-  // Page Arc et fiche livre : un grand avis tiré au hasard à chaque visite parmi les avis de 80 à 255 caractères ; sa carte disparaît,
+  // Fermer : la croix, Échap (natif), ou un clic à côté de la fenêtre.
+  document.addEventListener('click', (e) => {
+    const fenetre = e.target.closest('.avis-lecture');
+    if (!fenetre) return;
+    if (e.target === fenetre || e.target.closest('.avis-lecture__fermer')) fenetre.close();
+  });
+
+  // Page Arc et fiche livre : un grand avis tiré au hasard à chaque visite ; sa carte disparaît,
   // et les petites cartes se recomptent pour en garder nombre_cartes.
   document.querySelectorAll('.arc-avis').forEach((bloc) => {
     const grands = [...bloc.querySelectorAll('[data-grand]')];
@@ -141,7 +150,7 @@
   });
 
   // Fiche livre : la bande d'avis défile seule (en boucle si elle dépasse l'écran) et se tire à la souris.
-  // Au doigt, le défilement natif prend le relais. Pause au survol, pendant le glisser, et quand on lit (« Voir plus »).
+  // Au doigt, le défilement natif prend le relais. Pause au survol, pendant le glisser, et pendant la lecture d'un avis.
   document.querySelectorAll('[data-defile]').forEach((bande) => {
     const piste = bande.firstElementChild;
     const vitesse = 45; // pixels par seconde
@@ -153,8 +162,9 @@
     if (!calme && piste.scrollWidth > bande.clientWidth) {
       cartes.forEach((carte) => {
         const copie = carte.cloneNode(true);
+        // Cachée aux lecteurs d'écran mais cliquable : son « Voir l'avis en entier » doit marcher aussi.
         copie.setAttribute('aria-hidden', 'true');
-        copie.inert = true;
+        copie.querySelectorAll('button').forEach((b) => b.setAttribute('tabindex', '-1'));
         piste.append(copie);
       });
       boucle = true;
@@ -166,7 +176,7 @@
     function tour(temps) {
       const ecart = precedent ? (temps - precedent) / 1000 : 0;
       precedent = temps;
-      const lit = bande.querySelector('.arc-avis__plus[aria-expanded="true"]');
+      const lit = bande.closest('.arc-avis').querySelector('.avis-lecture[open]');
       if (boucle && !survol && !tire && !lit) {
         avance += vitesse * Math.min(ecart, 0.1);
         bande.scrollLeft = avance;
@@ -186,7 +196,7 @@
     bande.addEventListener('touchstart', () => { survol = true; }, {passive: true});
     bande.addEventListener('touchend', () => setTimeout(() => { survol = false; }, 1500), {passive: true});
 
-    // Glisser à la souris. Un vrai glisser (plus de 5 px) annule le clic qui suit, pour ne pas ouvrir « Voir plus » par erreur.
+    // Glisser à la souris. Un vrai glisser (plus de 5 px) annule le clic qui suit, pour ne pas ouvrir un avis par erreur.
     bande.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse' || e.button !== 0) return;
       tire = {x: e.clientX, depart: bande.scrollLeft, bouge: false};
@@ -226,17 +236,84 @@
     cursor: pointer;
   }
 
-  /* Le texte complet apparaît en fondu. */
-  .arc-avis [data-long]:not([hidden]) {
-    animation: avis-deplie 0.4s ease;
+  /* La fenêtre de lecture : une colonne confortable, le texte défile à l'intérieur si l'avis est très long. */
+  .avis-lecture {
+    width: min(640px, calc(100% - 32px));
+    max-height: min(80vh, 760px);
+    margin: auto;
+    padding: 0;
+    border-radius: 18px;
+    color: var(--ivoire);
+    overflow: hidden;
   }
 
-  @keyframes avis-deplie {
-    from { opacity: 0; }
+  .avis-lecture[open] {
+    display: flex;
+    flex-direction: column;
+    animation: avis-ouvre 0.25s ease;
+  }
+
+  .avis-lecture::backdrop {
+    background: #0b0c0ecc;
+    backdrop-filter: blur(4px);
+  }
+
+  @keyframes avis-ouvre {
+    from { opacity: 0; transform: translateY(12px); }
+  }
+
+  .avis-lecture__fermer {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #ece5d614;
+    color: var(--ivoire);
+    cursor: pointer;
+  }
+
+  .avis-lecture__contenu {
+    overflow-y: auto;
+    padding: 36px clamp(24px, 5vw, 48px) 40px;
+  }
+
+  .avis-lecture__avis {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+  }
+
+  .avis-lecture__avis .arc-avis__titre {
+    padding-right: 40px;
+    font-family: var(--titre);
+    font-size: clamp(22px, 2.4vw, 28px);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ivoire);
+  }
+
+  .avis-lecture__avis blockquote {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--gris-1);
+  }
+
+  .avis-lecture__avis figcaption {
+    font-size: 14px;
+    font-weight: 600;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .arc-avis [data-long]:not([hidden]) {
+    .avis-lecture[open] {
       animation: none;
     }
   }
