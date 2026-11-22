@@ -12,9 +12,9 @@
   --or-fonce: #b08a45;
   --rond: #17110a;
   /* Buenard est la signature de la maison (le nom BILSKIRNIR) ; les couvertures la portent déjà.
-     Les titres : Big Shoulders Display, condensée et nordique (choisie le 22/11/2026). */
+     Les titres : Gloock, serif d'affiche (choix E du 22/11/2026). Une seule graisse : jamais de faux gras. */
   --marque: Buenard, Georgia, serif;
-  --titre: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --titre: Gloock, Georgia, serif;
   --texte: 'Source Sans 3', system-ui, sans-serif;
   --gouttiere: clamp(24px, 8vw, 120px);
   /* Marge qui garde le contenu des écrans dans une colonne centrée de 1280 px sur grand écran. */
@@ -57,6 +57,8 @@ h3 {
 
 /* ---------- Page ---------- */
 html {
+  /* Gloock n'a qu'une graisse : le navigateur ne doit pas en fabriquer un faux gras. */
+  font-synthesis-weight: none;
   background: var(--encre);
   scrollbar-width: none;
 }
@@ -89,7 +91,7 @@ a:hover {
 h1,
 h2 {
   font-family: var(--titre);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 0.95;
   text-wrap: balance;
 }
