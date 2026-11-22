@@ -3,11 +3,12 @@
   - Sans livre ni saga (l'accueil) : tous les avis du site. Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
   - Avec livre (un produit) ou saga : les avis de ce livre, ou de tous les tomes de la saga ; lien vers le bloc des avis (#avis).
   « ★★★★★ 4,8/5 · 7 avis de lecteurs ». La moyenne ne compte que les avis notés ; rien si aucun avis.
-  shortcut: shop.metaobjects.avis.values lit les 50 premiers avis ; paginer au-delà.
+  shortcut: lit 250 avis au plus (paginate ; sans lui, Shopify n'en donne que 50).
   Usage : {% render 'note', lecteurs: true %}
           {% render 'note', livre: product %}
           {% render 'note', saga: saga %}
 {%- endcomment -%}
+{%- paginate shop.metaobjects.avis.values by 250 -%}
 {%- liquid
   # Les livres concernés, en « ,id,id, » ; vide = tout le site.
   assign ids = ''
@@ -55,3 +56,4 @@
     </span>
   </p>
 {%- endif -%}
+{%- endpaginate -%}
