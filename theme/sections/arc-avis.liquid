@@ -9,16 +9,21 @@
   Sur la fiche d'un livre : le même grand avis tiré au hasard, puis tous les autres avis du livre en petites cartes,
   dans une bande de bord à bord qui défile seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
-{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
+{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json) ; un livre peut ne pas en avoir. {%- endcomment -%}
 {%- liquid
   assign saga = metaobject | default: product.metafields.custom.saga.value
+  # Les livres dont on montre les avis, par leur adresse : sur une fiche, le livre lui-même (même sans saga,
+  # comme un livret) ; sur une page Arc, tous les tomes dans l'ordre. all_products les retrouve.
+  assign adresses = product.handle
+  unless product
+    assign adresses = saga.ordre_des_tomes.value | map: 'handle' | join: ','
+  endunless
+  assign adresses = adresses | split: ','
   # Le grand avis est tiré au hasard parmi tous (script plus bas) ; sans script, c'est le premier.
   assign nombre = 0
   assign grand_defaut = ''
-  for tome in saga.ordre_des_tomes.value
-    if product and tome.id != product.id
-      continue
-    endif
+  for adresse in adresses
+    assign tome = all_products[adresse]
     for un_avis in tome.metafields.custom.avis.value
       assign nombre = nombre | plus: 1
       if grand_defaut == ''
@@ -36,8 +41,8 @@
     {%- capture grands -%}{%- endcapture -%}
     {%- capture cartes -%}{%- endcapture -%}
     {%- assign rang_carte = 0 -%}
-    {%- for tome in saga.ordre_des_tomes.value -%}
-      {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
+    {%- for adresse in adresses -%}
+      {%- assign tome = all_products[adresse] -%}
       {%- for un_avis in tome.metafields.custom.avis.value -%}
         {%- assign handle = un_avis.system.handle -%}
         {%- capture legende -%}
