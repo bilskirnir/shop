@@ -18,7 +18,9 @@
     <form action="{{ routes.search_url }}" method="get" role="search">
       <input type="hidden" name="type" value="product">
       <input type="hidden" name="options[prefix]" value="last">
-      <input
+      <div class="recherche__cadre verre">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input
         class="recherche__champ"
         id="recherche-champ"
         type="text"
@@ -26,7 +28,8 @@
         placeholder="{{ section.settings.indication }}"
         autocomplete="off"
         enterkeyhint="search"
-      >
+        >
+      </div>
       {%- comment -%} type="text" et non "search" : sur un champ search, le premier Échap vide le champ au lieu de fermer le voile. {%- endcomment -%}
     </form>
 
@@ -159,28 +162,40 @@
     display: none;
   }
 
+  /* Le grand champ encadré, en verre comme celui de la newsletter. */
+  .recherche__cadre {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 76px;
+    padding: 0 24px;
+    border: 1px solid #ece5d626;
+    border-radius: 22px;
+    color: var(--gris-2);
+    transition: border-color 0.25s;
+  }
+
+  .recherche__cadre:focus-within {
+    border-color: var(--or);
+    color: var(--or);
+  }
+
   .recherche__champ {
-    width: 100%;
-    padding: 0 0 14px;
+    flex: 1;
+    min-width: 0;
+    padding: 0;
     border: 0;
-    border-bottom: 1px solid #ece5d640;
-    border-radius: 0;
     background: transparent;
     outline: none;
     color: var(--ivoire);
     caret-color: var(--or);
     font-family: var(--titre);
-    font-weight: 700;
-    font-size: clamp(44px, 7vw, 96px);
-    line-height: 1.05;
+    font-size: clamp(30px, 5vw, 64px);
+    line-height: 1.1;
   }
 
   .recherche__champ::placeholder {
     color: #ece5d633;
-  }
-
-  .recherche__champ:focus-visible {
-    border-bottom-color: var(--or);
   }
 
   [data-accueil]:not([hidden]) {
@@ -367,6 +382,13 @@
       display: inline-flex;
     }
 
+    .recherche__cadre {
+      min-height: 112px;
+      gap: 22px;
+      padding: 0 36px;
+      border-radius: 28px;
+    }
+
     .recherche .recherche__recents {
       grid-template-columns: repeat(6, minmax(0, 1fr));
     }
@@ -414,6 +436,7 @@
     }
 
     .recherche::before,
+    .recherche__cadre,
     .suggestions__saga {
       transition: none;
     }
