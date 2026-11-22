@@ -149,7 +149,11 @@
 
         {%- if tomes.size > 1 and tout_en_vente -%}
           <a class="livre__arc" href="{{ saga.system.url }}">
-            <span>ou <strong>l'arc complet</strong> ({{ tomes.size }} livres) · <strong>{{ total | money_without_trailing_zeros }}</strong>, {{ section.settings.arc_mention }}</span>
+            <span>ou <strong>l'arc complet</strong> ({{ tomes.size }} livres) · <strong>{{ total | money_without_trailing_zeros }}</strong>
+              {%- comment -%} La livraison n'est offerte qu'à partir du seuil du thème (3 livres) : pas sur un arc de 2. {%- endcomment -%}
+              {%- assign seuil = settings.livraison_articles | default: 3 -%}
+              {%- if tomes.size >= seuil and section.settings.arc_mention != blank %}, {{ section.settings.arc_mention }}{% endif -%}
+            </span>
             <span class="livre__arc-lien">{{ section.settings.arc_lien }} →</span>
           </a>
         {%- endif -%}

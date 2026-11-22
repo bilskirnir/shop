@@ -82,7 +82,9 @@
           {%- if offre_arc -%}
             <div class="arc__offre">
               <p class="arc__prix">{{ total }}</p>
-              {%- if section.settings.offre != blank -%}
+              {%- comment -%} L'offre parle de livraison offerte : seulement si l'arc atteint le seuil du thème (3 livres). {%- endcomment -%}
+              {%- assign seuil = settings.livraison_articles | default: 3 -%}
+              {%- if section.settings.offre != blank and tomes.size >= seuil -%}
                 <p>{{ section.settings.offre }}</p>
               {%- endif -%}
             </div>

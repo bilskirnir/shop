@@ -2,53 +2,85 @@
   Page d'un arc — les avis des lecteurs. Chaque métaobjet « avis » désigne son livre : champ livre (référence produit),
   plus note (1 à 5, les vraies étoiles de la carte), titre, texte, auteur, source, verifie. Le lien va de l'avis au livre : ajouter un avis = choisir son livre.
   shortcut: shop.metaobjects.avis.values lit les 50 premiers avis de la boutique ; paginer au-delà. La page réunit ceux de tous les tomes,
-  dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
-  les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
+  dans l'ordre des tomes. L'un d'eux, tiré au hasard parmi les avis courts (144 caractères au plus), s'affiche en grand
+  dans le halo, les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
   Sur la fiche d'un livre : tous les avis de ce livre, en petites cartes, dans une bande de bord à bord qui défile
   seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
 {%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
-{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
-{%- assign nombre = 0 -%}
-{%- for tome in saga.ordre_des_tomes.value -%}
-  {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
-  {%- for un_avis in shop.metaobjects.avis.values -%}
-    {%- if un_avis.livre.value.id == tome.id %}{% assign nombre = nombre | plus: 1 %}{% endif -%}
-  {%- endfor -%}
-{%- endfor -%}
-{%- assign limite = section.settings.nombre_cartes | plus: 1 -%}
-{%- if nombre > limite and product == blank %}{% assign nombre = limite %}{% endif -%}
+{%- liquid
+  assign saga = metaobject | default: product.metafields.custom.saga.value
+  # Le grand avis de la page Arc est tiré au hasard (script plus bas) parmi les avis courts : ceux qui tiennent
+  # sans « Voir plus ». Sans script, ou sans avis court, c'est le premier avis de la page.
+  assign court = 144
+  assign nombre = 0
+  assign grand_defaut = ''
+  assign premier = ''
+  for tome in saga.ordre_des_tomes.value
+    if product and tome.id != product.id
+      continue
+    endif
+    for un_avis in shop.metaobjects.avis.values
+      if un_avis.livre.value.id == tome.id
+        assign nombre = nombre | plus: 1
+        if premier == ''
+          assign premier = un_avis.system.handle
+        endif
+        if grand_defaut == '' and un_avis.texte.value.size <= court
+          assign grand_defaut = un_avis.system.handle
+        endif
+      endif
+    endfor
+  endfor
+  if grand_defaut == ''
+    assign grand_defaut = premier
+    assign court = 100000
+  endif
+-%}
 {%- if nombre > 0 -%}
   <section class="arc-bloc arc-avis" id="avis" style="{% render 'saga-halo', saga: saga %}" data-reveal>
     <div class="arc-bloc__halo" aria-hidden="true"></div>
     <div class="arc-tete">
       <p class="surtitre">{{ section.settings.surtitre }}</p>
     </div>
-    {%- assign rang = 0 -%}
+    {%- capture grands -%}{%- endcapture -%}
+    {%- capture cartes -%}{%- endcapture -%}
+    {%- assign rang_carte = 0 -%}
     {%- for tome in saga.ordre_des_tomes.value -%}
       {%- if product and tome.id != product.id %}{% continue %}{% endif -%}
       {%- for un_avis in shop.metaobjects.avis.values -%}
         {%- if un_avis.livre.value.id != tome.id %}{% continue %}{% endif -%}
-        {%- assign rang = rang | plus: 1 -%}
-        {%- if rang > nombre %}{% break %}{% endif -%}
+        {%- assign handle = un_avis.system.handle -%}
         {%- capture legende -%}
           <figcaption>
             {{- un_avis.auteur.value }}{% if un_avis.source.value != blank %} · {{ un_avis.source.value }}{% endif -%}
             {%- if un_avis.verifie.value %} <span class="arc-avis__verifie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{ section.settings.libelle_verifie }}</span>{% endif -%}
           </figcaption>
         {%- endcapture -%}
-        {%- if product and rang == 1 -%}
-          <div class="arc-avis__defile" data-defile><div class="arc-avis__piste">
+
+        {%- if product == blank and un_avis.texte.value.size <= court -%}
+          {%- capture grand -%}
+            <figure class="arc-avis__grand" data-grand="{{ handle }}"{% if handle != grand_defaut %} hidden{% endif %}>
+              {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
+              {% render 'avis-texte', texte: un_avis.texte.value %}
+              {{ legende }}
+            </figure>
+          {%- endcapture -%}
+          {%- assign grands = grands | append: grand -%}
         {%- endif -%}
-        {%- if rang == 1 and product == blank -%}
-          <figure class="arc-avis__grand">
-            {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
-            {% render 'avis-texte', texte: un_avis.texte.value %}
-            {{ legende }}
-          </figure>
-          {%- if nombre > 1 %}<div class="arc-avis__cartes">{% endif -%}
-        {%- else -%}
-          <figure class="arc-avis__carte verre">
+
+        {%- comment -%} Page Arc : les petites cartes après le grand avis, nombre_cartes au plus (le script recalcule après le tirage). {%- endcomment -%}
+        {%- assign cachee = false -%}
+        {%- if product == blank -%}
+          {%- if handle == grand_defaut -%}
+            {%- assign cachee = true -%}
+          {%- else -%}
+            {%- assign rang_carte = rang_carte | plus: 1 -%}
+            {%- if rang_carte > section.settings.nombre_cartes %}{% assign cachee = true %}{% endif -%}
+          {%- endif -%}
+        {%- endif -%}
+        {%- capture carte -%}
+          <figure class="arc-avis__carte verre" data-avis="{{ handle }}"{% if cachee %} hidden{% endif %}>
             {%- assign etoiles = un_avis.note.value -%}
             {%- if etoiles -%}
               <span class="note__etoiles" role="img" aria-label="{{ etoiles }} étoiles sur 5">{% for i in (1..5) %}{% if i <= etoiles %}★{% else %}☆{% endif %}{% endfor %}</span>
@@ -57,11 +89,19 @@
             {% render 'avis-texte', texte: un_avis.texte.value %}
             {{ legende }}
           </figure>
-          {%- if rang == nombre and product == blank %}</div>{% endif -%}
-        {%- endif -%}
-        {%- if product and rang == nombre %}</div></div>{% endif -%}
+        {%- endcapture -%}
+        {%- assign cartes = cartes | append: carte -%}
       {%- endfor -%}
     {%- endfor -%}
+
+    {%- if product -%}
+      <div class="arc-avis__defile" data-defile><div class="arc-avis__piste">{{ cartes }}</div></div>
+    {%- else -%}
+      {{ grands }}
+      {%- if nombre > 1 -%}
+        <div class="arc-avis__cartes" data-cartes="{{ section.settings.nombre_cartes }}">{{ cartes }}</div>
+      {%- endif -%}
+    {%- endif -%}
   </section>
 {%- endif -%}
 
@@ -78,11 +118,28 @@
     bouton.textContent = ouvert ? 'Voir plus' : 'Voir moins';
   });
 
+  // Page Arc : un grand avis tiré au hasard à chaque visite parmi les avis courts ; sa carte disparaît,
+  // et les petites cartes se recomptent pour en garder nombre_cartes.
+  document.querySelectorAll('.arc-avis').forEach((bloc) => {
+    const grands = [...bloc.querySelectorAll('[data-grand]')];
+    const zone = bloc.querySelector('[data-cartes]');
+    if (grands.length < 2) return;
+    const choisi = grands[Math.floor(Math.random() * grands.length)];
+    grands.forEach((g) => { g.hidden = g !== choisi; });
+    if (!zone) return;
+    let place = Number(zone.dataset.cartes);
+    zone.querySelectorAll('[data-avis]').forEach((carte) => {
+      const garder = carte.dataset.avis !== choisi.dataset.grand && place > 0;
+      carte.hidden = !garder;
+      if (garder) place--;
+    });
+  });
+
   // Fiche livre : la bande d'avis défile seule (en boucle si elle dépasse l'écran) et se tire à la souris.
   // Au doigt, le défilement natif prend le relais. Pause au survol, pendant le glisser, et quand on lit (« Voir plus »).
   document.querySelectorAll('[data-defile]').forEach((bande) => {
     const piste = bande.firstElementChild;
-    const vitesse = 30; // pixels par seconde
+    const vitesse = 45; // pixels par seconde
     const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let survol = false, tire = null, avance = 0, precedent = 0, boucle = false;
 
@@ -204,11 +261,22 @@
     color: var(--gris-2);
   }
 
+  /* Auteur et pastille « Avis vérifié » : quand la pastille passe à la ligne, elle reste alignée, avec un écart. */
+  .arc-avis figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+  }
+
+  .arc-avis__grand figcaption {
+    justify-content: center;
+  }
+
   .arc-avis__verifie {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-left: 8px;
     padding: 3px 10px 3px 8px;
     border-radius: 999px;
     background: #d2b06a1f;
@@ -258,6 +326,11 @@
     scroll-snap-align: start;
   }
 
+  /* Les cartes sont en flex : sans ça, l'attribut hidden (grand avis tiré, cartes en trop) ne les cacherait pas. */
+  .arc-avis__carte[hidden] {
+    display: none;
+  }
+
   .arc-avis__carte blockquote {
     margin: 0;
     font-size: 15px;
@@ -296,7 +369,6 @@
     align-items: flex-start;
     gap: 14px;
     width: max-content;
-    padding-inline: var(--marge-centre);
   }
 
   .arc-avis__defile .arc-avis__carte {
