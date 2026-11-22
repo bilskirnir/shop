@@ -10,17 +10,22 @@ Une ligne par avis, colonnes :
     titre, texte, auteur, source (ex. Amazon), verifie (oui / non)
 Réimporter le même fichier ne crée pas de doublon : un avis est retrouvé par son handle.
 
-La clé : dans Shopify, Paramètres › Applications › Développer des applications, une application « Import avis »
-avec les droits read_products, read_metaobjects et write_metaobjects. Copier son jeton d'accès Admin API dans
+La clé : une application « Import avis » installée sur la boutique, avec les droits read_products,
+read_metaobjects et write_metaobjects. Copier son identifiant client et son secret client dans
 outils/.env (jamais commité) :
-    SHOPIFY_ADMIN_TOKEN=shpat_...
+    SHOPIFY_CLIENT_ID=...
+    SHOPIFY_CLIENT_SECRET=shpss_...
+L'outil en tire un jeton valable 24 h à chaque lancement. Un ancien jeton SHOPIFY_ADMIN_TOKEN=shpat_... marche aussi.
 """
 import csv
+import functools
 import io
 import json
 import re
 import sys
 import unicodedata
+import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -64,13 +69,34 @@ def verifier(ligne, rang):
 
 # ---------- Shopify ----------
 
+@functools.cache
 def jeton():
+    """Un jeton shpat_ si .env en donne un ; sinon un jeton temporaire (24 h) demandé avec l'identifiant et le secret client."""
     env = Path(__file__).with_name(".env")
+    cles = {}
     if env.exists():
         for ligne in env.read_text(encoding="utf-8").splitlines():
-            if ligne.startswith("SHOPIFY_ADMIN_TOKEN="):
-                return ligne.split("=", 1)[1].strip()
-    sys.exit("Pas de clé : créer outils/.env avec SHOPIFY_ADMIN_TOKEN=... (voir en haut de ce fichier).")
+            if "=" in ligne:
+                nom, valeur = ligne.split("=", 1)
+                cles[nom.strip()] = valeur.strip()
+    if cles.get("SHOPIFY_ADMIN_TOKEN"):
+        return cles["SHOPIFY_ADMIN_TOKEN"]
+    if cles.get("SHOPIFY_CLIENT_ID") and cles.get("SHOPIFY_CLIENT_SECRET"):
+        demande = urllib.request.Request(
+            f"https://{BOUTIQUE}/admin/oauth/access_token",
+            data=urllib.parse.urlencode({
+                "grant_type": "client_credentials",
+                "client_id": cles["SHOPIFY_CLIENT_ID"],
+                "client_secret": cles["SHOPIFY_CLIENT_SECRET"],
+            }).encode(),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        try:
+            with urllib.request.urlopen(demande) as reponse:
+                return json.load(reponse)["access_token"]
+        except urllib.error.HTTPError as erreur:
+            sys.exit(f"Shopify refuse la clé ({erreur.code}) : vérifier l'identifiant, le secret, et que l'application est installée sur la boutique.")
+    sys.exit("Pas de clé : créer outils/.env avec SHOPIFY_CLIENT_ID=... et SHOPIFY_CLIENT_SECRET=shpss_... (voir en haut de ce fichier).")
 
 
 def graphql(requete, variables=None):
