@@ -41,11 +41,11 @@
           <legend class="visually-hidden">Motif du message</legend>
           {%- for motif in motifs -%}
             {%- case motif -%}
-              {%- when 'question' -%}{%- assign nom = 'Une question' -%}{%- assign aide = 'Un livre, une commande, une dédicace.' -%}
-              {%- when 'conference' -%}{%- assign nom = 'Une conférence' -%}{%- assign aide = 'Mythologies, héroïsme, écriture : Gautier vient parler.' -%}
-              {%- when 'stand' -%}{%- assign nom = 'Un stand' -%}{%- assign aide = 'Salon, festival, librairie : inviter Bilskirnir.' -%}
-              {%- when 'collaboration' -%}{%- assign nom = 'Une collaboration' -%}{%- assign aide = 'Illustration, presse, créateurs, partenariats.' -%}
-              {%- when 'manuscrit' -%}{%- assign nom = 'Un manuscrit' -%}{%- assign aide = 'Tu as écrit un roman épique.' -%}
+              {%- when 'question' -%}{%- assign nom = 'Une question' -%}{%- assign aide = s.aide_question -%}
+              {%- when 'conference' -%}{%- assign nom = 'Une conférence' -%}{%- assign aide = s.aide_conference -%}
+              {%- when 'stand' -%}{%- assign nom = 'Un stand' -%}{%- assign aide = s.aide_stand -%}
+              {%- when 'collaboration' -%}{%- assign nom = 'Une collaboration' -%}{%- assign aide = s.aide_collaboration -%}
+              {%- when 'manuscrit' -%}{%- assign nom = 'Un manuscrit' -%}{%- assign aide = s.aide_manuscrit -%}
             {%- endcase -%}
             <label class="contact__porte">
               <input type="radio" name="contact[Motif]" id="motif-{{ motif }}" value="{{ nom }}" data-motif="{{ motif }}"{% if forloop.first %} checked{% endif %}>
@@ -685,7 +685,13 @@
     { "type": "image_picker", "id": "photo", "label": "Photo de Gautier" },
     { "type": "text", "id": "signature_titre", "label": "Signature", "default": "Gautier lit chaque message lui-même." },
     { "type": "text", "id": "signature_texte", "label": "Délai de réponse", "default": "Réponse en général sous une semaine." },
-    { "type": "header", "content": "Textes de chaque motif" },
+    { "type": "header", "content": "Sous-texte des boutons" },
+    { "type": "text", "id": "aide_question", "label": "Une question", "default": "Un livre, une commande, une dédicace." },
+    { "type": "text", "id": "aide_conference", "label": "Une conférence", "default": "Mythologies, héroïsme, écriture : Gautier vient parler." },
+    { "type": "text", "id": "aide_stand", "label": "Un stand", "default": "Salon, festival, librairie : inviter Bilskirnir." },
+    { "type": "text", "id": "aide_collaboration", "label": "Une collaboration", "default": "Illustration, presse, créateurs, partenariats." },
+    { "type": "text", "id": "aide_manuscrit", "label": "Un manuscrit", "default": "Tu as écrit un roman épique." },
+    { "type": "header", "content": "Texte d'introduction de chaque formulaire" },
     { "type": "textarea", "id": "intro_question", "label": "Une question", "default": "Sur un livre, une commande ou une dédicace. Si c'est une commande, donne son numéro." },
     { "type": "textarea", "id": "intro_conference", "label": "Une conférence", "default": "Dis-nous qui vous êtes et ce que vous imaginez. Gautier revient vers toi avec ses disponibilités et ses conditions." },
     { "type": "textarea", "id": "intro_stand", "label": "Un stand", "default": "Bilskirnir tient des stands en salon, en festival et en librairie. Dis-nous où et quand." },
