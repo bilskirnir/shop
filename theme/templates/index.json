@@ -1,47 +1,83 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "ouverture": {
       "type": "ouverture",
       "settings": {
-        "fondateur_avatar": "shopify://shop_images/avatar-gautier.jpg"
+        "titre": "Les romans épiques à la française",
+        "sous_titre": "Des héros, des mythes, et des histoires qui se dévorent comme les meilleures séries.",
+        "fondateur_avatar": "shopify://shop_images/avatar-gautier.jpg",
+        "fondateur_intro": "Maison d'édition fondée par",
+        "fondateur_nom": "Gautier Durrieu de Madron",
+        "libelle_bouton": "Découvrir nos romans"
       }
     },
     "histoire-eau-et-sang": {
       "type": "histoire",
       "settings": {
-        "saga": "de-leau-et-du-sang"
+        "saga": "de-leau-et-du-sang",
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
+        "libelle_bouton": ""
       }
     },
     "histoire-fracture": {
       "type": "histoire",
       "settings": {
         "saga": "fracture",
-        "particules": "neige"
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
+        "libelle_bouton": ""
       }
     },
     "histoire-salvation": {
       "type": "histoire",
       "settings": {
-        "saga": "salvation"
+        "saga": "salvation",
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
+        "libelle_bouton": ""
       }
     },
     "histoire-crepuscule": {
       "type": "histoire",
       "settings": {
         "saga": "crepuscule-dun-monde",
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
         "libelle_bouton": "Voir l'arc final"
       }
     },
     "histoire-berserker": {
       "type": "histoire",
       "settings": {
-        "saga": "berserker"
+        "saga": "berserker",
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
+        "libelle_bouton": ""
       }
     },
     "histoire-parmi": {
       "type": "histoire",
       "settings": {
-        "saga": "parmi-ces-mondes-ici-bas"
+        "saga": "parmi-ces-mondes-ici-bas",
+        "voile_couleur": "#0b0c0e",
+        "voile_opacite": 40,
+        "particules": "auto",
+        "libelle_bouton": ""
       }
     },
     "maison": {
@@ -68,7 +104,20 @@
         "gautier",
         "uriel"
       ],
-      "settings": {}
+      "settings": {
+        "surtitre": "La maison",
+        "presentation": "<p>Une maison d'édition de romans épiques, fondée par <strong>Gautier Durrieu de Madron</strong> : romancier, expert en mythologie, conférencier et vulgarisateur en ligne.</p>",
+        "salon": "",
+        "salon_lien": "",
+        "esprit_surtitre": "L'esprit français",
+        "esprit_titre": "Entre grandeur et abnégation",
+        "page_valeurs": "nos-valeurs",
+        "libelle_valeurs": "Pourquoi « à la française » ?",
+        "surtitre_inscription": "La lettre de la maison",
+        "titre_inscription": "Ne manque ni une sortie, ni une rencontre",
+        "texte_inscription": "Les nouveaux romans dès leur parution, les dates où venir nous voir en salon et en dédicace, et un peu des coulisses.",
+        "libelle_inscription": "Je m'inscris"
+      }
     }
   },
   "order": [

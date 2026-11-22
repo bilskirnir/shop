@@ -1,12 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "ouverture": {
       "type": "francaise-ouverture",
-      "settings": {}
+      "settings": {
+        "surtitre": "Pourquoi « à la française » ?",
+        "titre": "Entre grandeur et abnégation, des romans imprégnés d'esprit français",
+        "accroche": "Des héros. Des mythes. Des mondes à découvrir. Des romans pour ceux qui veulent encore rêver grand."
+      }
     },
     "engagements": {
       "type": "francaise-engagements",
-      "settings": {}
+      "settings": {
+        "surtitre": "Nos engagements"
+      }
     },
     "maison": {
       "type": "francaise-maison",
@@ -36,12 +51,23 @@
         "infectes"
       ],
       "settings": {
-        "personne_photo": "shopify://shop_images/avatar-gautier.jpg"
+        "titre": "Ce qui vous attend",
+        "intro": "<p>Bilskirnir, le Hall de Force, est <strong>le</strong> spécialiste des histoires épiques et héroïques de France : des romans originaux, des aventures époustouflantes et des personnages charismatiques.</p>",
+        "conclusion": "Et découvrez de nombreux univers originaux en création.",
+        "personne_surtitre": "Qui est derrière ?",
+        "personne_photo": "shopify://shop_images/avatar-gautier.jpg",
+        "personne_nom": "Gautier Durrieu de Madron",
+        "personne_role": "Fondateur, écrivain et conférencier",
+        "personne_texte": "<p>Bilskirnir a été fondé en 2018 par Gautier. Spécialiste des mythologies, designer narratif dans le jeu vidéo, conteur et entrepreneur, il anime aujourd'hui une chaîne TikTok populaire et parcourt la France pour faire connaître Bilskirnir et son envie de réinsuffler de l'héroïsme.</p><p>Nordique d'apparence mais sudiste d'état (Saint-Raphaël), il tient la ligne de Bilskirnir et s'attelle à terminer les quatre derniers tomes de la saga Au Nom des Dieux.</p>"
       }
     },
     "appel": {
       "type": "francaise-appel",
-      "settings": {}
+      "settings": {
+        "titre": "Prêts pour l'aventure ?",
+        "libelle_bouton": "Découvrir nos histoires",
+        "lien": ""
+      }
     }
   },
   "order": [
