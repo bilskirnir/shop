@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "contact",
+      "blocks": {
+        "commande": {
+          "type": "question",
+          "settings": {
+            "question": "Où en est ma commande ?",
+            "reponse": "<p>Le suivi est dans l'email de confirmation et dans ton compte. Si le colis tarde, écris avec ton numéro de commande.</p>"
+          }
+        },
+        "dedicace": {
+          "type": "question",
+          "settings": {
+            "question": "Je veux un livre dédicacé.",
+            "reponse": "<p>Choisis « Une question » et dis pour qui : Gautier signe sur les salons et, selon les périodes, par envoi.</p>"
+          }
+        },
+        "manuscrit": {
+          "type": "question",
+          "settings": {
+            "question": "Combien de temps pour un manuscrit ?",
+            "reponse": "<p>La lecture prend du temps : compte jusqu'à trois mois. Chaque manuscrit reçoit une réponse.</p>"
+          }
+        }
+      },
+      "block_order": ["commande", "dedicace", "manuscrit"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

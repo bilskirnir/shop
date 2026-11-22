@@ -1,0 +1,283 @@
+<title>Contact Bilskirnir</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Buenard:wght@700&family=Marcellus&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Mise en page : un seul monde sombre (celui du site). Mobile : tout en colonne. Ordinateur : la porte à gauche, Gautier à droite. */
+:root {
+  color-scheme: dark;
+  --encre: #0b0c0e;
+  --ardoise: #14161a;
+  --ivoire: #ece5d6;
+  --gris-1: #c9c7c2;
+  --gris-2: #a7a6a2;
+  --gris-3: #8d8b86;
+  --or: #d2b06a;
+  --or-fonce: #b08a45;
+  --rond: #17110a;
+  --filet: #ece5d61a;
+  --marque: Buenard, Georgia, serif;
+  --titre: Marcellus, Georgia, serif;
+  --texte: 'Source Sans 3', system-ui, sans-serif;
+  --rayon: 14px;
+}
+body { background: var(--encre); color: var(--ivoire); font-family: var(--texte); font-size: 16px; line-height: 1.55; }
+a { color: var(--ivoire); }
+:focus-visible { outline: 2px solid var(--or); outline-offset: 3px; }
+.cadre { max-width: 1200px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+/* En-tête du site, en résumé */
+.entete { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
+.entete__marque { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--marque); font-weight: 700; letter-spacing: .14em; font-size: 15px; }
+.entete__marque img { width: 28px; }
+.entete__actions { display: flex; gap: 18px; color: var(--gris-1); }
+.entete__actions svg { width: 20px; height: 20px; }
+
+/* Ouverture */
+.ouverture { position: relative; overflow: hidden; padding-bottom: 8px; }
+.ouverture__fond { position: absolute; inset: 0; background: url(assets/fond-foret.jpg) center 70%/cover no-repeat; opacity: .32; filter: saturate(.6); -webkit-mask-image: linear-gradient(180deg, #000 20%, transparent 100%); mask-image: linear-gradient(180deg, #000 20%, transparent 100%); }
+.ouverture__grain { position: absolute; inset: 0; background: url(assets/grain.png); opacity: .14; mix-blend-mode: overlay; pointer-events: none; }
+.ouverture__texte { position: relative; padding-block: 56px 40px; max-width: 760px; }
+.surtitre { font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--or); }
+h1 { font-family: var(--titre); font-weight: 400; font-size: clamp(40px, 7vw, 76px); line-height: 1.02; margin-top: 14px; text-wrap: balance; }
+.chapeau { margin-top: 18px; font-size: 18px; color: var(--gris-1); max-width: 56ch; }
+.signe { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
+.signe img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1px solid var(--or-fonce); }
+.signe strong { display: block; font-weight: 600; }
+.signe span { color: var(--gris-2); font-size: 14px; }
+
+/* Corps : formulaire + colonne */
+.corps { display: grid; gap: 48px; padding-block: 24px 120px; }
+@media (min-width: 980px) { .corps { grid-template-columns: minmax(0, 1fr) 340px; gap: 64px; align-items: start; } }
+
+.etape-titre { display: flex; align-items: baseline; gap: 12px; font-family: var(--titre); font-weight: 400; font-size: 26px; }
+.etape-titre small { font-family: var(--texte); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--gris-3); }
+
+/* Les cinq portes */
+.portes { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 18px; border: 0; padding: 0; }
+.porte { position: relative; display: grid; gap: 6px; align-content: start; padding: 18px 18px 20px; border-radius: var(--rayon); background: var(--ardoise); border: 1px solid var(--filet); cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.porte:hover { border-color: #ece5d640; transform: translateY(-2px); }
+.porte input { position: absolute; opacity: 0; pointer-events: none; }
+.porte svg { width: 26px; height: 26px; color: var(--gris-2); transition: color .2s; }
+.porte b { font-family: var(--titre); font-weight: 400; font-size: 19px; margin-top: 6px; }
+.porte span { font-size: 14px; color: var(--gris-2); }
+.porte:has(input:checked) { border-color: var(--or); background: linear-gradient(180deg, #d2b06a1f, #d2b06a08); }
+.porte:has(input:checked) svg { color: var(--or); }
+.porte:has(input:focus-visible) { outline: 2px solid var(--or); outline-offset: 3px; }
+
+/* Le formulaire qui change selon la porte */
+.lettre { margin-top: 40px; padding: 28px; border-radius: var(--rayon); background: #14161ab3; backdrop-filter: blur(16px); border: 1px solid var(--filet); }
+@media (max-width: 520px) { .lettre { padding: 20px; } }
+.lettre__intro { color: var(--gris-1); margin-top: 8px; max-width: 60ch; }
+.champs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+@media (max-width: 620px) { .champs { grid-template-columns: 1fr; } }
+.champ { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.champs:empty { display: none; }
+.champ--large { grid-column: 1 / -1; }
+label, .champ > span { font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gris-1); }
+label em { font-style: normal; font-weight: 400; color: var(--gris-3); }
+input[type=text], input[type=email], input[type=url], input[type=date], select, textarea { display: block; width: 100%; min-width: 0; box-sizing: border-box; margin: 0; font: inherit; line-height: 1.3;padding: 12px 14px; border-radius: 10px; border: 1px solid #ece5d626; background: #0b0c0e99; color: var(--ivoire); }
+input::placeholder, textarea::placeholder { color: var(--gris-3); }
+textarea { resize: vertical; min-height: 140px; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--or); }
+.cases { display: flex; flex-wrap: wrap; gap: 8px; }
+.cases label { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 1px solid #ece5d626; font-weight: 400; letter-spacing: 0; cursor: pointer; }
+.cases input { accent-color: var(--or); }
+.cases label:has(input:checked) { border-color: var(--or); color: var(--ivoire); }
+.charte { margin-top: 22px; display: grid; gap: 10px; padding: 18px 20px; border-left: 2px solid var(--or-fonce); background: #d2b06a0d; border-radius: 0 10px 10px 0; font-size: 15px; color: var(--gris-1); }
+.charte strong { color: var(--ivoire); font-weight: 600; }
+.charte ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.envoi { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; }
+.envoi p { font-size: 13px; color: var(--gris-3); max-width: 42ch; }
+.bouton { padding: 14px 26px; border: 0; border-radius: 999px; background: linear-gradient(180deg, var(--or), var(--or-fonce)); color: var(--rond); font-weight: 700; font-size: 16px; cursor: pointer; transition: filter .2s; }
+.bouton:hover { filter: brightness(1.08); }
+.merci { text-align: center; padding-block: 40px; }
+.merci h2 { font-family: var(--titre); font-weight: 400; font-size: 32px; }
+.merci p { color: var(--gris-1); margin-top: 10px; }
+
+/* Colonne de droite */
+.colonne { display: grid; gap: 28px; }
+@media (min-width: 980px) { .colonne { position: sticky; top: 24px; } }
+.bloc h3 { font-family: var(--titre); font-weight: 400; font-size: 20px; }
+.bloc p, .bloc li { color: var(--gris-1); font-size: 15px; }
+.collab { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.collab img { width: 40px; height: 40px; border-radius: 50%; flex: none; }
+.collab strong { color: var(--ivoire); font-weight: 600; }
+.bloc ul { list-style: none; padding: 0; margin-top: 10px; display: grid; gap: 8px; }
+.bloc + .bloc { padding-top: 28px; border-top: 1px solid var(--filet); }
+.sujets li::before { content: "ᚱ"; color: var(--or); margin-right: 10px; }
+.direct li { display: flex; justify-content: space-between; gap: 12px; }
+.direct li span:first-child { color: var(--gris-3); }
+.faq details { padding-block: 10px; border-bottom: 1px solid var(--filet); }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+.faq details p { margin-top: 8px; }
+.note-maquette { font-size: 12px; color: var(--or); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="cadre entete">
+  <a class="entete__marque" href="#"><img src="assets/logo-ivoire.svg" alt="">BILSKIRNIR</a>
+  <div class="entete__actions" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+  </div>
+</header>
+
+<section class="ouverture">
+  <div class="ouverture__fond" aria-hidden="true"></div>
+  <div class="ouverture__grain" aria-hidden="true"></div>
+  <div class="cadre">
+    <div class="ouverture__texte">
+      <p class="surtitre">Contact</p>
+      <h1>Frappe à la porte du hall.</h1>
+      <p class="chapeau">Une question sur un livre, une conférence à organiser, un salon, une idée à mener ensemble ou un manuscrit : dis-nous pourquoi tu écris, le message arrive au bon endroit.</p>
+      <div class="signe">
+        <img src="assets/avatar-gautier.jpg" alt="Gautier Durrieu de Madron">
+        <div><strong>Gautier lit chaque message lui-même.</strong><span>Réponse en général sous une semaine.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cadre corps">
+  <form id="contact" novalidate>
+    <h2 class="etape-titre">Pourquoi tu écris ? <small>Choisis une porte</small></h2>
+    <fieldset class="portes">
+      <legend hidden>Motif du message</legend>
+      <label class="porte"><input type="radio" name="motif" id="motif-question" value="question" checked>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M10 9.5a2 2 0 1 1 2.6 1.9c-.4.2-.6.5-.6.9v.4M12 14.5v.1"/></svg>
+        <b>Une question</b><span>Un livre, une commande, une dédicace.</span></label>
+      <label class="porte"><input type="radio" name="motif" id="motif-conference" value="conference">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>
+        <b>Une conférence</b><span>Mythologies, héroïsme, écriture : Gautier vient parler.</span></label>
+      <label class="porte"><input type="radio" name="motif" id="motif-stand" value="stand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9 5 4h14l2 5M3 9h18M3 9c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3M5 12v8h14v-8"/></svg>
+        <b>Un stand</b><span>Salon, festival, librairie : inviter Bilskirnir.</span></label>
+      <label class="porte"><input type="radio" name="motif" id="motif-collab" value="collaboration">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m3 11 4-4 4 3 3-2 7 5-3 3M7 7l-4 7 5 5 3-2M11 17l2 2 5-4"/></svg>
+        <b>Une collaboration</b><span>Illustration, presse, créateurs, partenariats.</span></label>
+      <label class="porte"><input type="radio" name="motif" id="motif-manuscrit" value="manuscrit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4M9 11h7M9 14h7M9 17h4"/></svg>
+        <b>Un manuscrit</b><span>Tu as écrit un roman épique.</span></label>
+    </fieldset>
+
+    <div class="lettre" id="lettre">
+      <h2 class="etape-titre" id="lettre-titre">Poser une question</h2>
+      <p class="lettre__intro" id="lettre-intro"></p>
+      <div id="lettre-charte"></div>
+      <div class="champs">
+        <div class="champ"><label for="prenom">Prénom et nom</label><input type="text" id="prenom" autocomplete="name" placeholder="Camille Arnaud"></div>
+        <div class="champ"><label for="email">Ton email</label><input type="email" id="email" autocomplete="email" placeholder="ton@email.fr"></div>
+      </div>
+      <div class="champs" id="champs-motif"></div>
+      <div class="champs">
+        <div class="champ champ--large"><label for="message" id="message-label">Ton message</label><textarea id="message" placeholder=""></textarea></div>
+      </div>
+      <div class="envoi">
+        <p>Ton adresse sert seulement à te répondre. Rien n'est ajouté à la newsletter sans ton accord.</p>
+        <button class="bouton" type="submit">Envoyer</button>
+      </div>
+    </div>
+  </form>
+
+  <aside class="colonne">
+    <div class="bloc sujets">
+      <h3>Gautier en conférence</h3>
+      <p>Médiathèques, collèges, lycées, festivals, entreprises. Une heure de récit, une demi-heure de questions.</p>
+      <p class="collab"><img src="assets/gamology.jpg" alt="Logo de Gamology" width="40" height="40"><span>Plusieurs collaborations avec la chaîne YouTube <strong>Gamology</strong>.</span></p>
+      <ul>
+        <li>Les mythologies nordiques, sans le folklore</li>
+        <li>Pourquoi on a encore besoin de héros</li>
+        <li>Écrire une saga : de l'idée au tome 8</li>
+        <li>Les dieux dans le jeu vidéo et la pop culture</li>
+      </ul>
+    </div>
+    <div class="bloc direct">
+      <h3>Écrire directement</h3>
+      <ul>
+        <li><span>Email</span><span>contact@bilskirnir.fr</span></li>
+        <li><span>TikTok</span><span>@bilskirnir</span></li>
+        <li><span>Basé à</span><span>Saint-Raphaël (83)</span></li>
+      </ul>
+      <p class="note-maquette">Adresse et réseaux à confirmer.</p>
+    </div>
+    <div class="bloc faq">
+      <h3>Avant d'écrire</h3>
+      <details><summary>Où en est ma commande ?</summary><p>Le suivi est dans l'email de confirmation et dans ton compte. Si le colis tarde, écris avec ton numéro de commande.</p></details>
+      <details><summary>Je veux un livre dédicacé.</summary><p>Choisis « Une question » et dis pour qui : Gautier signe sur les salons et, selon les périodes, par envoi.</p></details>
+      <details><summary>Combien de temps pour un manuscrit ?</summary><p>La lecture prend du temps : compte jusqu'à trois mois. Chaque manuscrit reçoit une réponse.</p></details>
+    </div>
+  </aside>
+</div>
+
+<script>
+// Ce que chaque porte ajoute au formulaire. Sur le site, chaque champ partira en contact[Nom du champ].
+const portes = {
+  question: {
+    titre: 'Poser une question',
+    intro: 'Sur un livre, une commande ou une dédicace. Si c\'est une commande, donne son numéro.',
+    champs: `<div class="champ champ--large"><label for="q-sujet">Ça concerne</label><select id="q-sujet"><option>Un livre ou une saga</option><option>Une commande</option><option>Une dédicace</option><option>Autre chose</option></select></div>`,
+    message: ['Ta question', 'Bonjour Gautier, je voulais savoir…']
+  },
+  conference: {
+    titre: 'Organiser une conférence',
+    intro: 'Dis-nous qui vous êtes et ce que vous imaginez. Gautier revient vers toi avec ses disponibilités et ses conditions.',
+    champs: `<div class="champ"><label for="c-structure">Ta structure</label><select id="c-structure"><option>Médiathèque ou bibliothèque</option><option>Collège ou lycée</option><option>Festival ou salon</option><option>Entreprise</option><option>Association</option></select></div>
+      <div class="champ"><label for="c-ville">Ville</label><input type="text" id="c-ville" placeholder="Nantes"></div>
+      <div class="champ"><label for="c-date">Date souhaitée <em>(si tu la connais)</em></label><input type="date" id="c-date"></div>
+      <div class="champ"><label for="c-public">Public attendu</label><input type="text" id="c-public" placeholder="Une classe de 4e, 30 élèves"></div>`,
+    message: ['Le projet', 'Le thème qui vous intéresse, la durée, ce que vous avez déjà prévu…']
+  },
+  stand: {
+    titre: 'Inviter Bilskirnir sur un salon',
+    intro: 'Bilskirnir tient des stands en salon, en festival et en librairie. Dis-nous où et quand.',
+    champs: `<div class="champ"><label for="s-nom">Nom de l'événement</label><input type="text" id="s-nom" placeholder="Les Imaginales"></div>
+      <div class="champ"><label for="s-ville">Ville</label><input type="text" id="s-ville" placeholder="Épinal"></div>
+      <div class="champ"><label for="s-debut">Premier jour</label><input type="date" id="s-debut"></div>
+      <div class="champ"><label for="s-lien">Site de l'événement <em>(facultatif)</em></label><input type="url" id="s-lien" placeholder="https://"></div>`,
+    message: ['Les conditions', 'Prix de l\'emplacement, taille du stand, visiteurs attendus, signature prévue…']
+  },
+  collaboration: {
+    titre: 'Proposer une collaboration',
+    intro: 'Illustrateurs, créateurs de contenu, journalistes, marques, autres maisons : montre-nous ton travail.',
+    champs: `<div class="champ champ--large"><span>Tu es</span><div class="cases">
+        <label><input type="radio" name="collab" checked> Illustrateur ou illustratrice</label>
+        <label><input type="radio" name="collab"> Créateur de contenu</label>
+        <label><input type="radio" name="collab"> Presse ou podcast</label>
+        <label><input type="radio" name="collab"> Marque ou partenaire</label>
+        <label><input type="radio" name="collab"> Traducteur</label></div></div>
+      <div class="champ champ--large"><label for="co-lien">Lien vers ton travail</label><input type="url" id="co-lien" placeholder="Portfolio, chaîne, article…"></div>`,
+    message: ['Ton idée', 'Ce que tu proposes, et ce que ça apporterait aux lecteurs de Bilskirnir.']
+  },
+  manuscrit: {
+    titre: 'Soumettre un manuscrit',
+    intro: 'Bilskirnir publie peu, et le lit en entier. Avant d\'envoyer, vérifie que ton texte est dans la ligne de la maison.',
+    charte: `<div class="charte"><p><strong>Ce que Bilskirnir publie :</strong> des romans épiques. Fantasy, mythologies, urban fantasy, aventure, histoire revisitée. Pas de poésie, pas d'essai, pas de jeunesse illustrée.</p>
+      <ul><li>Un roman terminé, en français</li><li>Un synopsis d'une page, fin comprise</li><li>Le texte complet en PDF, via un lien de partage</li></ul></div>`,
+    champs: `<div class="champ"><label for="m-titre">Titre du roman</label><input type="text" id="m-titre" placeholder="Le Chant des Fjords"></div>
+      <div class="champ"><label for="m-genre">Genre</label><select id="m-genre"><option>Fantasy</option><option>Mythologies</option><option>Urban fantasy</option><option>Aventure historique</option><option>Science-fiction</option><option>Autre</option></select></div>
+      <div class="champ"><label for="m-taille">Longueur <em>(en signes)</em></label><input type="text" id="m-taille" inputmode="numeric" placeholder="650 000"></div>
+      <div class="champ"><label for="m-serie">C'est</label><select id="m-serie"><option>Un roman seul</option><option>Le tome 1 d'une saga</option></select></div>
+      <div class="champ champ--large"><label for="m-lien">Lien vers le PDF <em>(Google Drive, Dropbox, WeTransfer)</em></label><input type="url" id="m-lien" placeholder="https://"></div>`,
+    message: ['Ton synopsis', 'L\'histoire en une page, fin comprise. Et deux lignes sur toi.']
+  }
+};
+
+const zone = document.getElementById('champs-motif');
+function ouvrir(motif) {
+  const p = portes[motif];
+  document.getElementById('lettre-titre').textContent = p.titre;
+  document.getElementById('lettre-intro').textContent = p.intro;
+  document.getElementById('lettre-charte').innerHTML = p.charte || '';
+  zone.innerHTML = p.champs;
+  document.getElementById('message-label').textContent = p.message[0];
+  document.getElementById('message').placeholder = p.message[1];
+}
+document.querySelectorAll('[name=motif]').forEach(r => r.addEventListener('change', () => ouvrir(r.value)));
+ouvrir(document.querySelector('[name=motif]:checked').value);
+
+document.getElementById('contact').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('lettre').innerHTML = '<div class="merci"><h2>Message envoyé.</h2><p>Gautier te répond à ton adresse email, en général sous une semaine.</p></div>';
+});
+</script>

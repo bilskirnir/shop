@@ -1,0 +1,698 @@
+{% comment %}
+  Page Contact (templates/page.contact.json) : cinq motifs (question, conférence, stand, collaboration,
+  manuscrit). Chaque motif montre ses propres champs ; tout part par le formulaire de contact de Shopify et
+  arrive par email à la boutique, avec « Motif : … » en tête.
+  Les champs des motifs non choisis sont désactivés par le script en bas, pour ne pas polluer l'email.
+  Un lien peut ouvrir un motif précis : /pages/contact?motif=manuscrit (question, conference, stand,
+  collaboration, manuscrit).
+  Pas de pièce jointe possible avec ce formulaire : le manuscrit arrive par un lien de partage.
+  Maquette validée le 22/11/2026 : https://claude.ai/artifact/Xjo5aeVMqHwST3K3nwT8Yw
+{% endcomment %}
+{%- liquid
+  assign s = section.settings
+  assign motifs = 'question,conference,stand,collaboration,manuscrit' | split: ','
+-%}
+
+<div class="contact">
+  <header class="contact__ouverture">
+    <p class="surtitre contact__surtitre">{{ s.surtitre }}</p>
+    <h1>{{ s.titre }}</h1>
+    {%- if s.chapeau != blank -%}<p class="contact__chapeau">{{ s.chapeau }}</p>{%- endif -%}
+    <div class="contact__signe">
+      {%- if s.photo -%}
+        {{ s.photo | image_url: width: 120 | image_tag: alt: s.signature_titre, width: 52, height: 52 }}
+      {%- endif -%}
+      <div><strong>{{ s.signature_titre }}</strong><span>{{ s.signature_texte }}</span></div>
+    </div>
+  </header>
+
+  <div class="contact__corps">
+    {%- form 'contact', id: 'contact', class: 'contact__formulaire' -%}
+      {%- if form.posted_successfully? -%}
+        <div class="contact__lettre verre contact__merci" role="status">
+          <h2>{{ s.merci_titre }}</h2>
+          <p>{{ s.merci_texte }}</p>
+        </div>
+      {%- else -%}
+        <h2 class="contact__etape">Pourquoi tu écris ? <small>Choisis une porte</small></h2>
+        <fieldset class="contact__portes">
+          <legend class="visually-hidden">Motif du message</legend>
+          {%- for motif in motifs -%}
+            {%- case motif -%}
+              {%- when 'question' -%}{%- assign nom = 'Une question' -%}{%- assign aide = 'Un livre, une commande, une dédicace.' -%}
+              {%- when 'conference' -%}{%- assign nom = 'Une conférence' -%}{%- assign aide = 'Mythologies, héroïsme, écriture : Gautier vient parler.' -%}
+              {%- when 'stand' -%}{%- assign nom = 'Un stand' -%}{%- assign aide = 'Salon, festival, librairie : inviter Bilskirnir.' -%}
+              {%- when 'collaboration' -%}{%- assign nom = 'Une collaboration' -%}{%- assign aide = 'Illustration, presse, créateurs, partenariats.' -%}
+              {%- when 'manuscrit' -%}{%- assign nom = 'Un manuscrit' -%}{%- assign aide = 'Tu as écrit un roman épique.' -%}
+            {%- endcase -%}
+            <label class="contact__porte">
+              <input type="radio" name="contact[Motif]" id="motif-{{ motif }}" value="{{ nom }}" data-motif="{{ motif }}"{% if forloop.first %} checked{% endif %}>
+              {%- render 'contact-icone', motif: motif -%}
+              <b>{{ nom }}</b><span>{{ aide }}</span>
+            </label>
+          {%- endfor -%}
+        </fieldset>
+
+        <div class="contact__lettre verre">
+          <fieldset class="contact__motif" data-motif="question" data-placeholder="Bonjour Gautier, je voulais savoir…">
+            <legend><h2 class="contact__etape">Poser une question</h2></legend>
+            <p class="contact__intro">{{ s.intro_question }}</p>
+            <div class="contact__champs">
+              <div class="contact__champ contact__champ--large"><label for="q-sujet">Ça concerne</label>
+                <select id="q-sujet" name="contact[Sujet]"><option>Un livre ou une saga</option><option>Une commande</option><option>Une dédicace</option><option>Autre chose</option></select></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="contact__motif" data-motif="conference" data-placeholder="Le thème qui vous intéresse, la durée, ce que vous avez déjà prévu…">
+            <legend><h2 class="contact__etape">Organiser une conférence</h2></legend>
+            <p class="contact__intro">{{ s.intro_conference }}</p>
+            <div class="contact__champs">
+              <div class="contact__champ"><label for="c-structure">Ta structure</label>
+                <select id="c-structure" name="contact[Structure]"><option>Médiathèque ou bibliothèque</option><option>Collège ou lycée</option><option>Festival ou salon</option><option>Entreprise</option><option>Association</option></select></div>
+              <div class="contact__champ"><label for="c-ville">Ville</label><input type="text" id="c-ville" name="contact[Ville]" placeholder="Nantes"></div>
+              <div class="contact__champ"><label for="c-date">Date souhaitée <em>(si tu la connais)</em></label><input type="date" id="c-date" name="contact[Date souhaitée]"></div>
+              <div class="contact__champ"><label for="c-public">Public attendu</label><input type="text" id="c-public" name="contact[Public]" placeholder="Une classe de 4e, 30 élèves"></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="contact__motif" data-motif="stand" data-placeholder="Prix de l'emplacement, taille du stand, visiteurs attendus, signature prévue…">
+            <legend><h2 class="contact__etape">Inviter Bilskirnir sur un salon</h2></legend>
+            <p class="contact__intro">{{ s.intro_stand }}</p>
+            <div class="contact__champs">
+              <div class="contact__champ"><label for="s-nom">Nom de l'événement</label><input type="text" id="s-nom" name="contact[Événement]" placeholder="Les Imaginales"></div>
+              <div class="contact__champ"><label for="s-ville">Ville</label><input type="text" id="s-ville" name="contact[Ville]" placeholder="Épinal"></div>
+              <div class="contact__champ"><label for="s-debut">Premier jour</label><input type="date" id="s-debut" name="contact[Premier jour]"></div>
+              <div class="contact__champ"><label for="s-lien">Site de l'événement <em>(facultatif)</em></label><input type="url" id="s-lien" name="contact[Site]" placeholder="https://"></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="contact__motif" data-motif="collaboration" data-placeholder="Ce que tu proposes, et ce que ça apporterait aux lecteurs de Bilskirnir.">
+            <legend><h2 class="contact__etape">Proposer une collaboration</h2></legend>
+            <p class="contact__intro">{{ s.intro_collaboration }}</p>
+            <div class="contact__champs">
+              <div class="contact__champ contact__champ--large"><span>Tu es</span>
+                <div class="contact__cases">
+                  {%- assign profils = 'Illustrateur ou illustratrice,Créateur de contenu,Presse ou podcast,Marque ou partenaire,Traducteur' | split: ',' -%}
+                  {%- for profil in profils -%}
+                    <label><input type="radio" name="contact[Profil]" value="{{ profil }}"{% if forloop.first %} checked{% endif %}> {{ profil }}</label>
+                  {%- endfor -%}
+                </div></div>
+              <div class="contact__champ contact__champ--large"><label for="co-lien">Lien vers ton travail</label><input type="url" id="co-lien" name="contact[Lien]" placeholder="Portfolio, chaîne, article…"></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="contact__motif" data-motif="manuscrit" data-placeholder="L'histoire en une page, fin comprise. Et deux lignes sur toi.">
+            <legend><h2 class="contact__etape">Soumettre un manuscrit</h2></legend>
+            <p class="contact__intro">{{ s.intro_manuscrit }}</p>
+            {%- if s.charte_manuscrit != blank -%}<div class="contact__charte">{{ s.charte_manuscrit }}</div>{%- endif -%}
+            <div class="contact__champs">
+              <div class="contact__champ"><label for="m-titre">Titre du roman</label><input type="text" id="m-titre" name="contact[Titre du roman]" placeholder="Le Chant des Fjords"></div>
+              <div class="contact__champ"><label for="m-genre">Genre</label>
+                <select id="m-genre" name="contact[Genre]"><option>Fantasy</option><option>Mythologies</option><option>Urban fantasy</option><option>Aventure historique</option><option>Science-fiction</option><option>Autre</option></select></div>
+              <div class="contact__champ"><label for="m-taille">Longueur <em>(en signes)</em></label><input type="text" id="m-taille" name="contact[Longueur en signes]" inputmode="numeric" placeholder="650 000"></div>
+              <div class="contact__champ"><label for="m-serie">C'est</label>
+                <select id="m-serie" name="contact[Format]"><option>Un roman seul</option><option>Le tome 1 d'une saga</option></select></div>
+              <div class="contact__champ contact__champ--large"><label for="m-lien">Lien vers le PDF <em>(Google Drive, Dropbox, WeTransfer)</em></label><input type="url" id="m-lien" name="contact[Lien du manuscrit]" placeholder="https://"></div>
+            </div>
+          </fieldset>
+
+          <div class="contact__champs">
+            <div class="contact__champ"><label for="contact-nom">Prénom et nom</label><input type="text" id="contact-nom" name="contact[name]" autocomplete="name" required></div>
+            <div class="contact__champ"><label for="contact-email">Ton email</label><input type="email" id="contact-email" name="contact[email]" autocomplete="email" placeholder="ton@email.fr" required></div>
+            <div class="contact__champ contact__champ--large"><label for="contact-message">Ton message</label><textarea id="contact-message" name="contact[body]" rows="6" required></textarea></div>
+          </div>
+
+          {%- if form.errors -%}
+            <p class="contact__erreur" role="alert">{{ form.errors | default_errors }}</p>
+          {%- endif -%}
+
+          <div class="contact__envoi">
+            <p>{{ s.mention }}</p>
+            {% render 'bouton', libelle: 'Envoyer', variante: 'or' %}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+
+    <aside class="contact__colonne">
+      <div class="contact__bloc">
+        <h3>{{ s.conference_titre }}</h3>
+        {%- if s.conference_texte != blank -%}<p>{{ s.conference_texte }}</p>{%- endif -%}
+        {%- if s.collab_texte != blank -%}
+          <p class="contact__collab">
+            {%- if s.collab_logo -%}{{ s.collab_logo | image_url: width: 80 | image_tag: alt: '', width: 40, height: 40, loading: 'lazy' }}{%- endif -%}
+            <span>{{ s.collab_texte }}</span>
+          </p>
+        {%- endif -%}
+        {%- assign sujets = s.conference_sujets | newline_to_br | split: '<br />' -%}
+        {%- if s.conference_sujets != blank -%}
+          <ul class="contact__sujets">
+            {%- for sujet in sujets -%}{%- assign sujet = sujet | strip -%}{%- if sujet != blank -%}<li>{{ sujet }}</li>{%- endif -%}{%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {%- if s.email != blank or s.tiktok != blank or s.lieu != blank -%}
+        <div class="contact__bloc">
+          <h3>Écrire directement</h3>
+          <ul class="contact__direct">
+            {%- if s.email != blank -%}<li><span>Email</span><a href="mailto:{{ s.email }}">{{ s.email }}</a></li>{%- endif -%}
+            {%- if s.tiktok != blank -%}<li><span>TikTok</span><a href="https://www.tiktok.com/@{{ s.tiktok | remove: '@' }}" target="_blank" rel="noopener">@{{ s.tiktok | remove: '@' }}</a></li>{%- endif -%}
+            {%- if s.lieu != blank -%}<li><span>Basé à</span><span>{{ s.lieu }}</span></li>{%- endif -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="contact__bloc">
+          <h3>Avant d'écrire</h3>
+          {%- for block in section.blocks -%}
+            <details class="contact__faq" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.question }}</summary>
+              {{ block.settings.reponse }}
+            </details>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </aside>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const formulaire = document.getElementById('contact');
+    if (!formulaire) return;
+    const message = document.getElementById('contact-message');
+    const choisir = (motif) => {
+      formulaire.querySelectorAll('.contact__motif').forEach((groupe) => {
+        const actif = groupe.dataset.motif === motif;
+        groupe.disabled = !actif;
+        if (actif && message) message.placeholder = groupe.dataset.placeholder;
+      });
+    };
+    const radios = formulaire.querySelectorAll('[data-motif][type=radio]');
+    radios.forEach((radio) => radio.addEventListener('change', () => choisir(radio.dataset.motif)));
+    const demande = new URLSearchParams(location.search).get('motif');
+    const depart = [...radios].find((radio) => radio.dataset.motif === demande) || [...radios].find((radio) => radio.checked);
+    if (depart) { depart.checked = true; choisir(depart.dataset.motif); }
+  })();
+</script>
+
+{% stylesheet %}
+  .contact {
+    padding: 110px var(--marge-centre) 120px;
+  }
+
+  .contact__ouverture {
+    max-width: 760px;
+    padding-block: 24px 40px;
+  }
+
+  .contact__surtitre {
+    color: var(--or);
+  }
+
+  .contact h1 {
+    margin-top: 14px;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .contact__chapeau {
+    margin-top: 18px;
+    max-width: 56ch;
+    font-size: 18px;
+    color: var(--gris-1);
+  }
+
+  .contact__signe {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .contact__signe img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--or-fonce);
+  }
+
+  .contact__signe strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  .contact__signe span {
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .contact__corps {
+    display: grid;
+    gap: 48px;
+    padding-top: 24px;
+  }
+
+  @media (min-width: 980px) {
+    .contact__corps {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 64px;
+      align-items: start;
+    }
+  }
+
+  .contact fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .contact legend {
+    padding: 0;
+  }
+
+  .contact__etape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 12px;
+    font-size: 26px;
+    font-weight: 400;
+  }
+
+  .contact__etape small {
+    font-family: var(--texte);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gris-3);
+  }
+
+  /* Les cinq portes */
+  .contact__portes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  /* Cinq portes sans orpheline : 2 + 2 + 1 large sur mobile, 3 + 2 sur grand écran. */
+  .contact__porte:last-of-type {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 700px) {
+    .contact__portes {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .contact__porte {
+      grid-column: span 2;
+    }
+
+    .contact__porte:nth-of-type(n + 4),
+    .contact__porte:last-of-type {
+      grid-column: span 3;
+    }
+  }
+
+  .contact__porte {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px 18px 20px;
+    border-radius: 14px;
+    background: #14161a;
+    border: 1px solid #ece5d61a;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  }
+
+  .contact__porte:hover {
+    border-color: #ece5d640;
+    transform: translateY(-2px);
+  }
+
+  .contact__porte input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .contact__porte svg {
+    width: 26px;
+    height: 26px;
+    color: var(--gris-2);
+    transition: color 0.2s;
+  }
+
+  .contact__porte b {
+    margin-top: 6px;
+    font-family: var(--titre);
+    font-size: 19px;
+    font-weight: 400;
+  }
+
+  .contact__porte span {
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .contact__porte:has(input:checked) {
+    border-color: var(--or);
+    background: linear-gradient(180deg, #d2b06a1f, #d2b06a08);
+  }
+
+  .contact__porte:has(input:checked) svg {
+    color: var(--or);
+  }
+
+  .contact__porte:has(input:focus-visible) {
+    outline: 2px solid var(--or);
+    outline-offset: 3px;
+  }
+
+  /* Le formulaire : seul le groupe du motif choisi s'affiche. */
+  .contact__lettre {
+    display: grid;
+    gap: 16px;
+    margin-top: 40px;
+    padding: clamp(20px, 3vw, 28px);
+    border-radius: 14px;
+  }
+
+  .contact__motif {
+    display: none;
+  }
+
+  .contact:has(#motif-question:checked) .contact__motif[data-motif='question'],
+  .contact:has(#motif-conference:checked) .contact__motif[data-motif='conference'],
+  .contact:has(#motif-stand:checked) .contact__motif[data-motif='stand'],
+  .contact:has(#motif-collaboration:checked) .contact__motif[data-motif='collaboration'],
+  .contact:has(#motif-manuscrit:checked) .contact__motif[data-motif='manuscrit'] {
+    display: grid;
+    gap: 6px;
+  }
+
+  .contact__intro {
+    max-width: 60ch;
+    color: var(--gris-1);
+  }
+
+  .contact__champs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 620px) {
+    .contact__champs {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .contact__champ {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .contact__champ--large {
+    grid-column: 1 / -1;
+  }
+
+  .contact__champ > label,
+  .contact__champ > span {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--gris-1);
+  }
+
+  .contact__champ em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--gris-3);
+  }
+
+  .contact__champ input,
+  .contact__champ select,
+  .contact__champ textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ece5d626;
+    background: #0b0c0e99;
+    color: var(--ivoire);
+    line-height: 1.3;
+    color-scheme: dark;
+  }
+
+  .contact__champ ::placeholder {
+    color: var(--gris-3);
+  }
+
+  .contact__champ textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .contact__champ :is(input, select, textarea):focus {
+    outline: none;
+    border-color: var(--or);
+  }
+
+  .contact__cases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .contact__cases label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid #ece5d626;
+    cursor: pointer;
+  }
+
+  .contact__cases input {
+    width: auto;
+    accent-color: var(--or);
+  }
+
+  .contact__cases label:has(input:checked) {
+    border-color: var(--or);
+  }
+
+  .contact__charte {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 18px 20px;
+    border-left: 2px solid var(--or-fonce);
+    border-radius: 0 10px 10px 0;
+    background: #d2b06a0d;
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .contact__charte strong {
+    color: var(--ivoire);
+    font-weight: 600;
+  }
+
+  .contact__charte ul {
+    display: grid;
+    gap: 4px;
+    padding-left: 18px;
+  }
+
+  .contact__erreur {
+    color: #f0a58a;
+  }
+
+  .contact__envoi {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .contact__envoi p {
+    max-width: 42ch;
+    font-size: 13px;
+    color: var(--gris-3);
+  }
+
+  .contact__merci {
+    padding-block: 40px;
+    text-align: center;
+  }
+
+  .contact__merci h2 {
+    font-size: 32px;
+    font-weight: 400;
+  }
+
+  .contact__merci p {
+    color: var(--gris-1);
+  }
+
+  /* Colonne de droite */
+  .contact__colonne {
+    display: grid;
+    gap: 28px;
+  }
+
+  @media (min-width: 980px) {
+    .contact__colonne {
+      position: sticky;
+      top: 96px;
+    }
+  }
+
+  .contact__bloc {
+    display: grid;
+    gap: 10px;
+  }
+
+  .contact__bloc + .contact__bloc {
+    padding-top: 28px;
+    border-top: 1px solid #ece5d61a;
+  }
+
+  .contact__bloc h3 {
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .contact__bloc p,
+  .contact__bloc li {
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .contact__collab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .contact__collab img {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .contact__sujets,
+  .contact__direct {
+    display: grid;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact__sujets li::before {
+    content: 'ᚱ';
+    margin-right: 10px;
+    color: var(--or);
+  }
+
+  .contact__direct li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .contact__direct li span:first-child {
+    color: var(--gris-3);
+  }
+
+  .contact__direct a {
+    color: var(--ivoire);
+  }
+
+  .contact__faq {
+    padding-block: 10px;
+    border-bottom: 1px solid #ece5d61a;
+  }
+
+  .contact__faq summary {
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .contact__faq p {
+    margin-top: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact__porte {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Ouverture" },
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Contact" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Frappe à la porte du hall." },
+    { "type": "textarea", "id": "chapeau", "label": "Texte d'introduction", "default": "Une question sur un livre, une conférence à organiser, un salon, une idée à mener ensemble ou un manuscrit : dis-nous pourquoi tu écris, le message arrive au bon endroit." },
+    { "type": "image_picker", "id": "photo", "label": "Photo de Gautier" },
+    { "type": "text", "id": "signature_titre", "label": "Signature", "default": "Gautier lit chaque message lui-même." },
+    { "type": "text", "id": "signature_texte", "label": "Délai de réponse", "default": "Réponse en général sous une semaine." },
+    { "type": "header", "content": "Textes de chaque motif" },
+    { "type": "textarea", "id": "intro_question", "label": "Une question", "default": "Sur un livre, une commande ou une dédicace. Si c'est une commande, donne son numéro." },
+    { "type": "textarea", "id": "intro_conference", "label": "Une conférence", "default": "Dis-nous qui vous êtes et ce que vous imaginez. Gautier revient vers toi avec ses disponibilités et ses conditions." },
+    { "type": "textarea", "id": "intro_stand", "label": "Un stand", "default": "Bilskirnir tient des stands en salon, en festival et en librairie. Dis-nous où et quand." },
+    { "type": "textarea", "id": "intro_collaboration", "label": "Une collaboration", "default": "Illustrateurs, créateurs de contenu, journalistes, marques, autres maisons : montre-nous ton travail." },
+    { "type": "textarea", "id": "intro_manuscrit", "label": "Un manuscrit", "default": "Bilskirnir publie peu, et le lit en entier. Avant d'envoyer, vérifie que ton texte est dans la ligne de la maison." },
+    { "type": "richtext", "id": "charte_manuscrit", "label": "Ce que Bilskirnir publie (manuscrit)", "default": "<p><strong>Ce que Bilskirnir publie :</strong> des romans épiques. Fantasy, mythologies, urban fantasy, aventure, histoire revisitée. Pas de poésie, pas d'essai, pas de jeunesse illustrée.</p><ul><li>Un roman terminé, en français</li><li>Un synopsis d'une page, fin comprise</li><li>Le texte complet en PDF, via un lien de partage</li></ul>" },
+    { "type": "text", "id": "mention", "label": "Mention sous le formulaire", "default": "Ton adresse sert seulement à te répondre. Rien n'est ajouté à la newsletter sans ton accord." },
+    { "type": "text", "id": "merci_titre", "label": "Titre après envoi", "default": "Message envoyé." },
+    { "type": "text", "id": "merci_texte", "label": "Texte après envoi", "default": "Gautier te répond à ton adresse email, en général sous une semaine." },
+    { "type": "header", "content": "Colonne : conférences" },
+    { "type": "text", "id": "conference_titre", "label": "Titre", "default": "Gautier en conférence" },
+    { "type": "textarea", "id": "conference_texte", "label": "Texte", "default": "Médiathèques, collèges, lycées, festivals, entreprises. Une heure de récit, une demi-heure de questions." },
+    { "type": "image_picker", "id": "collab_logo", "label": "Logo de la collaboration" },
+    { "type": "text", "id": "collab_texte", "label": "Texte de la collaboration", "default": "Plusieurs collaborations avec la chaîne YouTube Gamology." },
+    { "type": "textarea", "id": "conference_sujets", "label": "Sujets", "info": "Un sujet par ligne.", "default": "Les mythologies nordiques, sans le folklore\nPourquoi on a encore besoin de héros\nÉcrire une saga : de l'idée au tome 8\nLes dieux dans le jeu vidéo et la pop culture" },
+    { "type": "header", "content": "Colonne : écrire directement" },
+    { "type": "text", "id": "email", "label": "Email", "info": "Vide : la ligne disparaît." },
+    { "type": "text", "id": "tiktok", "label": "Compte TikTok", "info": "Sans le @. Vide : la ligne disparaît." },
+    { "type": "text", "id": "lieu", "label": "Basé à", "default": "Saint-Raphaël (83)" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question fréquente",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "reponse", "label": "Réponse" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Contact" }]
+}
+{% endschema %}
