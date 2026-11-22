@@ -675,6 +675,11 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   padding: 110px var(--marge-centre) 0;
 }
 
+/* Les blocs d'une saga ou d'un livre n'ont de marge qu'en haut : de l'air sous le dernier, avant le pied de page. */
+main:has(.arc-bloc) {
+  padding-bottom: 120px;
+}
+
 .arc-tete {
   position: relative;
   display: flex;

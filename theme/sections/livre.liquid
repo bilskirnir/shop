@@ -102,7 +102,7 @@
             <span>Écrit par <strong>{{ auteur.nom.value }}</strong></span>
           </p>
         {%- endfor -%}
-        {% render 'note' %}
+        {% render 'note', livre: product %}
       </div>
 
       {% render 'pastilles', liste: saga.tags.value %}

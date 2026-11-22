@@ -71,7 +71,9 @@
             <span>Écrit par <strong>{{ noms_auteurs }}</strong></span>
           </p>
         {%- endif -%}
-        {% render 'note' %}
+        {%- assign prefixe = '' -%}
+        {%- if tomes.size > 1 %}{% assign prefixe = 'Livre 1 · ' %}{% endif -%}
+        {% render 'note', livre: tome_1, prefixe: prefixe %}
       </div>
 
       {% render 'pastilles', liste: saga.tags.value %}

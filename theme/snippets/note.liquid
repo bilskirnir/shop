@@ -1,9 +1,21 @@
 {% comment %}
-  La note des lecteurs : « ★★★★★ 4,7/5 · 137 avis », lue dans Paramètres du thème › Bilskirnir.
-  Avec lecteurs: true, ajoute « · 10k+ lecteurs ». Rien si la note est vide.
+  La note des lecteurs, avec ses étoiles.
+  - Sans livre : la note de la maison, lue dans Paramètres du thème › Bilskirnir (« 4,7/5 · 137 avis »).
+    Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
+  - Avec livre : la note de ce livre seulement, champ produit custom.note (texte, ex. « 4,7/5 · 137 avis sur Amazon »).
+    prefixe se place devant (ex. « Livre 1 · » sur la page d'une saga). Rien si le champ est vide.
   Usage : {% render 'note', lecteurs: true %}
+          {% render 'note', livre: product %}
 {%- endcomment -%}
-{%- if settings.note != blank -%}
+{%- if livre -%}
+  {%- assign note_livre = livre.metafields.custom.note.value -%}
+  {%- if note_livre != blank -%}
+    <p class="note">
+      <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+      <span>{{ prefixe }}<strong>{{ note_livre }}</strong></span>
+    </p>
+  {%- endif -%}
+{%- elsif settings.note != blank -%}
   <p class="note">
     <span class="note__etoiles" aria-hidden="true">★★★★★</span>
     <span>

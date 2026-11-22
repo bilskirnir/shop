@@ -19,7 +19,10 @@
     <div class="arc-bloc__halo" aria-hidden="true"></div>
     <div class="arc-tete">
       <p class="surtitre">{{ section.settings.surtitre }}</p>
-      {% render 'note', lecteurs: true %}
+      {%- comment -%} La note du livre de la fiche, ou celle du Livre 1 sur la page de la saga. {%- endcomment -%}
+      {%- assign livre_note = product -%}
+      {%- unless product %}{% for tome in saga.ordre_des_tomes.value limit: 1 %}{% assign livre_note = tome %}{% endfor %}{% endunless -%}
+      {% render 'note', livre: livre_note %}
     </div>
     {%- assign rang = 0 -%}
     {%- for tome in saga.ordre_des_tomes.value -%}

@@ -2,12 +2,12 @@
   La page de recherche (/search) : un champ, puis les livres trouvés en couvertures, comme au catalogue.
   On ne cherche que les livres (type=product), et « destin » trouve « destinée » (prefix=last).
 {% endcomment %}
-<section class="recherche">
-  <div class="recherche__tete" data-reveal>
+<section class="page-recherche">
+  <div class="page-recherche__tete" data-reveal>
     <p class="surtitre">{{ section.settings.surtitre }}</p>
     <h1>{{ section.settings.titre }}</h1>
 
-    <form class="recherche__formulaire" action="{{ routes.search_url }}" method="get" role="search">
+    <form class="page-recherche__formulaire" action="{{ routes.search_url }}" method="get" role="search">
       <input type="hidden" name="type" value="product">
       <input type="hidden" name="options[prefix]" value="last">
       <label class="visually-hidden" for="recherche-termes">{{ section.settings.titre }}</label>
@@ -26,7 +26,7 @@
     </form>
 
     {%- if search.performed -%}
-      <p class="recherche__compte" role="status">
+      <p class="page-recherche__compte" role="status">
         {%- if search.results_count == 0 -%}
           Aucun livre pour « {{ search.terms | escape }} ».
           <a href="{{ routes.all_products_collection_url }}">{{ section.settings.libelle_catalogue }}</a>
@@ -45,14 +45,14 @@
         {%- endfor -%}
       </ul>
       {%- if paginate.pages > 1 -%}
-        <nav class="recherche__pages" aria-label="Pages de résultats">{{ paginate | default_pagination }}</nav>
+        <nav class="page-recherche__pages" aria-label="Pages de résultats">{{ paginate | default_pagination }}</nav>
       {%- endif -%}
     {%- endpaginate -%}
   {%- endif -%}
 </section>
 
 {% stylesheet %}
-  .recherche {
+  .page-recherche {
     display: flex;
     flex-direction: column;
     gap: clamp(40px, 4vw, 56px);
@@ -60,22 +60,22 @@
     padding: clamp(110px, 12vw, 160px) var(--marge-centre) 96px;
   }
 
-  .recherche__tete {
+  .page-recherche__tete {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .recherche__tete .surtitre {
+  .page-recherche__tete .surtitre {
     color: var(--gris-2);
   }
 
-  .recherche__tete h1 {
+  .page-recherche__tete h1 {
     font-size: clamp(44px, 5vw, 72px);
     line-height: 0.95;
   }
 
-  .recherche__formulaire {
+  .page-recherche__formulaire {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -83,16 +83,16 @@
     margin-top: 12px;
   }
 
-  .recherche__compte {
+  .page-recherche__compte {
     font-size: clamp(16px, 1.3vw, 18px);
     color: var(--gris-1);
   }
 
-  .recherche__compte a {
+  .page-recherche__compte a {
     color: var(--ivoire);
   }
 
-  .recherche__pages {
+  .page-recherche__pages {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -100,11 +100,11 @@
   }
 
   @media (min-width: 1024px) {
-    .recherche__formulaire {
+    .page-recherche__formulaire {
       flex-direction: row;
     }
 
-    .recherche__formulaire .champ {
+    .page-recherche__formulaire .champ {
       flex: 1;
     }
   }
