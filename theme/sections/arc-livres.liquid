@@ -26,7 +26,7 @@
             {%- endif -%}
             <span class="arc-livres__nom">
               <span class="surtitre">Livre {{ forloop.index }}</span>
-              <strong class="oeuvre">{% render 'livre-titre', livre: tome %}</strong>
+              <strong>{% render 'livre-titre', livre: tome %}</strong>
             </span>
             <span class="arc-livres__prix">
               {%- if tome.available -%}{{ tome.price | money_without_trailing_zeros }}{%- else -%}À paraître{%- endif -%}
@@ -112,6 +112,7 @@
   }
 
   .arc-livres__nom strong {
+    font-family: var(--titre);
     font-size: clamp(18px, 1.7vw, 24px);
     line-height: 1.25;
   }

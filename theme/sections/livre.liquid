@@ -54,7 +54,7 @@
           {{ saga.nom.value | default: product.type }}
         {%- endif -%}
       </p>
-      <h1 class="oeuvre">{% render 'livre-titre', livre: product %}</h1>
+      <h1>{% render 'livre-titre', livre: product %}</h1>
       {%- comment -%}
         En haut, l'accroche du livre (custom.teaser_court) pour que le bloc d'achat reste au premier écran ;
         le synopsis complet s'ouvre dans un panneau par-dessus la page (<dialog>), qui finit sur l'achat.
@@ -78,7 +78,7 @@
                 <button class="livre__panneau-fermer" aria-label="Fermer">×</button>
               </form>
               <p class="surtitre arc__surtitre">{{ saga.nom.value }}{% if rang > 0 %} · Livre {{ rang }}{% endif %}</p>
-              <h2 class="oeuvre" id="livre-synopsis-titre">{% render 'livre-titre', livre: product %}</h2>
+              <h2 id="livre-synopsis-titre">{% render 'livre-titre', livre: product %}</h2>
               <div class="arc__synopsis">{{ product.description }}</div>
             </div>
             {%- if variante.available -%}

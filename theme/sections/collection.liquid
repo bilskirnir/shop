@@ -89,7 +89,7 @@
         <div class="catalogue__nom">
           {%- if annees != blank %}<p class="catalogue__annees">{{ annees }}</p>{% endif %}
           <p class="surtitre">{% render 'saga-surtitre', saga: saga %}</p>
-          <h2 class="oeuvre">{{ saga.nom.value | default: saga.system.handle }}</h2>
+          <h2>{{ saga.nom.value | default: saga.system.handle }}</h2>
           <a class="catalogue__lien" href="{% render 'saga-lien', saga: saga %}">
             {%- if tomes.size > 1 %}{{ section.settings.libelle_arc }}{% else %}{{ section.settings.libelle_livre }}{% endif %} <span aria-hidden="true">→</span>
           </a>

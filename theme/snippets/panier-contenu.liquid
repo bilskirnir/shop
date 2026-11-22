@@ -102,7 +102,7 @@
             </a>
           {%- endif -%}
           <div class="panier__ligne-texte">
-            <a class="panier__ligne-titre oeuvre" href="{{ item.url }}" style="{% render 'saga-halo', saga: item.product.metafields.custom.saga.value %}">{% render 'livre-titre', livre: item.product %}</a>
+            <a class="panier__ligne-titre" href="{{ item.url }}">{% render 'livre-titre', livre: item.product %}</a>
             {%- if saga -%}
               <span>{{ saga.nom.value }}{% if rang > 0 and saga.ordre_des_tomes.value.size > 1 %} · Livre {{ rang }}{% endif %}</span>
             {%- endif -%}

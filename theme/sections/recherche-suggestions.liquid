@@ -53,7 +53,7 @@
         <a class="suggestions__saga" href="{% render 'saga-lien', saga: saga %}" style="{% render 'saga-halo', saga: saga %}">
           <span class="suggestions__pastille" aria-hidden="true"></span>
           <span class="suggestions__nom">
-            <strong class="oeuvre">{{ saga.nom.value | highlight: predictive_search.terms }}</strong>
+            <strong>{{ saga.nom.value | highlight: predictive_search.terms }}</strong>
             <span>{% render 'saga-surtitre', saga: saga %}</span>
           </span>
           <span class="suggestions__fleche" aria-hidden="true">→</span>

@@ -54,7 +54,7 @@
       {%- if surtitre != blank -%}
         <p class="surtitre arc__surtitre">{{ surtitre }}</p>
       {%- endif -%}
-      <h1 class="oeuvre">{{ saga.nom.value }}</h1>
+      <h1>{{ saga.nom.value }}</h1>
       {%- if saga.synopsis != blank -%}
         <div class="arc__synopsis">{{ saga.synopsis | metafield_tag }}</div>
       {%- endif -%}
