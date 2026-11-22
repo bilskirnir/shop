@@ -12,7 +12,10 @@
     </button>
   {%- endif -%}
 
-  <a class="entete__marque" href="{{ routes.root_url }}">BILSKIRNIR</a>
+  <a class="entete__marque" href="{{ routes.root_url }}">
+    <img src="{{ 'logo-ivoire.svg' | asset_url }}" alt="" width="24" height="24">
+    BILSKIRNIR
+  </a>
 
   {%- if liens.size > 0 -%}
     <nav class="entete__liens" aria-label="Menu principal">
@@ -106,6 +109,9 @@
   }
 
   .entete__marque {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding-left: 10px;
     font-family: var(--marque);
     font-weight: 700;
