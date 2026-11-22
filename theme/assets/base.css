@@ -662,6 +662,15 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   background: currentColor;
 }
 
+/* L'icône du genre remplace le point, découpée dans la couleur de la pastille (masque). */
+.pastilles .pastille--icone::before {
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  -webkit-mask: var(--icone) center / contain no-repeat;
+  mask: var(--icone) center / contain no-repeat;
+}
+
 @media (min-width: 1024px) {
   .note {
     font-size: 14px;

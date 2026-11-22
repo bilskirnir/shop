@@ -1,6 +1,7 @@
 {% comment %}
   Des étiquettes en pilules (les tags d'une saga). Rien si la liste est vide.
   Couleur : celle du métaobjet « genre » du même nom (champs nom, couleur), sinon ivoire neutre.
+  Icône : son champ icone (image monochrome, SVG ou PNG transparent) remplace le point, teintée de la même couleur.
   Styles : assets/base.css (« Pastilles »).
   Usage : {% render 'pastilles', liste: saga.tags.value %}
 {%- endcomment -%}
@@ -8,10 +9,18 @@
   <ul class="pastilles">
     {%- for element in liste -%}
       {%- assign couleur = nil -%}
+      {%- assign icone = nil -%}
       {%- for genre in shop.metaobjects.genre.values -%}
-        {%- if genre.nom.value == element -%}{%- assign couleur = genre.couleur.value -%}{%- endif -%}
+        {%- if genre.nom.value == element -%}
+          {%- assign couleur = genre.couleur.value -%}
+          {%- assign icone = genre.icone.value -%}
+        {%- endif -%}
       {%- endfor -%}
-      <li{% if couleur %} style="--pastille: {{ couleur }}"{% endif %}>{{ element }}</li>
+      {%- capture style -%}
+        {%- if couleur %}--pastille: {{ couleur }};{% endif -%}
+        {%- if icone %} --icone: url('{{ icone | image_url: width: 48 }}');{% endif -%}
+      {%- endcapture -%}
+      <li{% if icone %} class="pastille--icone"{% endif %}{% if style != blank %} style="{{ style }}"{% endif %}>{{ element }}</li>
     {%- endfor -%}
   </ul>
 {%- endif -%}
