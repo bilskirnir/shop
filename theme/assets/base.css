@@ -870,3 +870,37 @@ body:has(.eteint-feu.is-visible) .decor__feu {
     scroll-behavior: auto;
   }
 }
+
+/* ---------- Champ pilule (newsletter, recherche) : à poser avec .verre ---------- */
+.champ {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 22px;
+  border-radius: 999px;
+}
+
+.champ input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ivoire);
+  font-size: 16px;
+  outline: none;
+}
+
+.champ:focus-within {
+  outline: 2px solid var(--or);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1024px) {
+  .champ {
+    min-height: 60px;
+  }
+
+  .champ input {
+    font-size: 17px;
+  }
+}

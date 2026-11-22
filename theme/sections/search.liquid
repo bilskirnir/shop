@@ -1,70 +1,124 @@
 {% comment %}
-  This section is used in the search template to render search results for
-  products, articles, and pages.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/search
+  La page de recherche (/search) : un champ, puis les livres trouvés en couvertures, comme au catalogue.
+  On ne cherche que les livres (type=product), et « destin » trouve « destinée » (prefix=last).
 {% endcomment %}
+<section class="recherche">
+  <div class="recherche__tete" data-reveal>
+    <p class="surtitre">{{ section.settings.surtitre }}</p>
+    <h1>{{ section.settings.titre }}</h1>
 
-<h1>{{ 'search.title' | t }}</h1>
+    <form class="recherche__formulaire" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <label class="visually-hidden" for="recherche-termes">{{ section.settings.titre }}</label>
+      <div class="champ verre">
+        <input
+          id="recherche-termes"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ section.settings.indication }}"
+          autocomplete="off"
+          {% unless search.performed %}autofocus{% endunless %}
+        >
+      </div>
+      {% render 'bouton', libelle: section.settings.libelle_bouton, variante: 'or' %}
+    </form>
 
-<form action="{{ routes.search_url }}" method="get" role="search">
-  <input
-    type="search"
-    size="50"
-    name="q"
-    value="{{ search.terms | escape }}"
-    placeholder="{{ 'search.placeholder' | t }}"
-  >
-  <button type="submit">{{ 'search.submit' | t }}</button>
-</form>
+    {%- if search.performed -%}
+      <p class="recherche__compte" role="status">
+        {%- if search.results_count == 0 -%}
+          Aucun livre pour « {{ search.terms | escape }} ».
+          <a href="{{ routes.all_products_collection_url }}">{{ section.settings.libelle_catalogue }}</a>
+        {%- else -%}
+          {{ search.results_count }} livre{% if search.results_count > 1 %}s{% endif %} pour « {{ search.terms | escape }} »
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
 
-{% if search.performed %}
-  {% if search.results_count == 0 %}
-    <p>{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-  {% else %}
-    <p>{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
-
-    <div class="search-results">
-      {% paginate search.results by 20 %}
-        {% # Search result items may be an article, a page, or a product. %}
-        {% for result in search.results %}
-          <div class="search-result">
-            {% assign featured_image = result.featured_image | default: result.image %}
-            {% if featured_image %}
-              {% render 'image', class: 'search-result__image', image: featured_image, url: result.url, width: 400 %}
-            {% endif %}
-            <div class="search-result__content">
-              <p>
-                {{ result.title | link_to: result.url }}
-                {% if result.price %}
-                  {{ result.price | money_with_currency }}
-                {% endif %}
-              </p>
-            </div>
-          </div>
-        {% endfor %}
-
-        {{ paginate | default_pagination }}
-      {% endpaginate %}
-    </div>
-  {% endif %}
-{% endif %}
+  {%- if search.performed and search.results_count > 0 -%}
+    {%- paginate search.results by 24 -%}
+      <ul class="livres-grille" data-reveal>
+        {%- for livre in search.results -%}
+          <li>{% render 'livre-carte', livre: livre %}</li>
+        {%- endfor -%}
+      </ul>
+      {%- if paginate.pages > 1 -%}
+        <nav class="recherche__pages" aria-label="Pages de résultats">{{ paginate | default_pagination }}</nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  {%- endif -%}
+</section>
 
 {% stylesheet %}
-  .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .recherche {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 4vw, 56px);
+    min-height: 70svh;
+    padding: clamp(110px, 12vw, 160px) var(--marge-centre) 96px;
   }
-  .search-results .prev,
-  .search-results .page,
-  .search-results .next {
-    grid-column: 1 / -1;
+
+  .recherche__tete {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .recherche__tete .surtitre {
+    color: var(--gris-2);
+  }
+
+  .recherche__tete h1 {
+    font-size: clamp(44px, 5vw, 72px);
+    line-height: 0.95;
+  }
+
+  .recherche__formulaire {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 640px;
+    margin-top: 12px;
+  }
+
+  .recherche__compte {
+    font-size: clamp(16px, 1.3vw, 18px);
+    color: var(--gris-1);
+  }
+
+  .recherche__compte a {
+    color: var(--ivoire);
+  }
+
+  .recherche__pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: var(--gris-2);
+  }
+
+  @media (min-width: 1024px) {
+    .recherche__formulaire {
+      flex-direction: row;
+    }
+
+    .recherche__formulaire .champ {
+      flex: 1;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.search",
-  "settings": []
+  "name": "Recherche",
+  "settings": [
+    { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Recherche" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Chercher un livre" },
+    { "type": "text", "id": "indication", "label": "Texte du champ vide", "default": "Un titre, une saga, un auteur…" },
+    { "type": "text", "id": "libelle_bouton", "label": "Bouton", "default": "Chercher" },
+    { "type": "text", "id": "libelle_catalogue", "label": "Lien si rien n'est trouvé", "default": "Voir tout le catalogue" }
+  ]
 }
 {% endschema %}
