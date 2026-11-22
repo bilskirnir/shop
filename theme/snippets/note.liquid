@@ -1,19 +1,36 @@
 {% comment %}
-  La note des lecteurs, avec ses étoiles.
-  - Sans livre : la note de la maison, lue dans Paramètres du thème › Bilskirnir (« 4,7/5 · 137 avis »).
+  La preuve sociale sous un titre.
+  - Sans livre ni saga : la note de la maison, lue dans Paramètres du thème › Bilskirnir (« 4,7/5 · 137 avis »).
     Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
-  - Avec livre : la note de ce livre seulement, champ produit custom.note (texte, ex. « 4,7/5 · 137 avis sur Amazon »).
-    prefixe se place devant (ex. « Livre 1 · » sur la page d'une saga). Rien si le champ est vide.
+  - Avec livre (un produit) ou saga : le nombre d'avis publiés (métaobjets « avis », champ livre), sans étoiles ni
+    moyenne : ce sont des avis choisis, une note tirée d'eux serait trompeuse. Lien vers le bloc des avis (#avis).
+    Rien s'il n'y en a pas.
+  shortcut: shop.metaobjects.avis.values lit les 50 premiers avis ; paginer au-delà.
   Usage : {% render 'note', lecteurs: true %}
           {% render 'note', livre: product %}
+          {% render 'note', saga: saga %}
 {%- endcomment -%}
-{%- if livre -%}
-  {%- assign note_livre = livre.metafields.custom.note.value -%}
-  {%- if note_livre != blank -%}
-    <p class="note">
-      <span class="note__etoiles" aria-hidden="true">★★★★★</span>
-      <span>{{ prefixe }}<strong>{{ note_livre }}</strong></span>
-    </p>
+{%- if livre or saga -%}
+  {%- liquid
+    # Les livres concernés, en « ,id,id, ».
+    assign ids = ','
+    if livre
+      assign ids = ids | append: livre.id | append: ','
+    else
+      for tome in saga.ordre_des_tomes.value
+        assign ids = ids | append: tome.id | append: ','
+      endfor
+    endif
+    assign nombre = 0
+    for un_avis in shop.metaobjects.avis.values
+      assign cle = ',' | append: un_avis.livre.value.id | append: ','
+      if ids contains cle
+        assign nombre = nombre | plus: 1
+      endif
+    endfor
+  -%}
+  {%- if nombre > 0 -%}
+    <p class="note"><a href="#avis">{{ nombre }} avis de lecteur{% if nombre > 1 %}s{% endif %} <span aria-hidden="true">↓</span></a></p>
   {%- endif -%}
 {%- elsif settings.note != blank -%}
   <p class="note">
