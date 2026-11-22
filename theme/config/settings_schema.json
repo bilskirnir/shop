@@ -15,27 +15,7 @@
         "id": "lecteurs",
         "label": "Nombre de lecteurs",
         "default": "10k+",
-        "info": "Écrit tel quel, ex. « 10k+ ». Affiché à côté de la note sur l'accueil. Vide : masqué."
-      },
-      {
-        "type": "text",
-        "id": "note",
-        "label": "Note des lecteurs",
-        "default": "4,7/5",
-        "info": "Accueil et pages des arcs. Vide : masquée."
-      },
-      {
-        "type": "text",
-        "id": "note_source",
-        "label": "Source de la note",
-        "info": "Vide par défaut : la source n'est citée que sous chaque avis, pour ne pas envoyer le visiteur acheter ailleurs."
-      },
-      {
-        "type": "text",
-        "id": "note_nombre",
-        "label": "Nombre d'avis",
-        "default": "137 avis",
-        "info": "Affiché après la note : « 4,7/5 · 137 avis ». Vide : masqué."
+        "info": "Écrit tel quel, ex. « 10k+ ». Affiché à côté de la note des avis sur l'accueil. Vide : masqué."
       },
       {
         "type": "number",

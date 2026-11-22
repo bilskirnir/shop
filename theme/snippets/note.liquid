@@ -1,42 +1,56 @@
 {% comment %}
-  La preuve sociale sous un titre.
-  - Sans livre ni saga : la note de la maison, lue dans Paramètres du thème › Bilskirnir (« 4,7/5 · 137 avis »).
-    Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
-  - Avec livre (un produit) ou saga : le nombre d'avis publiés (métaobjets « avis », champ livre), sans étoiles ni
-    moyenne : ce sont des avis choisis, une note tirée d'eux serait trompeuse. Lien vers le bloc des avis (#avis).
-    Rien s'il n'y en a pas.
+  La note des lecteurs, calculée sur les avis publiés du site (métaobjets « avis » : champs livre et note, 1 à 5).
+  - Sans livre ni saga (l'accueil) : tous les avis du site. Avec lecteurs: true, ajoute « · 10k+ lecteurs ».
+  - Avec livre (un produit) ou saga : les avis de ce livre, ou de tous les tomes de la saga ; lien vers le bloc des avis (#avis).
+  « ★★★★★ 4,8/5 · 7 avis de lecteurs ». La moyenne ne compte que les avis notés ; rien si aucun avis.
   shortcut: shop.metaobjects.avis.values lit les 50 premiers avis ; paginer au-delà.
   Usage : {% render 'note', lecteurs: true %}
           {% render 'note', livre: product %}
           {% render 'note', saga: saga %}
 {%- endcomment -%}
-{%- if livre or saga -%}
-  {%- liquid
-    # Les livres concernés, en « ,id,id, ».
+{%- liquid
+  # Les livres concernés, en « ,id,id, » ; vide = tout le site.
+  assign ids = ''
+  if livre
+    assign ids = ',' | append: livre.id | append: ','
+  elsif saga
     assign ids = ','
-    if livre
-      assign ids = ids | append: livre.id | append: ','
-    else
-      for tome in saga.ordre_des_tomes.value
-        assign ids = ids | append: tome.id | append: ','
-      endfor
-    endif
-    assign nombre = 0
-    for un_avis in shop.metaobjects.avis.values
-      assign cle = ',' | append: un_avis.livre.value.id | append: ','
-      if ids contains cle
-        assign nombre = nombre | plus: 1
-      endif
+    for tome in saga.ordre_des_tomes.value
+      assign ids = ids | append: tome.id | append: ','
     endfor
-  -%}
-  {%- if nombre > 0 -%}
-    <p class="note"><a href="#avis">{{ nombre }} avis de lecteur{% if nombre > 1 %}s{% endif %} <span aria-hidden="true">↓</span></a></p>
-  {%- endif -%}
-{%- elsif settings.note != blank -%}
+  endif
+
+  assign nombre = 0
+  assign notes = 0
+  assign total = 0
+  for un_avis in shop.metaobjects.avis.values
+    if ids != blank
+      assign cle = ',' | append: un_avis.livre.value.id | append: ','
+      unless ids contains cle
+        continue
+      endunless
+    endif
+    assign nombre = nombre | plus: 1
+    if un_avis.note.value
+      assign notes = notes | plus: 1
+      assign total = total | plus: un_avis.note.value
+    endif
+  endfor
+-%}
+{%- if nombre > 0 -%}
   <p class="note">
-    <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+    {%- if notes > 0 -%}
+      {%- assign moyenne = total | times: 1.0 | divided_by: notes | round: 1 -%}
+      {%- assign pleines = moyenne | round -%}
+      <span class="note__etoiles" aria-hidden="true">{% for i in (1..5) %}{% if i <= pleines %}★{% else %}☆{% endif %}{% endfor %}</span>
+    {%- endif -%}
     <span>
-      <strong>{{ settings.note }}</strong>{% if settings.note_nombre != blank %} · {{ settings.note_nombre }}{% endif %}{%- if settings.note_source != blank %} {{ settings.note_source }}{% endif -%}
+      {%- if notes > 0 %}<strong>{{ moyenne | append: '' | replace: '.', ',' }}/5</strong> · {% endif -%}
+      {%- if ids != blank -%}
+        <a href="#avis">{{ nombre }} avis de lecteur{% if nombre > 1 %}s{% endif %} <span aria-hidden="true">↓</span></a>
+      {%- else -%}
+        {{ nombre }} avis
+      {%- endif -%}
       {%- if lecteurs and settings.lecteurs != blank %} · <strong>{{ settings.lecteurs }}</strong> lecteurs{% endif -%}
     </span>
   </p>

@@ -1,6 +1,6 @@
 {% comment %}
   Page d'un arc — les avis des lecteurs. Chaque métaobjet « avis » désigne son livre : champ livre (référence produit),
-  plus titre, texte, auteur, source, verifie. Le lien va de l'avis au livre : ajouter un avis = choisir son livre.
+  plus note (1 à 5, les vraies étoiles de la carte), titre, texte, auteur, source, verifie. Le lien va de l'avis au livre : ajouter un avis = choisir son livre.
   shortcut: shop.metaobjects.avis.values lit les 50 premiers avis de la boutique ; paginer au-delà. La page réunit ceux de tous les tomes,
   dans l'ordre des tomes. Le premier (le premier avis du Livre 1) s'affiche en grand dans le halo,
   les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
@@ -45,7 +45,10 @@
           {%- if nombre > 1 %}<div class="arc-avis__cartes">{% endif -%}
         {%- else -%}
           <figure class="arc-avis__carte verre">
-            <span class="note__etoiles" aria-hidden="true">★★★★★</span>
+            {%- assign etoiles = un_avis.note.value -%}
+            {%- if etoiles -%}
+              <span class="note__etoiles" role="img" aria-label="{{ etoiles }} étoiles sur 5">{% for i in (1..5) %}{% if i <= etoiles %}★{% else %}☆{% endif %}{% endfor %}</span>
+            {%- endif %}
             {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
             <blockquote>« {{ un_avis.texte.value }} »</blockquote>
             {{ legende }}
