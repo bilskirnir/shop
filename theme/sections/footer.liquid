@@ -16,6 +16,19 @@
   {%- endif -%}
 
   <div class="pied__liens">
+    {%- comment -%} Un seul lien ; la liste s'ouvre dans une fenêtre (attribut popover natif : Échap et clic dehors la ferment). {%- endcomment -%}
+    <button class="pied__ouvrir" type="button" popovertarget="pied-legal">Informations légales</button>
+    <span>© {{ shop.name }}</span>
+  </div>
+
+  <div class="pied__fenetre verre" id="pied-legal" popover>
+    <div class="pied__entete">
+      <p class="surtitre">Informations légales</p>
+      <button class="pied__fermer" type="button" popovertarget="pied-legal" popovertargetaction="hide" aria-label="Fermer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <nav class="pied__legal" aria-label="Informations légales">
     {%- assign urls_menu = '' -%}
     {%- for lien in section.settings.menu.links -%}
       <a href="{{ lien.url }}">{{ lien.title }}</a>
@@ -39,7 +52,7 @@
         <a href="{{ politique.url }}">{{ nom }}</a>
       {%- endunless -%}
     {%- endfor -%}
-    <span>© {{ shop.name }}</span>
+    </nav>
   </div>
 </footer>
 
@@ -75,8 +88,73 @@
     color: #6f6d69;
   }
 
-  .pied__liens a {
+  .pied__ouvrir {
+    padding: 0;
+    border: 0;
+    background: none;
     color: var(--gris-3);
+    cursor: pointer;
+  }
+
+  .pied__ouvrir:hover {
+    color: var(--ivoire);
+  }
+
+  /* La fenêtre des liens légaux, centrée au-dessus de la page. */
+  .pied__fenetre {
+    width: min(420px, calc(100% - 32px));
+    /* La remise à zéro (* { margin: 0 }) annule le centrage natif du popover. */
+    margin: auto;
+    padding: 20px 24px 24px;
+    border-radius: 14px;
+    color: var(--ivoire);
+  }
+
+  .pied__fenetre::backdrop {
+    background: #0b0c0eb3;
+  }
+
+  .pied__entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pied__entete .surtitre {
+    color: var(--or);
+  }
+
+  .pied__fermer {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #ece5d60f;
+    color: var(--ivoire);
+    cursor: pointer;
+  }
+
+  .pied__legal {
+    display: grid;
+    margin-top: 12px;
+  }
+
+  .pied__legal a {
+    padding-block: 11px;
+    border-bottom: 1px solid #ece5d614;
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .pied__legal a:last-child {
+    border-bottom: 0;
+  }
+
+  .pied__legal a:hover {
+    color: var(--ivoire);
   }
 
   @media (min-width: 1024px) {
