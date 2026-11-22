@@ -16,19 +16,10 @@
   {%- endif -%}
 
   <div class="pied__liens">
-    {%- comment -%} Un seul lien ; la liste s'ouvre dans une fenêtre (attribut popover natif : Échap et clic dehors la ferment). {%- endcomment -%}
-    <button class="pied__ouvrir" type="button" popovertarget="pied-legal">Informations légales</button>
-    <span>© {{ shop.name }}</span>
-  </div>
-
-  <div class="pied__fenetre verre" id="pied-legal" popover>
-    <div class="pied__entete">
-      <p class="surtitre">Informations légales</p>
-      <button class="pied__fermer" type="button" popovertarget="pied-legal" popovertargetaction="hide" aria-label="Fermer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button>
-    </div>
-    <nav class="pied__legal" aria-label="Informations légales">
+    {%- comment -%} Un seul lien ; la liste s'ouvre au survol, au-dessus du lien (au toucher sur mobile : le bouton prend le focus). {%- endcomment -%}
+    <div class="pied__legal">
+      <button class="pied__ouvrir" type="button">Informations légales</button>
+      <nav class="pied__panneau verre" aria-label="Informations légales">
     {%- assign urls_menu = '' -%}
     {%- for lien in section.settings.menu.links -%}
       <a href="{{ lien.url }}">{{ lien.title }}</a>
@@ -52,7 +43,9 @@
         <a href="{{ politique.url }}">{{ nom }}</a>
       {%- endunless -%}
     {%- endfor -%}
-    </nav>
+      </nav>
+    </div>
+    <span>© {{ shop.name }}</span>
   </div>
 </footer>
 
@@ -96,65 +89,63 @@
     cursor: pointer;
   }
 
-  .pied__ouvrir:hover {
+  .pied__legal:is(:hover, :focus-within) .pied__ouvrir {
     color: var(--ivoire);
   }
 
-  /* La fenêtre des liens légaux, centrée au-dessus de la page. */
-  .pied__fenetre {
-    width: min(420px, calc(100% - 32px));
-    /* La remise à zéro (* { margin: 0 }) annule le centrage natif du popover. */
-    margin: auto;
-    padding: 20px 24px 24px;
-    border-radius: 14px;
-    color: var(--ivoire);
-  }
-
-  .pied__fenetre::backdrop {
-    background: #0b0c0eb3;
-  }
-
-  .pied__entete {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .pied__entete .surtitre {
-    color: var(--or);
-  }
-
-  .pied__fermer {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: #ece5d60f;
-    color: var(--ivoire);
-    cursor: pointer;
-  }
-
+  /* La liste flotte au-dessus du lien. Le padding du bas comble l'écart : la souris peut y monter sans la fermer. */
   .pied__legal {
-    display: grid;
-    margin-top: 12px;
+    position: relative;
   }
 
-  .pied__legal a {
-    padding-block: 11px;
+  .pied__panneau {
+    position: absolute;
+    bottom: 100%;
+    left: -16px;
+    z-index: 20;
+    display: grid;
+    width: 260px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+  }
+
+  .pied__panneau::after {
+    content: '';
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 14px;
+  }
+
+  .pied__legal:is(:hover, :focus-within) .pied__panneau {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .pied__panneau a {
+    padding-block: 8px;
     border-bottom: 1px solid #ece5d614;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--gris-1);
   }
 
-  .pied__legal a:last-child {
+  .pied__panneau a:last-child {
     border-bottom: 0;
   }
 
-  .pied__legal a:hover {
+  .pied__panneau a:hover {
     color: var(--ivoire);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pied__panneau {
+      transition: none;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -173,6 +164,12 @@
     .pied__liens {
       gap: 20px;
       font-size: 13px;
+    }
+
+    /* Avec les réseaux à gauche, le lien passe à droite : la liste s'aligne sur son bord droit. */
+    .pied:has(.pied__reseaux) .pied__panneau {
+      left: auto;
+      right: -16px;
     }
   }
 {% endstylesheet %}
