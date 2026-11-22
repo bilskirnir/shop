@@ -1,5 +1,6 @@
 {% comment %}
-  Pied de page : TikTok et Instagram (les seuls liens qui sortent de la boutique), puis le menu légal.
+  Pied de page : TikTok et Instagram (les seuls liens qui sortent de la boutique), puis le menu légal
+  et les politiques de la boutique.
   Les adresses des réseaux se règlent dans Paramètres du thème › Réseaux sociaux.
 {% endcomment %}
 <footer class="pied">
@@ -15,8 +16,28 @@
   {%- endif -%}
 
   <div class="pied__liens">
+    {%- assign urls_menu = '' -%}
     {%- for lien in section.settings.menu.links -%}
       <a href="{{ lien.url }}">{{ lien.title }}</a>
+      {%- assign urls_menu = urls_menu | append: lien.url | append: ' ' -%}
+    {%- endfor -%}
+    {%- comment -%} Les politiques remplies dans Paramètres › Politiques (CGV, confidentialité, retours…), sauf celles déjà dans le menu. {%- endcomment -%}
+    {%- for politique in shop.policies -%}
+      {%- unless urls_menu contains politique.url -%}
+        {%- comment -%} Shopify donne les titres dans la langue de la boutique (ici l'anglais) : on les nomme en français. {%- endcomment -%}
+        {%- assign cle = politique.url | split: '/' | last -%}
+        {%- case cle -%}
+          {%- when 'terms-of-sale' -%}{%- assign nom = 'CGV' -%}
+          {%- when 'legal-notice' -%}{%- assign nom = 'Mentions légales' -%}
+          {%- when 'privacy-policy' -%}{%- assign nom = 'Confidentialité' -%}
+          {%- when 'terms-of-service' -%}{%- assign nom = "Conditions d'utilisation" -%}
+          {%- when 'refund-policy' -%}{%- assign nom = 'Retours et remboursements' -%}
+          {%- when 'shipping-policy' -%}{%- assign nom = 'Livraison' -%}
+          {%- when 'contact-information' -%}{%- assign nom = 'Coordonnées' -%}
+          {%- else -%}{%- assign nom = politique.title -%}
+        {%- endcase -%}
+        <a href="{{ politique.url }}">{{ nom }}</a>
+      {%- endunless -%}
     {%- endfor -%}
     <span>© {{ shop.name }}</span>
   </div>
