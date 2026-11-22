@@ -11,9 +11,10 @@
   --or: #d2b06a;
   --or-fonce: #b08a45;
   --rond: #17110a;
-  /* Buenard est la signature de la maison (le nom BILSKIRNIR) ; les couvertures la portent déjà, les titres n'en ont pas besoin. */
+  /* Buenard est la signature de la maison (le nom BILSKIRNIR) ; les couvertures la portent déjà.
+     Les titres : Big Shoulders Display, condensée et nordique (choisie le 22/11/2026). */
   --marque: Buenard, Georgia, serif;
-  --titre: 'Source Sans 3', system-ui, sans-serif;
+  --titre: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
   --texte: 'Source Sans 3', system-ui, sans-serif;
   --gouttiere: clamp(24px, 8vw, 120px);
   /* Marge qui garde le contenu des écrans dans une colonne centrée de 1280 px sur grand écran. */
@@ -88,7 +89,7 @@ a:hover {
 h1,
 h2 {
   font-family: var(--titre);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 0.95;
   text-wrap: balance;
 }
