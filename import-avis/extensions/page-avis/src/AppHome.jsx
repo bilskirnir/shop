@@ -97,7 +97,10 @@ async function mettreAJourLivres() {
 async function creerChampAvis() {
   const {product} = await graphql(`{ product: metafieldDefinitions(ownerType: PRODUCT, namespace: "custom", key: "avis", first: 1) { nodes { id } } }`);
   if (product.nodes.length) return;
-  const {metaobjectDefinitionByType} = await graphql('{ metaobjectDefinitionByType(type: "avis") { id } }');
+  // La définition « avis » se lit par un avis existant (metaobjectDefinitionByType demanderait un droit de plus).
+  const {metaobjects} = await graphql('{ metaobjects(type: "avis", first: 1) { nodes { definition { id } } } }');
+  const metaobjectDefinitionByType = metaobjects.nodes[0]?.definition;
+  if (!metaobjectDefinitionByType) throw new Error('aucun avis dans la boutique : publie-en un avant de mettre les livres à jour.');
   const data = await graphql(
     `mutation($definition: MetafieldDefinitionInput!) { metafieldDefinitionCreate(definition: $definition) { userErrors { message } } }`,
     {definition: {
