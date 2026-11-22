@@ -1,0 +1,211 @@
+<title>Bonus et promesse</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Deux propositions sur fond du site : A. la vitrine Bonus en bas du catalogue ; B. « Pourquoi on ne le lâche pas » sur la fiche livre, posé à côté des avis pour juger du contraste. */
+:root {
+  color-scheme: dark;
+  --encre: #0b0c0e;
+  --ardoise: #14161a;
+  --ivoire: #ece5d6;
+  --gris-1: #c9c7c2;
+  --gris-2: #a7a6a2;
+  --gris-3: #8d8b86;
+  --or: #d2b06a;
+  --or-fonce: #b08a45;
+  --rond: #17110a;
+  --teinte: #e5cfa4;
+  --filet: #ece5d61a;
+  --titre: Marcellus, Georgia, serif;
+  --texte: 'Source Sans 3', system-ui, sans-serif;
+}
+body { background: var(--encre); color: var(--ivoire); font: 16px/1.55 var(--texte); }
+.cadre { max-width: 1180px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--titre); font-weight: 400; line-height: 1.05; text-wrap: balance; }
+.surtitre { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+.repere { padding-block: 56px 20px; border-bottom: 1px solid var(--filet); }
+.repere p { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--or); }
+.repere h1 { font-size: clamp(28px, 4vw, 40px); margin-top: 8px; }
+.repere span { display: block; margin-top: 8px; color: var(--gris-2); max-width: 70ch; }
+.etiquette { display: inline-block; margin-bottom: 14px; padding: 4px 10px; border: 1px dashed #ece5d640; border-radius: 999px; font-size: 12px; color: var(--gris-3); }
+
+/* ---------- Contexte : la fin du catalogue ---------- */
+.histoire { display: grid; gap: 18px; padding-block: 40px; border-top: 1px solid #ece5d61f; }
+@media (min-width: 900px) { .histoire { grid-template-columns: 300px 1fr; gap: 48px; } }
+.histoire .annees { font-family: var(--titre); font-size: 22px; color: var(--gris-2); }
+.histoire .surtitre { color: var(--teinte); }
+.histoire h2 { font-size: clamp(30px, 3vw, 40px); margin-top: 4px; }
+.couvs { display: flex; gap: 18px; }
+.couvs figure { margin: 0; width: 140px; }
+.couvs img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 4px; box-shadow: 0 14px 30px #0009; }
+.couvs figcaption { margin-top: 8px; font-size: 14px; }
+.couvs small { display: block; color: var(--gris-3); }
+
+/* ---------- A. La vitrine Bonus ---------- */
+.vitrine { position: relative; margin-block: 24px 96px; padding: clamp(28px, 4vw, 48px); border-radius: 22px; overflow: hidden;
+  background: radial-gradient(70% 90% at 85% 0%, #d2b06a26, transparent 60%), radial-gradient(60% 80% at 0% 100%, #b8643c1f, transparent 60%), #14161ad9;
+  border: 1px solid #d2b06a33; }
+.vitrine::before { content: "BONUS"; position: absolute; right: -10px; bottom: -40px; font-family: var(--titre); font-size: clamp(120px, 18vw, 240px); line-height: 1; color: transparent; -webkit-text-stroke: 1px #ece5d612; pointer-events: none; }
+.vitrine__grille { position: relative; display: grid; gap: 32px; }
+@media (min-width: 900px) { .vitrine__grille { grid-template-columns: 260px 1fr; gap: 48px; align-items: center; } }
+.vitrine__tete .surtitre { color: var(--or); }
+.vitrine__tete h2 { font-size: clamp(44px, 5vw, 64px); margin-top: 10px; }
+.vitrine__tete p { margin-top: 12px; color: var(--gris-1); max-width: 30ch; }
+.goodies { display: grid; gap: 18px; }
+.goodies--plusieurs { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.goodie { display: grid; grid-template-columns: 150px 1fr; gap: 24px; align-items: center; padding: 22px; border-radius: 18px; background: #0b0c0e80; border: 1px solid var(--filet); }
+@media (max-width: 560px) { .goodie { grid-template-columns: 1fr; } .goodie__visuel { max-width: 180px; } }
+.goodie__visuel { position: relative; aspect-ratio: 2/3; }
+.goodie__visuel img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; transform: rotate(-3deg); box-shadow: 0 18px 40px #000a, 0 0 0 1px #ece5d61a; }
+.goodie__visuel--tshirt { display: grid; place-items: center; border-radius: 12px; background: #ece5d608; border: 1px dashed #ece5d633; aspect-ratio: 1; }
+.goodie__visuel--tshirt svg { width: 60%; color: var(--gris-3); }
+.goodie__texte { display: grid; gap: 8px; align-content: start; }
+.badge { justify-self: start; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--or); background: #d2b06a1a; border: 1px solid #d2b06a40; }
+.goodie h3 { font-size: clamp(22px, 2.2vw, 28px); }
+.goodie__qui { font-size: 14px; color: var(--gris-2); }
+.goodie__pitch { color: var(--gris-1); font-size: 15px; max-width: 52ch; }
+.goodie__achat { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; margin-top: 6px; }
+.prix { font-family: var(--titre); font-size: 26px; }
+.bouton { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border: 0; border-radius: 999px; background: linear-gradient(180deg, var(--or), var(--or-fonce)); color: var(--rond); font: 700 15px var(--texte); cursor: pointer; }
+.lien { color: var(--gris-1); font-size: 14px; font-weight: 600; text-decoration: none; }
+.lien:hover { color: var(--ivoire); }
+.goodies--plusieurs .goodie { grid-template-columns: 1fr; align-content: start; }
+.goodies--plusieurs .goodie__visuel { max-width: 140px; }
+
+/* ---------- B. La promesse de la fiche livre ---------- */
+.fiche { position: relative; padding-block: 40px 96px; }
+.halo { position: absolute; inset: 0; background: radial-gradient(50% 45% at 50% 30%, #e5cfa41f, transparent 70%); pointer-events: none; }
+
+.promesse { position: relative; display: grid; gap: 36px; padding: clamp(28px, 4vw, 56px); border-radius: 22px; border: 1px solid var(--filet); background: linear-gradient(120deg, #e5cfa40f, transparent 45%), #14161ab3; overflow: hidden; }
+@media (min-width: 900px) { .promesse { grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; } }
+.promesse__gauche { display: grid; gap: 18px; }
+.promesse__gauche .surtitre { color: var(--teinte); }
+.promesse__phrase { font-size: clamp(36px, 4.4vw, 60px); line-height: 1.02; text-align: left; }
+.promesse__phrase em { font-style: normal; color: var(--teinte); }
+.promesse__trait { width: 64px; height: 2px; background: var(--teinte); }
+.raisons { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.raisons li { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; padding-block: 20px; border-top: 1px solid var(--filet); }
+.raisons li:last-child { border-bottom: 1px solid var(--filet); }
+.rune { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e5cfa459; color: var(--teinte); font-size: 20px; }
+.raisons strong { display: block; font-family: var(--titre); font-weight: 400; font-size: clamp(20px, 2vw, 24px); }
+.raisons span { color: var(--gris-2); font-size: 14px; }
+
+.avis-voisin { position: relative; margin-top: 72px; text-align: center; }
+.avis-voisin .surtitre { color: var(--gris-2); }
+.avis-voisin blockquote { margin: 18px auto 0; max-width: 900px; font-family: var(--titre); font-size: clamp(24px, 2.8vw, 38px); line-height: 1.15; }
+.avis-voisin figcaption { margin-top: 12px; font-size: 14px; color: var(--gris-2); }
+.notes { margin-top: 28px; padding: 18px 20px; border-left: 2px solid var(--or-fonce); background: #d2b06a0d; border-radius: 0 12px 12px 0; color: var(--gris-1); font-size: 15px; }
+.notes ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+</style>
+
+<div class="cadre">
+  <header class="repere">
+    <p>Proposition A · page Catalogue</p>
+    <h1>La vitrine « Bonus »</h1>
+    <span>En fin de catalogue, après la dernière histoire. Un panneau à part, plus chaud, où l'on ajoute au panier sans passer par la fiche.</span>
+  </header>
+
+  <section class="histoire" aria-label="Fin du catalogue (contexte)">
+    <div>
+      <p class="annees">2019 – 2020</p>
+      <p class="surtitre">2 livres · La saga qui a tout lancé</p>
+      <h2>De l'Eau et du Sang</h2>
+    </div>
+    <div class="couvs">
+      <figure><img src="assets/cover-sang-1.jpg" alt=""><figcaption>Destinée manifeste<small>Livre 1 · 25 €</small></figcaption></figure>
+      <figure><img src="assets/cover-sang-2.jpg" alt=""><figcaption>Volonté inébranlable<small>Livre 2 · 26 €</small></figcaption></figure>
+    </div>
+  </section>
+
+  <p class="etiquette">Aujourd'hui : un seul produit</p>
+  <section class="vitrine" aria-label="Bonus">
+    <div class="vitrine__grille">
+      <div class="vitrine__tete">
+        <p class="surtitre">Pour prolonger l'aventure</p>
+        <h2>Bonus</h2>
+        <p>Les à-côtés de la maison : de quoi écrire tes propres héros, et bientôt de quoi porter les nôtres.</p>
+      </div>
+      <div class="goodies">
+        <article class="goodie">
+          <div class="goodie__visuel"><img src="assets/livret-ecriture.jpg" alt="Couverture du livret d'écriture"></div>
+          <div class="goodie__texte">
+            <span class="badge">Livret</span>
+            <h3>Personnages emblématiques</h3>
+            <p class="goodie__qui">Guide d'écriture · Livret N°1 · par Uriel Lahoussaye et Gautier Durrieu de Madron</p>
+            <p class="goodie__pitch">Un guide à remplir qui t'accompagne pas à pas pour créer et développer des personnages qui marquent.</p>
+            <div class="goodie__achat">
+              <span class="prix">15 €</span>
+              <button class="bouton" type="button">Ajouter au panier <span aria-hidden="true">→</span></button>
+              <a class="lien" href="#">Voir le livret</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <p class="etiquette">Demain : plusieurs produits (t-shirts : exemple inventé)</p>
+  <section class="vitrine" aria-label="Bonus, avec plusieurs produits">
+    <div class="vitrine__grille">
+      <div class="vitrine__tete">
+        <p class="surtitre">Pour prolonger l'aventure</p>
+        <h2>Bonus</h2>
+        <p>Les à-côtés de la maison : de quoi écrire tes propres héros, et de quoi porter les nôtres.</p>
+      </div>
+      <div class="goodies goodies--plusieurs">
+        <article class="goodie">
+          <div class="goodie__visuel"><img src="assets/livret-ecriture.jpg" alt=""></div>
+          <div class="goodie__texte">
+            <span class="badge">Livret</span>
+            <h3>Personnages emblématiques</h3>
+            <div class="goodie__achat"><span class="prix">15 €</span><button class="bouton" type="button">Ajouter</button></div>
+          </div>
+        </article>
+        <article class="goodie">
+          <div class="goodie__visuel goodie__visuel--tshirt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M8 3 3 6l2 4 2-1v12h10V9l2 1 2-4-5-3c0 1.7-1.8 3-4 3S8 4.7 8 3Z"/></svg></div>
+          <div class="goodie__texte">
+            <span class="badge">T-shirt</span>
+            <h3>Hall de Bilskirnir</h3>
+            <div class="goodie__achat"><span class="prix">29 €</span><button class="bouton" type="button">Ajouter</button></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <header class="repere">
+    <p>Proposition B · fiche livre</p>
+    <h1>« Pourquoi on ne le lâche pas »</h1>
+    <span>Aujourd'hui, la promesse est une grande phrase centrée, comme le grand avis qui la suit : on croit lire deux citations. Ici, elle devient une fiche argumentée, alignée à gauche, sans guillemets, avec ses raisons en liste. L'avis reste la seule citation centrée.</span>
+  </header>
+
+  <section class="fiche">
+    <div class="halo" aria-hidden="true"></div>
+    <div class="promesse">
+      <div class="promesse__gauche">
+        <p class="surtitre">Pourquoi on ne le lâche pas</p>
+        <h2 class="promesse__phrase">Tout ce qu'on t'a raconté sur les dieux est <em>vrai</em>.</h2>
+        <div class="promesse__trait" aria-hidden="true"></div>
+      </div>
+      <ul class="raisons">
+        <li><span class="rune" aria-hidden="true">ᛗ</span><div><strong>Les mythes dans notre monde</strong></div></li>
+        <li><span class="rune" aria-hidden="true">ᚱ</span><div><strong>Se dévore comme une série</strong></div></li>
+        <li><span class="rune" aria-hidden="true">ᛏ</span><div><strong>Épique et déjanté</strong></div></li>
+      </ul>
+    </div>
+
+    <figure class="avis-voisin" aria-label="Le bloc des avis qui suit (contexte)">
+      <p class="surtitre">Ils l'ont lu</p>
+      <blockquote>« Je connais l'auteur via TikTok et découvert un conteur hors pair, ce qui s'est confirmé dans ce livre qui nous maintient en haleine. »</blockquote>
+      <figcaption>Jordan N. · Amazon</figcaption>
+    </figure>
+
+    <div class="notes">
+      <strong>Ce qui change dans l'admin :</strong>
+      <ul>
+        <li>Rien d'obligatoire : la phrase et les raisons restent les champs « promesse » et « raisons » de la saga.</li>
+        <li>Le mot mis en couleur (« vrai ») : le dernier mot de la phrase, automatiquement. On peut aussi le choisir en l'entourant d'astérisques dans le champ.</li>
+      </ul>
+    </div>
+  </section>
+</div>

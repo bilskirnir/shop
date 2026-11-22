@@ -109,21 +109,54 @@
     {%- endif -%}
   {%- endfor -%}
 
+  {%- comment -%}
+    La vitrine Bonus (maquette validée le 22/11/2026, docs/maquette-2026-11-19/Bonus-Promesse.html) :
+    une carte par produit hors saga, avec son type, ses auteurs, son accroche (custom.teaser_court,
+    sinon le début de la description) et l'ajout au panier sur place (le tiroir du panier s'ouvre).
+  {%- endcomment -%}
+  {%- assign nombre_bonus = 0 -%}
   {%- capture bonus -%}
     {%- for produit in collection.products -%}
       {%- assign cle = ',' | append: produit.id | append: ',' -%}
-      {%- unless ids_sagas contains cle -%}
-        <li>{% render 'livre-carte', livre: produit %}</li>
-      {%- endunless -%}
+      {%- if ids_sagas contains cle %}{% continue %}{% endif -%}
+      {%- assign nombre_bonus = nombre_bonus | plus: 1 -%}
+      {%- capture auteurs %}{% render 'saga-auteurs', livre: produit %}{% endcapture -%}
+      {%- assign accroche = produit.metafields.custom.teaser_court.value | default: produit.description | strip_html | truncatewords: 26, '…' -%}
+      <article class="bonus__carte">
+        <a class="bonus__visuel" href="{{ produit.url }}" tabindex="-1" aria-hidden="true">
+          {%- if produit.featured_image -%}
+            {{ produit.featured_image | image_url: width: 400 | image_tag: alt: '', loading: 'lazy', widths: '200, 300, 400', sizes: '160px' }}
+          {%- endif -%}
+        </a>
+        <div class="bonus__texte">
+          {%- if produit.type != blank %}<span class="bonus__type">{{ produit.type }}</span>{% endif %}
+          <h3><a href="{{ produit.url }}">{% render 'livre-titre', livre: produit %}</a></h3>
+          {%- if auteurs != blank %}<p class="bonus__qui">par {{ auteurs }}</p>{% endif %}
+          {%- if accroche != blank %}<p class="bonus__accroche">{{ accroche }}</p>{% endif %}
+          <div class="bonus__achat">
+            {%- if produit.available -%}
+              <span class="bonus__prix">{{ produit.price | money_without_trailing_zeros }}</span>
+              {%- form 'product', produit -%}
+                <input type="hidden" name="id" value="{{ produit.selected_or_first_available_variant.id }}">
+                {% render 'bouton', libelle: section.settings.bonus_bouton, variante: 'or' %}
+              {%- endform -%}
+            {%- else -%}
+              <span class="bonus__prix">À paraître</span>
+            {%- endif -%}
+            <a class="bonus__lien" href="{{ produit.url }}">{{ section.settings.bonus_lien }}</a>
+          </div>
+        </div>
+      </article>
     {%- endfor -%}
   {%- endcapture -%}
-  {%- if bonus != blank -%}
-    <section class="catalogue__histoire" data-reveal>
-      <div class="catalogue__nom">
+  {%- if nombre_bonus > 0 -%}
+    <section class="bonus" data-reveal>
+      <div class="bonus__tete">
+        {%- if section.settings.bonus_surtitre != blank %}<p class="surtitre">{{ section.settings.bonus_surtitre }}</p>{% endif %}
         <h2>{{ section.settings.bonus_titre }}</h2>
-        {%- if section.settings.bonus_texte != blank %}<p class="catalogue__bonus-texte">{{ section.settings.bonus_texte }}</p>{% endif %}
+        {%- if section.settings.bonus_texte != blank %}<p>{{ section.settings.bonus_texte }}</p>{% endif %}
       </div>
-      <ul class="livres-grille">{{ bonus }}</ul>
+      <div class="bonus__cartes{% if nombre_bonus > 1 %} bonus__cartes--plusieurs{% endif %}">{{ bonus }}</div>
     </section>
   {%- endif -%}
 </section>
@@ -189,11 +222,181 @@
     line-height: 1.05;
   }
 
-  .catalogue__bonus-texte {
-    max-width: 280px;
-    font-size: 15px;
-    line-height: 1.5;
+  /* ---------- Vitrine Bonus ---------- */
+  .bonus {
+    position: relative;
+    display: grid;
+    gap: 32px;
+    padding: clamp(28px, 4vw, 48px);
+    border-radius: 22px;
+    border: 1px solid #d2b06a33;
+    background:
+      radial-gradient(70% 90% at 85% 0%, #d2b06a26, transparent 60%),
+      radial-gradient(60% 80% at 0% 100%, #b8643c1f, transparent 60%),
+      #14161ad9;
+    overflow: hidden;
+  }
+
+  /* Le mot gravé en très grand dans le fond du panneau. */
+  .bonus::before {
+    content: 'BONUS';
+    position: absolute;
+    right: -10px;
+    bottom: -40px;
+    font-family: var(--titre);
+    font-size: clamp(120px, 18vw, 240px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px #ece5d612;
+    pointer-events: none;
+  }
+
+  .bonus > * {
+    position: relative;
+  }
+
+  .bonus__tete .surtitre {
+    color: var(--or);
+  }
+
+  .bonus__tete h2 {
+    margin-top: 10px;
+    font-size: clamp(44px, 5vw, 64px);
+  }
+
+  .bonus__tete p:not(.surtitre) {
+    max-width: 30ch;
+    margin-top: 12px;
     color: var(--gris-1);
+  }
+
+  .bonus__cartes {
+    display: grid;
+    gap: 18px;
+  }
+
+  .bonus__cartes--plusieurs {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .bonus__carte {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid #ece5d61a;
+    background: #0b0c0e80;
+  }
+
+  .bonus__cartes--plusieurs .bonus__carte {
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+
+  .bonus__visuel {
+    display: block;
+    max-width: 160px;
+  }
+
+  .bonus__visuel img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    box-shadow: 0 18px 40px #000a, 0 0 0 1px #ece5d61a;
+    transition: transform 0.3s ease;
+  }
+
+  .bonus__carte:hover .bonus__visuel img {
+    transform: rotate(-1deg) translateY(-4px);
+  }
+
+  .bonus__texte {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+
+  .bonus__type {
+    justify-self: start;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid #d2b06a40;
+    background: #d2b06a1a;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--or);
+  }
+
+  .bonus__texte h3 {
+    font-family: var(--titre);
+    font-weight: 400;
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.1;
+  }
+
+  .bonus__texte h3 a {
+    text-decoration: none;
+  }
+
+  .bonus__qui {
+    font-size: 14px;
+    color: var(--gris-2);
+  }
+
+  .bonus__accroche {
+    max-width: 52ch;
+    font-size: 15px;
+    color: var(--gris-1);
+  }
+
+  .bonus__achat {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 18px;
+    margin-top: 6px;
+  }
+
+  .bonus__prix {
+    font-family: var(--titre);
+    font-size: 26px;
+  }
+
+  .bonus__lien {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gris-1);
+    text-decoration: none;
+  }
+
+  .bonus__lien:hover {
+    color: var(--ivoire);
+  }
+
+  @media (max-width: 560px) {
+    .bonus__carte {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .bonus {
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bonus__visuel img {
+      transition: none;
+    }
   }
 
   .catalogue__lien {
@@ -234,8 +437,11 @@
     { "type": "text", "id": "libelle_arc", "label": "Lien d'une saga", "default": "Découvrir l'arc" },
     { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" },
     { "type": "header", "content": "Bonus (produits hors saga)" },
+    { "type": "text", "id": "bonus_surtitre", "label": "Surtitre", "default": "Pour prolonger l'aventure" },
     { "type": "text", "id": "bonus_titre", "label": "Titre", "default": "Bonus" },
-    { "type": "text", "id": "bonus_texte", "label": "Texte", "default": "Pour prolonger l'aventure." }
+    { "type": "text", "id": "bonus_texte", "label": "Texte", "default": "Les à-côtés de la maison : de quoi écrire tes propres héros, et bientôt de quoi porter les nôtres." },
+    { "type": "text", "id": "bonus_bouton", "label": "Bouton", "default": "Ajouter au panier" },
+    { "type": "text", "id": "bonus_lien", "label": "Lien vers la fiche", "default": "Voir le produit" }
   ]
 }
 {% endschema %}
