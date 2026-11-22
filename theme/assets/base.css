@@ -11,7 +11,10 @@
   --or: #d2b06a;
   --or-fonce: #b08a45;
   --rond: #17110a;
-  --titre: Buenard, Georgia, serif;
+  /* Buenard est la police de la marque et de l'univers Au Nom des Dieux, pas celle des titres :
+     le nom BILSKIRNIR, et le nom d'une œuvre de cet univers (classe .oeuvre, --police posé par snippets/saga-halo). */
+  --marque: Buenard, Georgia, serif;
+  --titre: 'Source Sans 3', system-ui, sans-serif;
   --texte: 'Source Sans 3', system-ui, sans-serif;
   --gouttiere: clamp(24px, 8vw, 120px);
   /* Marge qui garde le contenu des écrans dans une colonne centrée de 1280 px sur grand écran. */
@@ -92,6 +95,11 @@ h2 {
 }
 
 /* ---------- Utilitaires ---------- */
+
+/* Le nom d'une œuvre (saga, livre) : la police de son univers si elle en a une (--police), sinon celle des titres. */
+.oeuvre {
+  font-family: var(--police, var(--titre));
+}
 
 /* Un écran plein de l'accueil. min-height, jamais height : le contenu doit rester atteignable sur un petit téléphone. */
 .ecran {

@@ -6,13 +6,13 @@
   - surligner : les mots cherchés, soulignés dans le titre (recherche)
   Usage : {% render 'livre-carte', livre: tome, mention: 'Livre 2' %}
 {% endcomment %}
-<a class="livre-carte" href="{{ livre.url }}">
+<a class="livre-carte" href="{{ livre.url }}" style="{% render 'saga-halo', saga: livre.metafields.custom.saga.value %}">
   {%- if livre.featured_image -%}
     {%- capture texte_alt %}Couverture : {% render 'livre-titre', livre: livre %}{% endcapture -%}
     {{- livre.featured_image | image_url: width: 600 | image_tag: widths: '240, 360, 480, 600', sizes: '(min-width: 1024px) 220px, 45vw', alt: texte_alt, loading: 'lazy' -}}
   {%- endif -%}
   {%- capture titre %}{% render 'livre-titre', livre: livre %}{% endcapture -%}
-  <strong>{% if surligner != blank %}{{ titre | highlight: surligner }}{% else %}{{ titre }}{% endif %}</strong>
+  <strong class="oeuvre">{% if surligner != blank %}{{ titre | highlight: surligner }}{% else %}{{ titre }}{% endif %}</strong>
   <span>
     {%- if mention != blank %}{{ mention }} · {% endif -%}
     {%- if livre.available %}{{ livre.price | money_without_trailing_zeros }}{% else %}À paraître{% endif -%}
@@ -41,7 +41,6 @@
   }
 
   .livre-carte strong {
-    font-family: var(--titre);
     font-size: 17px;
     line-height: 1.2;
   }

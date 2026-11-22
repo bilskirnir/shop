@@ -16,7 +16,7 @@
             {%- endif -%}
           {%- endfor -%}
           <span class="surtitre">{% render 'saga-surtitre', saga: autre %}</span>
-          <strong>{{ autre.nom.value }}</strong>
+          <strong class="oeuvre">{{ autre.nom.value }}</strong>
           <span class="bouton bouton--contour">
             {%- if autre.ordre_des_tomes.value.size == 1 -%}{{ section.settings.libelle_livre }}{%- else -%}{{ section.settings.libelle_arc }}{%- endif -%}
           </span>
@@ -97,7 +97,6 @@
   }
 
   .arc-univers__carte strong {
-    font-family: var(--titre);
     font-size: clamp(20px, 2vw, 28px);
     line-height: 1.1;
     color: var(--ivoire);
