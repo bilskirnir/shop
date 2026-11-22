@@ -4,8 +4,8 @@
   shortcut: shop.metaobjects.avis.values lit les 50 premiers avis de la boutique ; paginer au-delà. La page réunit ceux de tous les tomes,
   dans l'ordre des tomes. L'un d'eux, tiré au hasard parmi les avis courts (144 caractères au plus), s'affiche en grand
   dans le halo, les suivants en petites cartes. Un avis « Vérifié » porte le badge « Avis vérifié ».
-  Sur la fiche d'un livre : tous les avis de ce livre, en petites cartes, dans une bande de bord à bord qui défile
-  seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
+  Sur la fiche d'un livre : le même grand avis tiré au hasard, puis tous les autres avis du livre en petites cartes,
+  dans une bande de bord à bord qui défile seule et se tire à la souris (script plus bas). Rien si aucun n'a d'avis.
 {% endcomment %}
 {%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
 {%- liquid
@@ -58,7 +58,7 @@
           </figcaption>
         {%- endcapture -%}
 
-        {%- if product == blank and un_avis.texte.value.size <= court -%}
+        {%- if un_avis.texte.value.size <= court -%}
           {%- capture grand -%}
             <figure class="arc-avis__grand" data-grand="{{ handle }}"{% if handle != grand_defaut %} hidden{% endif %}>
               {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
@@ -69,15 +69,16 @@
           {%- assign grands = grands | append: grand -%}
         {%- endif -%}
 
-        {%- comment -%} Page Arc : les petites cartes après le grand avis, nombre_cartes au plus (le script recalcule après le tirage). {%- endcomment -%}
+        {%- comment -%}
+          Les petites cartes, sans le grand avis. Page Arc : nombre_cartes au plus ; fiche livre : toutes (bande).
+          Le script recalcule après le tirage du grand avis.
+        {%- endcomment -%}
         {%- assign cachee = false -%}
-        {%- if product == blank -%}
-          {%- if handle == grand_defaut -%}
-            {%- assign cachee = true -%}
-          {%- else -%}
-            {%- assign rang_carte = rang_carte | plus: 1 -%}
-            {%- if rang_carte > section.settings.nombre_cartes %}{% assign cachee = true %}{% endif -%}
-          {%- endif -%}
+        {%- if handle == grand_defaut and nombre > 1 -%}
+          {%- assign cachee = true -%}
+        {%- elsif product == blank -%}
+          {%- assign rang_carte = rang_carte | plus: 1 -%}
+          {%- if rang_carte > section.settings.nombre_cartes %}{% assign cachee = true %}{% endif -%}
         {%- endif -%}
         {%- capture carte -%}
           <figure class="arc-avis__carte verre" data-avis="{{ handle }}"{% if cachee %} hidden{% endif %}>
@@ -94,11 +95,11 @@
       {%- endfor -%}
     {%- endfor -%}
 
-    {%- if product -%}
-      <div class="arc-avis__defile" data-defile><div class="arc-avis__piste">{{ cartes }}</div></div>
-    {%- else -%}
-      {{ grands }}
-      {%- if nombre > 1 -%}
+    {{ grands }}
+    {%- if nombre > 1 -%}
+      {%- if product -%}
+        <div class="arc-avis__defile" data-defile><div class="arc-avis__piste" data-cartes="250">{{ cartes }}</div></div>
+      {%- else -%}
         <div class="arc-avis__cartes" data-cartes="{{ section.settings.nombre_cartes }}">{{ cartes }}</div>
       {%- endif -%}
     {%- endif -%}
@@ -118,7 +119,7 @@
     bouton.textContent = ouvert ? 'Voir plus' : 'Voir moins';
   });
 
-  // Page Arc : un grand avis tiré au hasard à chaque visite parmi les avis courts ; sa carte disparaît,
+  // Page Arc et fiche livre : un grand avis tiré au hasard à chaque visite parmi les avis courts ; sa carte disparaît,
   // et les petites cartes se recomptent pour en garder nombre_cartes.
   document.querySelectorAll('.arc-avis').forEach((bloc) => {
     const grands = [...bloc.querySelectorAll('[data-grand]')];
@@ -154,8 +155,9 @@
       });
       boucle = true;
     }
-    // Longueur d'un tour : de la première carte à sa copie (la marge de gauche n'en fait pas partie).
-    const moitie = () => piste.children[cartes.length].offsetLeft - cartes[0].offsetLeft;
+    // Longueur d'un tour : de la première carte affichée à sa copie (la carte du grand avis est cachée).
+    const premiere = Math.max(0, cartes.findIndex((c) => !c.hidden));
+    const moitie = () => piste.children[cartes.length + premiere].offsetLeft - cartes[premiere].offsetLeft;
 
     function tour(temps) {
       const ecart = precedent ? (temps - precedent) / 1000 : 0;
