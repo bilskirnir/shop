@@ -219,9 +219,12 @@
     line-height: 1.2;
   }
 
+  /* Ouverture centrée (demande de Gautier, 22/11/2026). */
   .contact__ouverture {
     max-width: 760px;
+    margin-inline: auto;
     padding-block: 56px 40px;
+    text-align: center;
   }
 
   .contact__surtitre {
@@ -236,7 +239,7 @@
   }
 
   .contact__chapeau {
-    margin-top: 18px;
+    margin: 18px auto 0;
     max-width: 56ch;
     font-size: 18px;
     color: var(--gris-1);
@@ -245,6 +248,8 @@
   .contact__signe {
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: left;
     gap: 14px;
     margin-top: 28px;
   }
