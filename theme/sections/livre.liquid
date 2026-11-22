@@ -107,7 +107,7 @@
         {% render 'note', livre: product %}
       </div>
 
-      {% render 'pastilles', liste: saga.tags.value %}
+      {% render 'pastilles', genres: saga.genres.value %}
 
       <div class="arc__achat livre__achat verre" id="arc-achat">
         {%- form 'product', product, id: 'livre-formulaire', class: 'livre__formulaire' -%}

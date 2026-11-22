@@ -639,19 +639,17 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   list-style: none;
 }
 
-/* Chaque pastille prend la couleur de son genre (--pastille), ivoire par défaut. */
 .pastilles li {
-  --pastille: #ece5d6;
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 6px 14px 6px 10px;
-  border: 1px solid color-mix(in srgb, var(--pastille) 40%, transparent);
+  border: 1px solid #ece5d666;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pastille) 12%, transparent);
+  background: #ece5d61f;
   font-size: 13px;
   font-weight: 600;
-  color: var(--pastille);
+  color: var(--ivoire);
 }
 
 .pastilles li::before {
@@ -662,7 +660,7 @@ body:has(.eteint-feu.is-visible) .decor__feu {
   background: currentColor;
 }
 
-/* L'icône du genre remplace le point, découpée dans la couleur de la pastille (masque). */
+/* L'icône du genre remplace le point, découpée dans la couleur du texte (masque). */
 .pastilles .pastille--icone::before {
   width: 14px;
   height: 14px;

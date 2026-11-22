@@ -102,7 +102,7 @@
       {%- if accroche != blank -%}
         <p class="histoire__accroche">{{ accroche }}</p>
       {%- endif -%}
-      {% render 'pastilles', liste: saga.tags.value %}
+      {% render 'pastilles', genres: saga.genres.value %}
       {%- if lien != blank -%}
         {% render 'bouton', libelle: libelle, url: lien, variante: 'contour' %}
       {%- endif -%}
