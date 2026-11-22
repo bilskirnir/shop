@@ -205,9 +205,9 @@
 </script>
 
 {% stylesheet %}
-  /* Mesures reprises de la maquette : colonne de 1160 px, interligne 1,55. */
+  /* Même colonne que le reste du site (1280 px au plus) ; interligne de la maquette. */
   .contact {
-    padding: 72px max(20px, (100% - 1160px) / 2) 120px;
+    padding: 72px var(--marge-centre) 120px;
     font-size: 16px;
     line-height: 1.55;
   }
@@ -283,7 +283,6 @@
 
   .contact fieldset {
     min-width: 0;
-    margin: 0;
     padding: 0;
     border: 0;
   }
