@@ -1,18 +1,18 @@
 {% comment %}
-  Pied de page : TikTok et Instagram (les seuls liens qui sortent de la boutique), puis le menu légal
+  Pied de page : les réseaux (TikTok, Instagram, YouTube, Facebook, Fellowship ; les seuls liens qui sortent de la boutique), puis le menu légal
   et les politiques de la boutique.
   Les adresses des réseaux se règlent dans Paramètres du thème › Réseaux sociaux.
 {% endcomment %}
 <footer class="pied">
-  {%- if settings.social_tiktok_link != blank or settings.social_instagram_link != blank -%}
-    <div class="pied__reseaux">
-      {%- if settings.social_tiktok_link != blank -%}
-        <a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a>
-      {%- endif -%}
-      {%- if settings.social_instagram_link != blank -%}
-        <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a>
-      {%- endif -%}
-    </div>
+  {%- capture reseaux -%}
+    {%- if settings.social_tiktok_link != blank -%}<a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a>{%- endif -%}
+    {%- if settings.social_instagram_link != blank -%}<a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a>{%- endif -%}
+    {%- if settings.social_youtube_link != blank -%}<a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener">YouTube</a>{%- endif -%}
+    {%- if settings.social_facebook_link != blank -%}<a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a>{%- endif -%}
+    {%- if settings.social_fellowship_link != blank -%}<a href="{{ settings.social_fellowship_link }}" target="_blank" rel="noopener">Fellowship</a>{%- endif -%}
+  {%- endcapture -%}
+  {%- if reseaux != blank -%}
+    <div class="pied__reseaux">{{ reseaux }}</div>
   {%- endif -%}
 
   <div class="pied__liens">
@@ -68,6 +68,7 @@
 
   .pied__reseaux {
     display: flex;
+    flex-wrap: wrap;
     gap: 18px;
     font-size: 14px;
     font-weight: 600;
