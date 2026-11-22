@@ -2,7 +2,8 @@
   Page d'un arc — « Tout ce qu'il y a dans le colis » : les tomes avec leur prix, puis les lignes
   offertes (blocs réglés une fois pour tous les arcs), le total et le bouton.
   Seulement quand l'arc complet est en vente (plusieurs tomes, tous disponibles).
-  « [auteur] » dans un libellé devient le nom de l'auteur de la saga.
+  « [auteur] » dans un libellé devient le nom de l'auteur de la saga. Une ligne cochée « Seulement si l'arc atteint
+  la livraison offerte » disparaît des arcs trop courts (moins de livres que settings.livraison_articles).
 {% endcomment %}
 {%- capture nom_auteur %}{% render 'saga-auteurs', saga: metaobject %}{% endcapture -%}
 {%- liquid
@@ -40,6 +41,8 @@
             <li><strong>Livre {{ forloop.index }} · {% render 'livre-titre', livre: tome %}</strong><span>{{ tome.price | money_without_trailing_zeros }}</span></li>
           {%- endfor -%}
           {%- for block in section.blocks -%}
+            {%- comment -%} Une ligne « livraison » ne s'affiche que si l'arc compte assez de livres pour la livraison offerte. {%- endcomment -%}
+            {%- if block.settings.si_livraison_offerte and tomes.size < settings.livraison_articles %}{% continue %}{% endif -%}
             <li {{ block.shopify_attributes }}><strong>{{ block.settings.libelle | replace: '[auteur]', nom_auteur }}</strong><span class="arc-offre__offert">{{ block.settings.mention }}</span></li>
           {%- endfor -%}
         </ul>
@@ -204,7 +207,13 @@
       "name": "Ligne offerte",
       "settings": [
         { "type": "text", "id": "libelle", "label": "Libellé", "info": "[auteur] = le nom de l'auteur de la saga." },
-        { "type": "text", "id": "mention", "label": "Mention", "default": "Offert" }
+        { "type": "text", "id": "mention", "label": "Mention", "default": "Offert" },
+        {
+          "type": "checkbox",
+          "id": "si_livraison_offerte",
+          "label": "Seulement si l'arc atteint la livraison offerte",
+          "info": "Pour la ligne de livraison : masquée quand l'arc compte moins de livres que le seuil (Paramètres du thème › Bilskirnir)."
+        }
       ]
     }
   ],
