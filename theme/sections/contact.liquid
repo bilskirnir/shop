@@ -207,7 +207,7 @@
 {% stylesheet %}
   /* Même colonne que le reste du site (1280 px au plus) ; interligne de la maquette. */
   .contact {
-    padding: 72px var(--marge-centre) 120px;
+    padding: 0 var(--marge-centre) 120px;
     font-size: 16px;
     line-height: 1.55;
   }
@@ -219,11 +219,15 @@
     line-height: 1.2;
   }
 
-  /* Ouverture centrée (demande de Gautier, 22/11/2026). */
+  /* Ouverture centrée, mêmes mesures que celle de « Nos valeurs » (francaise-ouverture) : 80 % de l'écran. */
   .contact__ouverture {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80svh;
     max-width: 760px;
     margin-inline: auto;
-    padding-block: 56px 40px;
+    padding-block: 110px 56px;
     text-align: center;
   }
 
@@ -275,7 +279,7 @@
   .contact__corps {
     display: grid;
     gap: 48px;
-    padding-top: 24px;
+    padding-top: 0;
   }
 
   @media (min-width: 980px) {
