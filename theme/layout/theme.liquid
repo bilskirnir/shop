@@ -34,6 +34,9 @@
 
     {% sections 'footer-group' %}
 
+    {% section 'recherche' %}
+    <script src="{{ 'recherche.js' | asset_url }}" defer></script>
+
     {%- unless template.name == 'cart' -%}
       {% section 'panier' %}
       <script src="{{ 'panier.js' | asset_url }}" defer></script>

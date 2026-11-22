@@ -1,7 +1,7 @@
 {% comment %}
   En-tête : barre en verre posée par-dessus la page.
-  Mobile : burger | BILSKIRNIR | panier. Le burger ouvre le menu en plein écran (popover natif : Échap et clic dehors le ferment).
-  Ordinateur : BILSKIRNIR | liens du menu | panier.
+  Mobile : burger | BILSKIRNIR | loupe, panier. Le burger ouvre le menu en plein écran (popover natif : Échap et clic dehors le ferment).
+  Ordinateur : BILSKIRNIR | liens du menu | loupe, panier.
 {% endcomment %}
 {%- assign liens = section.settings.menu.links -%}
 
@@ -22,13 +22,19 @@
     </nav>
   {%- endif -%}
 
-  <a class="entete__panier" href="{{ routes.cart_url }}">
-    <span class="visually-hidden">Panier, {{ cart.item_count }} article{% if cart.item_count > 1 %}s{% endif %}</span>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-    {%- if cart.item_count > 0 -%}
-      <span class="entete__compteur" aria-hidden="true">{{ cart.item_count }}</span>
-    {%- endif -%}
-  </a>
+  <div class="entete__actions">
+    {%- comment -%} Sans JavaScript, la loupe mène à la page /search ; avec, assets/recherche.js ouvre le voile (sections/recherche.liquid). {%- endcomment -%}
+    <a class="entete__recherche" href="{{ routes.search_url }}" aria-label="Rechercher">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+    </a>
+    <a class="entete__panier" href="{{ routes.cart_url }}">
+      <span class="visually-hidden">Panier, {{ cart.item_count }} article{% if cart.item_count > 1 %}s{% endif %}</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      {%- if cart.item_count > 0 -%}
+        <span class="entete__compteur" aria-hidden="true">{{ cart.item_count }}</span>
+      {%- endif -%}
+    </a>
+  </div>
 </header>
 
 {%- if liens.size > 0 -%}
@@ -84,6 +90,7 @@
   }
 
   .entete__burger,
+  .entete__recherche,
   .entete__panier,
   .menu-panneau__fermer {
     position: relative;
@@ -110,8 +117,10 @@
     display: none;
   }
 
-  .entete__panier {
+  .entete__actions {
     grid-column: 3;
+    display: flex;
+    align-items: center;
   }
 
   .entete__compteur {
@@ -200,7 +209,7 @@
       color: var(--ivoire);
     }
 
-    .entete__panier {
+    .entete__actions {
       justify-self: end;
     }
   }

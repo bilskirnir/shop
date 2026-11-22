@@ -3,6 +3,7 @@
   Partagé par le catalogue et la recherche.
   - livre : le produit
   - mention : texte optionnel avant le prix (ex. « Livre 2 »)
+  - surligner : les mots cherchés, soulignés dans le titre (recherche)
   Usage : {% render 'livre-carte', livre: tome, mention: 'Livre 2' %}
 {% endcomment %}
 <a class="livre-carte" href="{{ livre.url }}">
@@ -10,7 +11,8 @@
     {%- capture texte_alt %}Couverture : {% render 'livre-titre', livre: livre %}{% endcapture -%}
     {{- livre.featured_image | image_url: width: 600 | image_tag: widths: '240, 360, 480, 600', sizes: '(min-width: 1024px) 220px, 45vw', alt: texte_alt, loading: 'lazy' -}}
   {%- endif -%}
-  <strong>{% render 'livre-titre', livre: livre %}</strong>
+  {%- capture titre %}{% render 'livre-titre', livre: livre %}{% endcapture -%}
+  <strong>{% if surligner != blank %}{{ titre | highlight: surligner }}{% else %}{{ titre }}{% endif %}</strong>
   <span>
     {%- if mention != blank %}{{ mention }} · {% endif -%}
     {%- if livre.available %}{{ livre.price | money_without_trailing_zeros }}{% else %}À paraître{% endif -%}

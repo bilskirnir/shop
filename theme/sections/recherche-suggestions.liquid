@@ -1,0 +1,95 @@
+{% comment %}
+  Les résultats du voile de recherche, rendus par Shopify à chaque frappe :
+  assets/recherche.js appelle /search/suggest?q=…&section_id=recherche-suggestions.
+  Une saga est trouvée si son nom contient la recherche, ou si Shopify a trouvé l'un de ses livres
+  (champ produit custom.saga). Les livres : ceux de Shopify, puis ceux des sagas trouvées, 5 au plus.
+  data-halo porte la couleur de la première saga, que le voile reprend.
+  Maquette validée le 22/11/2026 : https://claude.ai/artifact/PmSVcZfZVXsQwrKSrGhMKU
+{% endcomment %}
+{%- liquid
+  assign q = predictive_search.terms | downcase
+  assign produits = predictive_search.resources.products
+
+  # Les sagas trouvées, en « ,handle,handle, » : par leur nom d'abord, puis par leurs livres.
+  assign handles = ','
+  for saga in shop.metaobjects.saga.values
+    assign nom = saga.nom.value | downcase
+    if nom contains q
+      assign handles = handles | append: saga.system.handle | append: ','
+    endif
+  endfor
+  for produit in produits
+    assign h = produit.metafields.custom.saga.value.system.handle
+    assign cle = ',' | append: h | append: ','
+    if h != blank
+      unless handles contains cle
+        assign handles = handles | append: h | append: ','
+      endunless
+    endif
+  endfor
+  assign liste_sagas = handles | remove_first: ',' | split: ','
+
+  assign halo = ''
+  for h in liste_sagas limit: 1
+    capture halo
+      render 'saga-halo', saga: shop.metaobjects.saga[h]
+    endcapture
+  endfor
+-%}
+<div class="suggestions" data-halo="{{ halo | escape }}">
+  {%- if liste_sagas.size == 0 and produits.size == 0 -%}
+    <div class="suggestions__rien">
+      <p>Aucune histoire ne répond à « {{ predictive_search.terms | escape }} ».</p>
+      <p>
+        Essaie un titre, le nom d'une saga… ou
+        <a href="{{ routes.all_products_collection_url }}">parcours tout le catalogue</a>.
+      </p>
+    </div>
+  {%- else -%}
+    <div class="suggestions__histoires">
+      <p class="suggestions__titre">Histoires</p>
+      {%- for h in liste_sagas -%}
+        {%- assign saga = shop.metaobjects.saga[h] -%}
+        <a class="suggestions__saga" href="{% render 'saga-lien', saga: saga %}" style="{% render 'saga-halo', saga: saga %}">
+          <span class="suggestions__pastille" aria-hidden="true"></span>
+          <span class="suggestions__nom">
+            <strong>{{ saga.nom.value | highlight: predictive_search.terms }}</strong>
+            <span>{% render 'saga-surtitre', saga: saga %}</span>
+          </span>
+          <span class="suggestions__fleche" aria-hidden="true">→</span>
+        </a>
+      {%- endfor -%}
+    </div>
+
+    <div class="suggestions__livres">
+      <p class="suggestions__titre">Livres</p>
+      <ul class="livres-grille">
+        {%- assign montres = ',' -%}
+        {%- assign nombre = 0 -%}
+        {%- for produit in produits limit: 5 -%}
+          {%- assign montres = montres | append: produit.id | append: ',' -%}
+          {%- assign nombre = nombre | plus: 1 -%}
+          <li>{% render 'livre-carte', livre: produit, surligner: predictive_search.terms %}</li>
+        {%- endfor -%}
+        {%- for h in liste_sagas -%}
+          {%- for tome in shop.metaobjects.saga[h].ordre_des_tomes.value -%}
+            {%- assign cle = ',' | append: tome.id | append: ',' -%}
+            {%- if nombre < 5 -%}
+              {%- unless montres contains cle -%}
+                {%- assign montres = montres | append: tome.id | append: ',' -%}
+                {%- assign nombre = nombre | plus: 1 -%}
+                <li>{% render 'livre-carte', livre: tome, surligner: predictive_search.terms %}</li>
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Suggestions de recherche"
+}
+{% endschema %}
