@@ -1,3 +1,15 @@
+{%- liquid
+  # Titres et descriptions que Shopify fabrique en anglais (« Products », « Search: … ») ou laisse vides :
+  # le catalogue et la recherche ont les leurs, en français.
+  if request.page_type == 'collection' and collection.handle == 'all'
+    assign page_title = 'Notre catalogue'
+    if page_description == blank
+      assign page_description = 'Tous les romans de Bilskirnir, maison d’édition française : sagas épiques, mythologies et aventure, de la plus récente à la plus ancienne, dédicacés sur demande.'
+    endif
+  elsif request.page_type == 'search'
+    assign page_title = 'Recherche'
+  endif
+-%}
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -58,8 +70,62 @@
 {%- endif -%}
 
 {%- if request.page_type == 'product' -%}
+  {%- comment -%}
+    Pour Google : le produit (prix, disponibilité) décrit aussi comme un livre — auteurs, éditeur, ISBN (code-barres),
+    nombre de pages, date de parution, langue. Pas de note d'avis : la plupart viennent d'Amazon, et Google interdit
+    de baliser des avis repris d'un autre site. À ajouter quand les avis viendront des lecteurs du site (page ?view=avis).
+  {%- endcomment -%}
+  {%- liquid
+    assign variante = product.selected_or_first_available_variant
+    assign auteurs = product.metafields.custom.auteur.value
+    assign pages = product.metafields.custom.nombre_pages.value
+    assign parution = product.metafields.custom.date_parution.value
+    assign disponibilite = 'https://schema.org/OutOfStock'
+    if product.available
+      assign disponibilite = 'https://schema.org/InStock'
+    endif
+  -%}
   <script type="application/ld+json">
-    {{ product | structured_data }}
+    {
+      "@context": "https://schema.org",
+      "@type": ["Product", "Book"],
+      "@id": {{ canonical_url | append: '#product' | json }},
+      "name": {{ product.title | json }},
+      "url": {{ canonical_url | json }},
+      "description": {{ product.description | strip_html | strip_newlines | truncate: 500 | json }},
+      {%- if product.featured_image %}
+      "image": {{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},
+      {%- endif %}
+      "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+      "publisher": { "@type": "Organization", "name": {{ shop.name | json }} },
+      {%- if auteurs != blank %}
+      "author": [
+        {%- for auteur in auteurs -%}
+          { "@type": "Person", "name": {{ auteur.nom.value | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      {%- endif %}
+      {%- if variante.barcode != blank %}
+      "isbn": {{ variante.barcode | json }},
+      "gtin13": {{ variante.barcode | json }},
+      {%- endif %}
+      {%- if pages != blank %}
+      "numberOfPages": {{ pages | json }},
+      {%- endif %}
+      {%- if parution != blank %}
+      "datePublished": {{ parution | date: '%Y-%m-%d' | json }},
+      {%- endif %}
+      "inLanguage": "fr",
+      "offers": {
+        "@type": "Offer",
+        "url": {{ canonical_url | json }},
+        "price": {{ variante.price | divided_by: 100.0 | json }},
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "availability": {{ disponibilite | json }},
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": { "@type": "Organization", "name": {{ shop.name | json }} }
+      }
+    }
   </script>
 
   <meta
