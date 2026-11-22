@@ -113,27 +113,53 @@ def graphql(requete, variables=None):
 
 
 def livres():
-    """{handle du livre: id Shopify} pour tous les produits."""
-    data = graphql("{ products(first: 250) { nodes { id handle } } }")
-    return {p["handle"]: p["id"] for p in data["products"]["nodes"]}
+    """{handle du livre: {"id": id Shopify, "titre": titre}} pour tous les produits."""
+    data = graphql("{ products(first: 250, sortKey: TITLE) { nodes { id handle title } } }")
+    return {p["handle"]: {"id": p["id"], "titre": p["title"]} for p in data["products"]["nodes"]}
+
+
+def lire_avis():
+    """Les avis de la boutique, une ligne par avis avec les COLONNES."""
+    data = graphql("""{ metaobjects(type: "avis", first: 250) { nodes {
+        handle fields { key value reference { ... on Product { handle } } } } } }""")
+    resultat = []
+    for avis in data["metaobjects"]["nodes"]:
+        champs = {c["key"]: c for c in avis["fields"]}
+        valeur = lambda cle: (champs.get(cle) or {}).get("value") or ""
+        resultat.append({
+            "handle": avis["handle"],
+            "livre": ((champs.get("livre") or {}).get("reference") or {}).get("handle", ""),
+            "note": valeur("note"), "titre": valeur("titre"), "texte": valeur("texte"),
+            "auteur": valeur("auteur"), "source": valeur("source"),
+            "verifie": "oui" if valeur("verifie") == "true" else "non",
+        })
+    return resultat
+
+
+def envoyer(ligne, ids):
+    """Crée ou met à jour un avis (retrouvé par son handle). Renvoie les refus de Shopify (liste vide si ok)."""
+    champs = {
+        "livre": ids[ligne["livre"]]["id"], "note": ligne["note"], "texte": ligne["texte"],
+        "titre": ligne.get("titre", ""), "auteur": ligne.get("auteur", ""), "source": ligne.get("source", ""),
+        "verifie": "true" if ligne.get("verifie", "").lower() in {"oui", "vrai", "true", "1"} else "false",
+    }
+    data = graphql(
+        """mutation($handle: MetaobjectHandleInput!, $avis: MetaobjectUpsertInput!) {
+             metaobjectUpsert(handle: $handle, metaobject: $avis) { userErrors { field message } } }""",
+        {"handle": {"type": "avis", "handle": ligne["handle"]},
+         "avis": {"fields": [{"key": k, "value": v} for k, v in champs.items() if v != ""],
+                  "capabilities": {"publishable": {"status": "ACTIVE"}}}},
+    )
+    return data["metaobjectUpsert"]["userErrors"]
 
 
 def exporter(chemin):
-    data = graphql("""{ metaobjects(type: "avis", first: 250) { nodes {
-        handle fields { key value reference { ... on Product { handle } } } } } }""")
+    avis = lire_avis()
     with open(chemin, "w", encoding="utf-8-sig", newline="") as f:
         sortie = csv.DictWriter(f, fieldnames=COLONNES, delimiter=";")
         sortie.writeheader()
-        for avis in data["metaobjects"]["nodes"]:
-            champs = {c["key"]: c for c in avis["fields"]}
-            valeur = lambda cle: (champs.get(cle) or {}).get("value") or ""
-            livre = ((champs.get("livre") or {}).get("reference") or {}).get("handle", "")
-            sortie.writerow({
-                "handle": avis["handle"], "livre": livre, "note": valeur("note"), "titre": valeur("titre"),
-                "texte": valeur("texte"), "auteur": valeur("auteur"), "source": valeur("source"),
-                "verifie": "oui" if valeur("verifie") == "true" else "non",
-            })
-    print(f"{len(data['metaobjects']['nodes'])} avis écrits dans {chemin}")
+        sortie.writerows(avis)
+    print(f"{len(avis)} avis écrits dans {chemin}")
 
 
 def importer(chemin):
@@ -152,19 +178,7 @@ def importer(chemin):
         sys.exit("Rien n'a été envoyé.")
 
     for ligne in lignes:
-        champs = {
-            "livre": ids[ligne["livre"]], "note": ligne["note"], "texte": ligne["texte"],
-            "titre": ligne.get("titre", ""), "auteur": ligne.get("auteur", ""), "source": ligne.get("source", ""),
-            "verifie": "true" if ligne.get("verifie", "").lower() in {"oui", "vrai", "true", "1"} else "false",
-        }
-        data = graphql(
-            """mutation($handle: MetaobjectHandleInput!, $avis: MetaobjectUpsertInput!) {
-                 metaobjectUpsert(handle: $handle, metaobject: $avis) { userErrors { field message } } }""",
-            {"handle": {"type": "avis", "handle": ligne["handle"]},
-             "avis": {"fields": [{"key": k, "value": v} for k, v in champs.items() if v != ""],
-                      "capabilities": {"publishable": {"status": "ACTIVE"}}}},
-        )
-        problemes = data["metaobjectUpsert"]["userErrors"]
+        problemes = envoyer(ligne, ids)
         print(f"  {'refusé' if problemes else 'ok'} {ligne['handle']}" + (f" : {problemes}" if problemes else ""))
 
 
