@@ -1,0 +1,13 @@
+{% comment %}
+  Le texte d'un avis entre guillemets, coupé à 144 caractères avec « Voir plus » s'il est plus long.
+  Le bouton déplie le texte sur place (script de sections/arc-avis.liquid).
+  Usage : {% render 'avis-texte', texte: un_avis.texte.value %}
+{%- endcomment -%}
+{%- if texte.size > 144 -%}
+  <blockquote>
+    « <span data-court>{{ texte | truncate: 144, '…' }}</span><span data-long hidden>{{ texte }}</span> »
+  </blockquote>
+  <button class="arc-avis__plus" type="button" aria-expanded="false">Voir plus</button>
+{%- else -%}
+  <blockquote>« {{ texte }} »</blockquote>
+{%- endif -%}

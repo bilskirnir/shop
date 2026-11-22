@@ -39,7 +39,7 @@
         {%- if rang == 1 -%}
           <figure class="arc-avis__grand">
             {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
-            <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+            {% render 'avis-texte', texte: un_avis.texte.value %}
             {{ legende }}
           </figure>
           {%- if nombre > 1 %}<div class="arc-avis__cartes">{% endif -%}
@@ -50,7 +50,7 @@
               <span class="note__etoiles" role="img" aria-label="{{ etoiles }} étoiles sur 5">{% for i in (1..5) %}{% if i <= etoiles %}★{% else %}☆{% endif %}{% endfor %}</span>
             {%- endif %}
             {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
-            <blockquote>« {{ un_avis.texte.value }} »</blockquote>
+            {% render 'avis-texte', texte: un_avis.texte.value %}
             {{ legende }}
           </figure>
           {%- if rang == nombre %}</div>{% endif -%}
@@ -60,7 +60,49 @@
   </section>
 {%- endif -%}
 
+{% javascript %}
+  // « Voir plus » d'un avis (snippets/avis-texte.liquid) : déplie le texte complet sur place.
+  document.addEventListener('click', (e) => {
+    const bouton = e.target.closest('.arc-avis__plus');
+    if (!bouton) return;
+    const ouvert = bouton.getAttribute('aria-expanded') === 'true';
+    const citation = bouton.previousElementSibling;
+    citation.querySelector('[data-court]').hidden = !ouvert;
+    citation.querySelector('[data-long]').hidden = ouvert;
+    bouton.setAttribute('aria-expanded', String(!ouvert));
+    bouton.textContent = ouvert ? 'Voir plus' : 'Voir moins';
+  });
+{% endjavascript %}
+
 {% stylesheet %}
+  .arc-avis__plus {
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--teinte, var(--or));
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Le texte complet apparaît en fondu. */
+  .arc-avis [data-long]:not([hidden]) {
+    animation: avis-deplie 0.4s ease;
+  }
+
+  @keyframes avis-deplie {
+    from { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arc-avis [data-long]:not([hidden]) {
+      animation: none;
+    }
+  }
+
   .arc-avis .arc-tete {
     margin-bottom: 28px;
   }
