@@ -1,41 +1,51 @@
 {% comment %}
-  Page d'un arc — l'auteur : photo, nom, présentation (métaobjet auteur du premier livre :
-  champs nom, avatar, bio, chiffres). Rien de propre à un auteur n'est réglé dans le modèle.
+  Page d'un arc — les auteurs : photo, nom, présentation (métaobjets auteur, champs nom, avatar, bio, chiffres),
+  un panneau par auteur. Sur une fiche : les auteurs du livre (même sans saga, comme un livret) ;
+  sur une page Arc : ceux du premier livre. Rien de propre à un auteur n'est réglé dans le modèle.
   chiffres : une liste de textes, « 150k abonnés TikTok » → le premier mot en grand, le reste en légende.
 {% endcomment %}
-{%- comment -%} La saga de la page Arc, ou celle du livre sur une fiche (templates/product.json). {%- endcomment -%}
-{%- assign saga = metaobject | default: product.metafields.custom.saga.value -%}
-{%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
-  {%- for a in tome.metafields.custom.auteur.value limit: 1 -%}
-    {%- assign auteur = a -%}
-  {%- endfor -%}
-{%- endfor -%}
-{%- if auteur -%}
+{%- liquid
+  assign saga = metaobject | default: product.metafields.custom.saga.value
+  assign auteurs = product.metafields.custom.auteur.value
+  unless product
+    for tome in saga.ordre_des_tomes.value limit: 1
+      assign auteurs = tome.metafields.custom.auteur.value
+    endfor
+  endunless
+-%}
+{%- if auteurs != blank -%}
   <section class="arc-bloc arc-auteur" style="{% render 'saga-halo', saga: saga %}" data-reveal>
-    <div class="arc-auteur__grille verre">
-      {%- if auteur.avatar.value != blank -%}
-        {{ auteur.avatar.value | image_url: width: 380, height: 380, crop: 'center' | image_tag: alt: auteur.nom.value, width: 190, height: 190, class: 'arc-auteur__photo', loading: 'lazy' }}
-      {%- endif -%}
-      <div class="arc-auteur__texte">
-        <p class="surtitre">{{ section.settings.surtitre }}</p>
-        <h2>{{ auteur.nom.value }}</h2>
-        {%- if auteur.bio.value != blank -%}
-          <p>{{ auteur.bio.value }}</p>
+    {%- for auteur in auteurs -%}
+      <div class="arc-auteur__grille verre">
+        {%- if auteur.avatar.value != blank -%}
+          {{ auteur.avatar.value | image_url: width: 380, height: 380, crop: 'center' | image_tag: alt: auteur.nom.value, width: 190, height: 190, class: 'arc-auteur__photo', loading: 'lazy' }}
         {%- endif -%}
-        {%- if auteur.chiffres.value != blank -%}
-          <dl class="arc-auteur__chiffres">
-            {%- for chiffre in auteur.chiffres.value -%}
-              {%- assign valeur = chiffre | split: ' ' | first -%}
-              <div><dt>{{ chiffre | remove_first: valeur | strip }}</dt><dd>{{ valeur }}</dd></div>
-            {%- endfor -%}
-          </dl>
-        {%- endif -%}
+        <div class="arc-auteur__texte">
+          <p class="surtitre">{{ section.settings.surtitre }}</p>
+          <h2>{{ auteur.nom.value }}</h2>
+          {%- if auteur.bio.value != blank -%}
+            <p>{{ auteur.bio.value }}</p>
+          {%- endif -%}
+          {%- if auteur.chiffres.value != blank -%}
+            <dl class="arc-auteur__chiffres">
+              {%- for chiffre in auteur.chiffres.value -%}
+                {%- assign valeur = chiffre | split: ' ' | first -%}
+                <div><dt>{{ chiffre | remove_first: valeur | strip }}</dt><dd>{{ valeur }}</dd></div>
+              {%- endfor -%}
+            </dl>
+          {%- endif -%}
+        </div>
       </div>
-    </div>
+    {%- endfor -%}
   </section>
 {%- endif -%}
 
 {% stylesheet %}
+  /* Deux auteurs : deux panneaux l'un sous l'autre. */
+  .arc-auteur .arc-auteur__grille + .arc-auteur__grille {
+    margin-top: 20px;
+  }
+
   .arc-auteur__grille {
     position: relative;
     overflow: hidden;

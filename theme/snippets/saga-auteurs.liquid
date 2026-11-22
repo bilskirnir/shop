@@ -1,10 +1,16 @@
 {% comment %}
-  Les auteurs d'une saga, lus sur son premier livre (custom.auteur, une liste) : « A » ou « A et B ».
-  Usage : {% render 'saga-auteurs', saga: saga %}
+  Les auteurs d'un livre (custom.auteur, une liste), ou d'une saga lus sur son premier livre : « A », « A et B », « A, B et C ».
+  Usage : {% render 'saga-auteurs', saga: saga %}  ·  {% render 'saga-auteurs', livre: product %} (marche sans saga)
 {%- endcomment -%}
-{%- for tome in saga.ordre_des_tomes.value limit: 1 -%}
-  {%- for auteur in tome.metafields.custom.auteur.value -%}
-    {%- unless forloop.first %} et {% endunless -%}
-    {{- auteur.nom.value -}}
-  {%- endfor -%}
+{%- liquid
+  assign auteurs = livre.metafields.custom.auteur.value
+  unless livre
+    for tome in saga.ordre_des_tomes.value limit: 1
+      assign auteurs = tome.metafields.custom.auteur.value
+    endfor
+  endunless
+-%}
+{%- for auteur in auteurs -%}
+  {%- unless forloop.first %}{% if forloop.last %} et {% else %}, {% endif %}{% endunless -%}
+  {{- auteur.nom.value -}}
 {%- endfor -%}

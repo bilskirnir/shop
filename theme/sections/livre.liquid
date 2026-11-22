@@ -23,7 +23,7 @@
   assign variante = product.selected_or_first_available_variant
   assign fond = saga.illustration_hero_de_la_saga.value
 -%}
-{%- capture noms_auteurs %}{% render 'saga-auteurs', saga: saga %}{% endcapture -%}
+{%- capture noms_auteurs %}{% render 'saga-auteurs', livre: product %}{% endcapture -%}
 
 <div class="arc livre" style="{% render 'saga-halo', saga: saga %}">
   {%- assign particules = product.metafields.custom.style_particules.value | default: saga.style_particules.value -%}
@@ -96,14 +96,22 @@
       {%- endif -%}
 
       <div class="arc__preuves">
-        {%- for auteur in product.metafields.custom.auteur.value limit: 1 -%}
+        {%- comment -%} Tous les auteurs du livre : « Écrit par A et B », leurs photos se chevauchent. {%- endcomment -%}
+        {%- assign auteurs = product.metafields.custom.auteur.value -%}
+        {%- if auteurs != blank -%}
           <p class="arc__auteur">
-            {%- if auteur.avatar.value != blank -%}
-              {{ auteur.avatar.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
-            {%- endif -%}
-            <span>Écrit par <strong>{{ auteur.nom.value }}</strong></span>
+            {%- for auteur in auteurs -%}
+              {%- if auteur.avatar.value != blank -%}
+                {{ auteur.avatar.value | image_url: width: 68, height: 68, crop: 'center' | image_tag: alt: '', width: 34, height: 34 }}
+              {%- endif -%}
+            {%- endfor -%}
+            <span>Écrit par
+              {%- for auteur in auteurs %}
+                {%- unless forloop.first %}{% if forloop.last %} et{% else %},{% endif %}{% endunless %} <strong>{{ auteur.nom.value }}</strong>
+              {%- endfor -%}
+            </span>
           </p>
-        {%- endfor -%}
+        {%- endif -%}
         {% render 'note', livre: product %}
       </div>
 

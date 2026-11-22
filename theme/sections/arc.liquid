@@ -212,6 +212,12 @@
     object-fit: cover;
   }
 
+  /* Plusieurs auteurs : les photos se chevauchent. */
+  .arc__auteur img + img {
+    margin-left: -20px;
+    border: 2px solid var(--encre);
+  }
+
   .arc__auteur:not(:has(img)) {
     padding-left: 16px;
   }
