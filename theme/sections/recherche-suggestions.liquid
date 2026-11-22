@@ -2,7 +2,7 @@
   Les résultats du voile de recherche, rendus par Shopify à chaque frappe :
   assets/recherche.js appelle /search/suggest?q=…&section_id=recherche-suggestions.
   Une saga est trouvée si son nom contient la recherche, ou si Shopify a trouvé l'un de ses livres
-  (champ produit custom.saga). Les livres : ceux de Shopify, puis ceux des sagas trouvées, 5 au plus.
+  (champ produit custom.saga). Les livres : ceux des sagas trouvées dans leur ordre, puis ceux de Shopify hors saga, 10 au plus.
   data-halo porte la couleur de la première saga, que le voile reprend.
   Maquette validée le 22/11/2026 : https://claude.ai/artifact/PmSVcZfZVXsQwrKSrGhMKU
 {% endcomment %}
@@ -64,17 +64,13 @@
     <div class="suggestions__livres">
       <p class="suggestions__titre">Livres</p>
       <ul class="livres-grille">
+        {%- comment -%} Les livres des histoires trouvées, dans leur ordre, puis ceux que Shopify a trouvés hors saga. {%- endcomment -%}
         {%- assign montres = ',' -%}
         {%- assign nombre = 0 -%}
-        {%- for produit in produits limit: 5 -%}
-          {%- assign montres = montres | append: produit.id | append: ',' -%}
-          {%- assign nombre = nombre | plus: 1 -%}
-          <li>{% render 'livre-carte', livre: produit, surligner: predictive_search.terms %}</li>
-        {%- endfor -%}
         {%- for h in liste_sagas -%}
           {%- for tome in shop.metaobjects.saga[h].ordre_des_tomes.value -%}
             {%- assign cle = ',' | append: tome.id | append: ',' -%}
-            {%- if nombre < 5 -%}
+            {%- if nombre < 10 -%}
               {%- unless montres contains cle -%}
                 {%- assign montres = montres | append: tome.id | append: ',' -%}
                 {%- assign nombre = nombre | plus: 1 -%}
@@ -82,6 +78,15 @@
               {%- endunless -%}
             {%- endif -%}
           {%- endfor -%}
+        {%- endfor -%}
+        {%- for produit in produits -%}
+          {%- assign cle = ',' | append: produit.id | append: ',' -%}
+          {%- if nombre < 10 -%}
+            {%- unless montres contains cle -%}
+              {%- assign nombre = nombre | plus: 1 -%}
+              <li>{% render 'livre-carte', livre: produit, surligner: predictive_search.terms %}</li>
+            {%- endunless -%}
+          {%- endif -%}
         {%- endfor -%}
       </ul>
     </div>

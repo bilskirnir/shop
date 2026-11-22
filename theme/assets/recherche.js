@@ -35,7 +35,7 @@ if (voile) {
     adresse.search = new URLSearchParams({
       q: mots,
       'resources[type]': 'product',
-      'resources[limit]': 6,
+      'resources[limit]': 10,
       section_id: 'recherche-suggestions',
     });
 
