@@ -20,7 +20,9 @@
     {%- if s.chapeau != blank -%}<p class="contact__chapeau">{{ s.chapeau }}</p>{%- endif -%}
     <div class="contact__signe">
       {%- if s.photo -%}
-        {{ s.photo | image_url: width: 120 | image_tag: alt: s.signature_titre, width: 52, height: 52 }}
+        {{ s.photo | image_url: width: 120 | image_tag: alt: 'Gautier Durrieu de Madron', width: 52, height: 52 }}
+      {%- else -%}
+        <img src="{{ 'avatar-gautier.jpg' | asset_url }}" alt="Gautier Durrieu de Madron" width="52" height="52">
       {%- endif -%}
       <div><strong>{{ s.signature_titre }}</strong><span>{{ s.signature_texte }}</span></div>
     </div>
@@ -140,7 +142,11 @@
         {%- if s.conference_texte != blank -%}<p>{{ s.conference_texte }}</p>{%- endif -%}
         {%- if s.collab_texte != blank -%}
           <p class="contact__collab">
-            {%- if s.collab_logo -%}{{ s.collab_logo | image_url: width: 80 | image_tag: alt: '', width: 40, height: 40, loading: 'lazy' }}{%- endif -%}
+            {%- if s.collab_logo -%}
+              {{ s.collab_logo | image_url: width: 80 | image_tag: alt: '', width: 40, height: 40, loading: 'lazy' }}
+            {%- else -%}
+              <img src="{{ 'gamology.jpg' | asset_url }}" alt="" width="40" height="40" loading="lazy">
+            {%- endif -%}
             <span>{{ s.collab_texte }}</span>
           </p>
         {%- endif -%}
@@ -199,13 +205,23 @@
 </script>
 
 {% stylesheet %}
+  /* Mesures reprises de la maquette : colonne de 1160 px, interligne 1,55. */
   .contact {
-    padding: 110px var(--marge-centre) 120px;
+    padding: 72px max(20px, (100% - 1160px) / 2) 120px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .contact h2,
+  .contact h3 {
+    font-family: var(--titre);
+    font-weight: 400;
+    line-height: 1.2;
   }
 
   .contact__ouverture {
     max-width: 760px;
-    padding-block: 24px 40px;
+    padding-block: 56px 40px;
   }
 
   .contact__surtitre {
@@ -214,7 +230,7 @@
 
   .contact h1 {
     margin-top: 14px;
-    font-size: clamp(40px, 6vw, 72px);
+    font-size: clamp(40px, 7vw, 76px);
     line-height: 1.02;
     text-wrap: balance;
   }
@@ -380,8 +396,6 @@
 
   /* Le formulaire : seul le groupe du motif choisi s'affiche. */
   .contact__lettre {
-    display: grid;
-    gap: 16px;
     margin-top: 40px;
     padding: clamp(20px, 3vw, 28px);
     border-radius: 14px;
@@ -396,20 +410,25 @@
   .contact:has(#motif-stand:checked) .contact__motif[data-motif='stand'],
   .contact:has(#motif-collaboration:checked) .contact__motif[data-motif='collaboration'],
   .contact:has(#motif-manuscrit:checked) .contact__motif[data-motif='manuscrit'] {
-    display: grid;
-    gap: 6px;
+    display: block;
   }
 
   .contact__intro {
     max-width: 60ch;
+    margin-top: 8px;
     color: var(--gris-1);
   }
 
+  /* Les champs du motif puis les champs communs se suivent comme une seule grille. */
   .contact__champs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
     margin-top: 16px;
+  }
+
+  .contact__motif .contact__champs {
+    margin-top: 22px;
   }
 
   @media (max-width: 620px) {
@@ -500,7 +519,7 @@
   .contact__charte {
     display: grid;
     gap: 10px;
-    margin-top: 16px;
+    margin-top: 22px;
     padding: 18px 20px;
     border-left: 2px solid var(--or-fonce);
     border-radius: 0 10px 10px 0;
@@ -530,7 +549,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-top: 8px;
+    margin-top: 24px;
   }
 
   .contact__envoi p {
@@ -591,6 +610,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .contact__collab strong {
+    color: var(--ivoire);
+    font-weight: 600;
   }
 
   .contact__collab img {
@@ -676,7 +700,7 @@
     { "type": "text", "id": "conference_titre", "label": "Titre", "default": "Gautier en conférence" },
     { "type": "textarea", "id": "conference_texte", "label": "Texte", "default": "Médiathèques, collèges, lycées, festivals, entreprises. Une heure de récit, une demi-heure de questions." },
     { "type": "image_picker", "id": "collab_logo", "label": "Logo de la collaboration" },
-    { "type": "text", "id": "collab_texte", "label": "Texte de la collaboration", "default": "Plusieurs collaborations avec la chaîne YouTube Gamology." },
+    { "type": "inline_richtext", "id": "collab_texte", "label": "Texte de la collaboration", "default": "Plusieurs collaborations avec la chaîne YouTube <strong>Gamology</strong>." },
     { "type": "textarea", "id": "conference_sujets", "label": "Sujets", "info": "Un sujet par ligne.", "default": "Les mythologies nordiques, sans le folklore\nPourquoi on a encore besoin de héros\nÉcrire une saga : de l'idée au tome 8\nLes dieux dans le jeu vidéo et la pop culture" },
     { "type": "header", "content": "Colonne : écrire directement" },
     { "type": "text", "id": "email", "label": "Email", "info": "Vide : la ligne disparaît." },
