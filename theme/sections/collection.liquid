@@ -3,15 +3,20 @@
   de la plus récente à la plus ancienne (date de parution de son premier livre, custom.date_parution),
   avec ses années de parution à gauche. Une histoire sans date passe en dernier.
   Sur une autre collection que « all », seules les histoires dont un livre est dans la collection s'affichent.
+  En bas, les produits rattachés à aucune saga (guides d'écriture, demain des t-shirts…), un groupe par type
+  de produit (champ Type de Shopify, le nom du groupe) ; sans type, « Autres ».
   Maquette validée le 21/11/2026 : https://claude.ai/artifact/5WVfrNr4NNYeFgWHW7koaK
 {% endcomment %}
 {%- liquid
   # Chaque saga en « date du premier livre|handle », triées puis inversées : la plus récente en haut.
   # Sans date, '0000-…' la fait passer en dernier.
   assign cles = ''
+  # Les livres qui appartiennent à une saga, en « ,id,id, » : les autres vont dans les groupes par type.
+  assign ids_sagas = ','
   for saga in shop.metaobjects.saga.values
     assign premiere = ''
     for tome in saga.ordre_des_tomes.value
+      assign ids_sagas = ids_sagas | append: tome.id | append: ','
       assign d = tome.metafields.custom.date_parution.value | date: '%Y-%m-%d'
       if d != blank
         if premiere == blank or d < premiere
@@ -104,6 +109,33 @@
       </section>
     {%- endif -%}
   {%- endfor -%}
+
+  {%- liquid
+    # Les types des produits hors saga, chacun une fois. « | » sépare les types ; un type vide devient « Autres ».
+    assign types = ''
+    for produit in collection.products
+      assign cle = ',' | append: produit.id | append: ','
+      unless ids_sagas contains cle
+        assign types = types | append: produit.type | append: '|'
+      endunless
+    endfor
+    assign types = types | split: '|' | uniq
+  -%}
+  {%- for type in types -%}
+    <section class="catalogue__histoire" data-reveal>
+      <div class="catalogue__nom">
+        <h2>{{ type | default: section.settings.autres }}</h2>
+      </div>
+      <ul class="livres-grille">
+        {%- for produit in collection.products -%}
+          {%- assign cle = ',' | append: produit.id | append: ',' -%}
+          {%- unless ids_sagas contains cle or produit.type != type -%}
+            <li>{% render 'livre-carte', livre: produit %}</li>
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+    </section>
+  {%- endfor -%}
 </section>
 
 {% stylesheet %}
@@ -195,7 +227,7 @@
   "name": "Catalogue",
   "settings": [
     { "type": "text", "id": "surtitre", "label": "Surtitre", "default": "Le catalogue" },
-    { "type": "text", "id": "titre", "label": "Titre (tous les livres)", "default": "Tous nos livres" },
+    { "type": "text", "id": "titre", "label": "Titre (tous les produits)", "default": "Notre catalogue" },
     {
       "type": "text",
       "id": "accroche",
@@ -203,7 +235,8 @@
       "default": "Rangés par histoire, de la plus récente à la plus ancienne."
     },
     { "type": "text", "id": "libelle_arc", "label": "Lien d'une saga", "default": "Découvrir l'arc" },
-    { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" }
+    { "type": "text", "id": "libelle_livre", "label": "Lien d'un livre seul", "default": "Découvrir le livre" },
+    { "type": "text", "id": "autres", "label": "Groupe des produits sans type", "default": "Autres" }
   ]
 }
 {% endschema %}
