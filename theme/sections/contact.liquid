@@ -207,7 +207,7 @@
 {% stylesheet %}
   /* Même colonne que le reste du site (1280 px au plus) ; interligne de la maquette. */
   .contact {
-    padding: 0 var(--marge-centre) 120px;
+    padding: 79px var(--marge-centre) 120px;
     font-size: 16px;
     line-height: 1.55;
   }
@@ -219,15 +219,11 @@
     line-height: 1.2;
   }
 
-  /* Ouverture centrée, mêmes mesures que celle de « Nos valeurs » (francaise-ouverture) : 80 % de l'écran. */
+  /* Ouverture centrée (demande de Gautier, 22/11/2026). Espaces de la maquette + 10 % (Uriel). */
   .contact__ouverture {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 80svh;
     max-width: 760px;
     margin-inline: auto;
-    padding-block: 110px 56px;
+    padding-block: 62px 44px;
     text-align: center;
   }
 
@@ -279,7 +275,7 @@
   .contact__corps {
     display: grid;
     gap: 48px;
-    padding-top: 0;
+    padding-top: 26px;
   }
 
   @media (min-width: 980px) {
