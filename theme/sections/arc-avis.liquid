@@ -61,7 +61,6 @@
         {%- if un_avis.texte.value.size <= court -%}
           {%- capture grand -%}
             <figure class="arc-avis__grand" data-grand="{{ handle }}"{% if handle != grand_defaut %} hidden{% endif %}>
-              {%- if un_avis.titre.value != blank %}<p class="arc-avis__titre">{{ un_avis.titre.value }}</p>{% endif %}
               {% render 'avis-texte', texte: un_avis.texte.value %}
               {{ legende }}
             </figure>
@@ -347,6 +346,7 @@
 
   /* Fiche livre : bande de bord à bord. Le texte sélectionnable gênerait le glisser. */
   .arc-avis__defile {
+    margin-top: 50px;
     /* Bord à bord : la marge négative se règle sur l'écran (100vw), pas sur la colonne du bloc. */
     margin-inline: calc(50% - 50vw);
     padding-block: 8px 16px;
