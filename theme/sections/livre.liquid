@@ -26,6 +26,8 @@
 {%- capture noms_auteurs %}{% render 'saga-auteurs', saga: saga %}{% endcapture -%}
 
 <div class="arc livre" style="{% render 'saga-halo', saga: saga %}">
+  {%- assign particules = product.metafields.custom.style_particules.value | default: saga.style_particules.value -%}
+  {% render 'particules', valeur: particules %}
   {%- if fond != blank -%}
     <div class="arc__fond" aria-hidden="true">
       {{- fond | image_url: width: 2400 | image_tag: widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}

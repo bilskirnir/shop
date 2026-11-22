@@ -1,10 +1,11 @@
 {% comment %}
   Neige qui tombe du haut de l'écran, en calque fixe au-dessus de l'image de fond.
   Apparaît en fondu avec son écran (.fondu) et éteint pendant ce temps les braises du décor.
+  fixe: true : toujours là, sur toute la page (fiche d'un livre, page d'une saga).
   Les flocons sont répartis par un petit calcul déterministe (pas de hasard : même rendu à chaque visite).
   Styles : assets/base.css (« Neige »).
 {% endcomment %}
-<div class="neige eteint-feu fondu" aria-hidden="true">
+<div class="neige eteint-feu{% if fixe %} is-visible{% else %} fondu{% endif %}" aria-hidden="true">
   {%- for i in (1..40) -%}
     {%- liquid
       assign gauche = i | times: 37 | modulo: 100

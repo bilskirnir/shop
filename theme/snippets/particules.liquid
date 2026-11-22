@@ -1,0 +1,11 @@
+{% comment %}
+  Les particules d'une page de livre ou de saga, pour toute la page (l'accueil, lui, les règle écran par écran
+  dans sections/histoire.liquid). valeur : 'neige', 'aucune' ou 'braises' (le décor par défaut, rien à ajouter).
+  Usage : {% render 'particules', valeur: product.metafields.custom.style_particules.value | default: saga.style_particules.value %}
+{%- endcomment -%}
+{%- if valeur == 'neige' -%}
+  {% render 'neige', fixe: true %}
+{%- elsif valeur == 'aucune' -%}
+  {%- comment -%} Marqueur sans rendu : éteint le feu du décor (base.css). {%- endcomment -%}
+  <div class="eteint-feu is-visible" hidden></div>
+{%- endif -%}

@@ -33,6 +33,7 @@
 {%- capture total %}{% render 'arc-total', saga: saga %}{% endcapture -%}
 
 <div class="arc" style="{% render 'saga-halo', saga: saga %}">
+  {% render 'particules', valeur: saga.style_particules.value %}
   {%- if fond != blank -%}
     <div class="arc__fond" aria-hidden="true">
       {{- fond | image_url: width: 2400 | image_tag: widths: '800, 1200, 1800, 2400', sizes: '100vw', alt: '' -}}
