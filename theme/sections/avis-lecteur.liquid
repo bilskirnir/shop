@@ -104,12 +104,6 @@
           <span>Suivant</span>
           <span class="bouton__fleche" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </button>
-
-        {%- if shop.email != blank -%}
-          <p class="avis-lecteur__aide">
-            Un souci avec ton livre (page abîmée, erreur de commande) ? Écris-nous plutôt : <a href="mailto:{{ shop.email }}">{{ shop.email }}</a>
-          </p>
-        {%- endif -%}
       </div>
 
       {%- comment -%} 2. Toi {%- endcomment -%}
@@ -144,6 +138,10 @@
     <input type="hidden" name="contact[email]" value="">
   {%- endform -%}
   <iframe name="avis-cadre" title="Inscription aux sorties" hidden></iframe>
+
+  <p class="avis-lecteur__aide avis-lecteur__contact">
+    Une question, un souci avec ton livre (page abîmée, erreur de commande) ? Écris-nous : <a href="mailto:contact@bilskirnir.fr">contact@bilskirnir.fr</a>
+  </p>
 </div>
 
 <script src="{{ 'avis-lecteur.js' | asset_url }}" defer></script>
@@ -424,6 +422,11 @@
     line-height: 1.5;
     text-align: center;
     color: var(--gris-2);
+  }
+
+  .avis-lecteur__contact {
+    max-width: 480px;
+    margin: 48px auto 0;
   }
 
   .avis-lecteur__retour {

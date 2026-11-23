@@ -77,7 +77,13 @@ body {
   font-family: var(--texte);
   color: var(--ivoire);
   background: transparent;
-  overflow-x: hidden;
+}
+
+/* Les halos décoratifs dépassent l'écran : sur mobile, un overflow-x: hidden sur body n'empêche pas la page
+   de s'élargir (on glisse à droite). clip coupe sans créer de zone de défilement (sticky et scroll-snap intacts). */
+html,
+body {
+  overflow-x: clip;
 }
 
 a {

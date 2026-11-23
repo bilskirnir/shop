@@ -1,0 +1,153 @@
+<title>Partenaire du pied de page</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Trois encarts « Partenaire : Runes de Chêne » posés dans le vrai pied de page (réseaux, puis légal), en large et en mobile 390 px.
+   Logos tirés de \EGIDE\Runes de Chêne\VISUELS\LOGOS (emblème et logo ligne découpés, logo rond passé en ivoire). */
+:root {
+  color-scheme: dark;
+  --encre: #0b0c0e; --ivoire: #ece5d6; --gris-1: #c9c7c2; --gris-2: #a7a6a2; --gris-3: #8d8b86;
+  --or: #d2b06a; --filet: #ece5d61a;
+  --titre: Marcellus, Georgia, serif; --texte: 'Source Sans 3', system-ui, sans-serif;
+}
+body { background: var(--encre); color: var(--ivoire); font: 16px/1.55 var(--texte); }
+.cadre { max-width: 1280px; margin-inline: auto; padding-inline: 20px; }
+a { color: var(--ivoire); text-decoration: none; }
+.repere { padding-block: 56px 8px; }
+.repere p { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--or); }
+.repere h1 { font: 400 clamp(28px, 4vw, 40px)/1.1 var(--titre); margin-top: 8px; }
+.repere span { display: block; margin-top: 8px; color: var(--gris-2); max-width: 70ch; }
+.etiquette { display: inline-block; margin: 48px 0 16px; padding: 4px 10px; border: 1px dashed #ece5d640; border-radius: 999px; font-size: 12px; color: var(--gris-3); }
+.etiquette b { color: var(--ivoire); }
+.duo { display: grid; gap: 24px; align-items: start; }
+@media (min-width: 1100px) { .duo { grid-template-columns: 1fr 390px; } }
+.ecran { position: relative; overflow: hidden; border: 1px solid var(--filet); border-radius: 14px;
+  background: radial-gradient(80% 120% at 50% 0%, #3a2c1a55, transparent 70%), #0e0f12; padding-top: 140px; }
+.ecran::before { content: attr(data-nom); position: absolute; top: 12px; left: 16px; font-size: 11px; color: var(--gris-3); letter-spacing: .1em; text-transform: uppercase; }
+.mobile { max-width: 390px; }
+
+/* ---------- Le pied existant ---------- */
+.pied { display: flex; flex-direction: column; gap: 12px; margin: 0 24px; padding: 16px 0 28px; border-top: 1px solid var(--filet); }
+.ecran:not(.mobile) .pied { margin-inline: 48px; }
+.pied__reseaux { display: flex; flex-wrap: wrap; gap: 18px; font-size: 14px; font-weight: 600; }
+.pied__liens { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: #6f6d69; }
+.pied__liens span:first-child { color: var(--gris-3); }
+
+.rune { flex: none; color: var(--or); }
+.fleche { display: inline-block; transition: transform .2s; }
+a:hover .fleche { transform: translate(2px, -2px); }
+
+/* ---------- A. Une ligne ---------- */
+.pa { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; color: var(--gris-3); }
+.pa__logo { display: inline-flex; align-items: center; gap: 8px; color: var(--gris-3); }
+.pa__logo img { height: 30px; width: auto; opacity: .85; transition: opacity .2s; }
+.pa__logo:hover img { opacity: 1; }
+
+/* ---------- B. La carte de verre ---------- */
+.pb { display: flex; align-items: center; gap: 16px; max-width: 460px; padding: 14px 18px; border-radius: 14px;
+  background: #ece5d60a; border: 1px solid #ece5d61f; backdrop-filter: blur(8px); transition: border-color .2s, background .2s; }
+.pb:hover { border-color: #d2b06a66; background: #d2b06a0d; }
+.pb__marque { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 12px; background: #0b0c0e; border: 1px solid #d2b06a40; }
+.pb__marque img { width: 40px; height: 40px; object-fit: contain; }
+.pb__texte { display: grid; gap: 2px; }
+.pb__sur { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--or); }
+.pb__nom { font-family: var(--titre); font-size: 19px; line-height: 1.15; }
+.pb__desc { font-size: 13px; color: var(--gris-2); line-height: 1.4; }
+.pb .fleche { margin-left: auto; color: var(--gris-3); }
+
+/* ---------- C. Le sceau ---------- */
+.pc { display: flex; align-items: center; gap: 20px; padding: 20px 0; border-block: 1px solid var(--filet); }
+.pc__sceau { flex: none; width: 100px; height: auto; opacity: .9; transition: transform .6s ease; }
+.pc:hover .pc__sceau { transform: rotate(-20deg); }
+.pc__texte { display: grid; gap: 4px; }
+.pc__devise { font-family: var(--titre); font-size: 22px; line-height: 1.15; }
+.pc__desc { font-size: 14px; color: var(--gris-2); max-width: 46ch; line-height: 1.45; }
+.pc__lien { font-size: 14px; font-weight: 600; color: var(--or); }
+@media (prefers-reduced-motion: reduce) { .pc__sceau, .fleche { transition: none; } }
+</style>
+
+<div class="cadre">
+  <header class="repere">
+    <p>Pied de page · Partenaire</p>
+    <h1>Runes de Chêne, trois façons de le dire</h1>
+    <span>L'encart se glisse entre les réseaux et les mentions légales, sur toutes les pages. Le lien ouvre runesdechene.com dans un nouvel onglet.</span>
+  </header>
+
+  <!-- ===== A ===== -->
+  <div class="etiquette"><b>A · Une ligne.</b> Discret : une mention, au même niveau que les réseaux.</div>
+  <div class="duo">
+    <div class="ecran" data-nom="Ordinateur">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <div class="pa">Partenaire <a class="pa__logo" href="#"><img src="assets/rdc-logo-ligne.png" alt="Runes de Chêne : Porter l'Histoire"><span class="fleche">↗</span></a></div>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+    <div class="ecran mobile" data-nom="Mobile">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <div class="pa">Partenaire <a class="pa__logo" href="#"><img src="assets/rdc-logo-ligne.png" alt="Runes de Chêne : Porter l'Histoire"><span class="fleche">↗</span></a></div>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ===== B ===== -->
+  <div class="etiquette"><b>B · La carte de verre.</b> Un petit encart cliquable, de la même matière que l'en-tête.</div>
+  <div class="duo">
+    <div class="ecran" data-nom="Ordinateur">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <a class="pb" href="#">
+          <span class="pb__marque"><img src="assets/rdc-embleme.png" alt=""></span>
+          <span class="pb__texte"><span class="pb__sur">Partenaire</span><span class="pb__nom">Runes de Chêne</span><span class="pb__desc">Vêtements illustrés : l'Histoire, la Nature et le folklore européen.</span></span>
+          <span class="fleche">↗</span>
+        </a>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+    <div class="ecran mobile" data-nom="Mobile">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <a class="pb" href="#">
+          <span class="pb__marque"><img src="assets/rdc-embleme.png" alt=""></span>
+          <span class="pb__texte"><span class="pb__sur">Partenaire</span><span class="pb__nom">Runes de Chêne</span><span class="pb__desc">Vêtements illustrés : l'Histoire, la Nature et le folklore européen.</span></span>
+          <span class="fleche">↗</span>
+        </a>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ===== C ===== -->
+  <div class="etiquette"><b>C · Le sceau.</b> Le logo rond, qui tourne au survol, la devise en grand : le plus visible, entre deux filets.</div>
+  <div class="duo" style="margin-bottom:96px">
+    <div class="ecran" data-nom="Ordinateur">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <a class="pc" href="#">
+          <img class="pc__sceau" src="assets/rdc-logo-rond.svg" alt="">
+          <span class="pc__texte">
+            <span class="pc__devise">Porter l'Histoire.</span>
+            <span class="pc__desc">Nos héros ont leurs vêtements : Runes de Chêne illustre l'Histoire, la Nature et le folklore européen. Fait en France.</span>
+            <span class="pc__lien">Découvrir Runes de Chêne <span class="fleche">↗</span></span>
+          </span>
+        </a>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+    <div class="ecran mobile" data-nom="Mobile">
+      <footer class="pied">
+        <div class="pied__reseaux"><a href="#">TikTok</a><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Facebook</a><a href="#">Fellowship</a></div>
+        <a class="pc" href="#">
+          <img class="pc__sceau" src="assets/rdc-logo-rond.svg" alt="">
+          <span class="pc__texte">
+            <span class="pc__devise">Porter l'Histoire.</span>
+            <span class="pc__desc">Nos héros ont leurs vêtements : Runes de Chêne illustre l'Histoire, la Nature et le folklore européen. Fait en France.</span>
+            <span class="pc__lien">Découvrir Runes de Chêne <span class="fleche">↗</span></span>
+          </span>
+        </a>
+        <div class="pied__liens"><span>Informations légales</span><span>© Bilskirnir</span></div>
+      </footer>
+    </div>
+  </div>
+</div>
