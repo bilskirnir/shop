@@ -309,8 +309,8 @@
 
   @media (min-width: 1024px) {
     .maison {
-      --pied: 70px;
-      justify-content: center;
+      /* Calé en bas, contre le pied (≈ 111 px avec l'encart partenaire) : centré, le vide grandissait sous la lettre sur les grands écrans. */
+      --pied: 112px;
       padding: 120px var(--marge-centre) 40px;
     }
 
