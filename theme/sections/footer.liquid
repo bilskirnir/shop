@@ -17,11 +17,10 @@
   {%- endif -%}
 
   <a class="pied__partenaire" href="https://runesdechene.com" target="_blank" rel="noopener">
-    <span class="pied__partenaire-marque"><img src="{{ 'runes-de-chene.png' | asset_url }}" width="40" height="40" alt="" loading="lazy"></span>
+    <span class="pied__partenaire-marque"><img src="{{ 'runes-de-chene.png' | asset_url }}" width="26" height="26" alt="" loading="lazy"></span>
     <span class="pied__partenaire-texte">
       <span class="pied__partenaire-sur">Partenaire</span>
       <span class="pied__partenaire-nom">Runes de Chêne</span>
-      <span class="pied__partenaire-desc">Vêtements illustrés : l'Histoire, la Nature et le folklore européen.</span>
     </span>
     <span class="pied__partenaire-fleche" aria-hidden="true">↗</span>
   </a>
@@ -88,12 +87,11 @@
   .pied__partenaire {
     display: flex;
     align-items: center;
-    gap: 16px;
-    max-width: 460px;
-    padding: 14px 18px;
-    margin-block: 4px;
+    gap: 10px;
+    align-self: flex-start;
+    padding: 6px 14px 6px 6px;
     border: 1px solid #ece5d61f;
-    border-radius: 14px;
+    border-radius: 12px;
     background: #ece5d60a;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
@@ -109,26 +107,26 @@
     flex: none;
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
     border: 1px solid #d2b06a40;
-    border-radius: 12px;
+    border-radius: 8px;
     background: var(--encre);
   }
 
   .pied__partenaire-marque img {
-    width: 40px;
-    height: 40px;
+    width: 26px;
+    height: 26px;
     object-fit: contain;
   }
 
   .pied__partenaire-texte {
     display: grid;
-    gap: 2px;
+    gap: 0;
   }
 
   .pied__partenaire-sur {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -137,19 +135,14 @@
 
   .pied__partenaire-nom {
     font-family: var(--titre);
-    font-size: 19px;
-    line-height: 1.15;
+    font-size: 15px;
+    line-height: 1.2;
     color: var(--ivoire);
   }
 
-  .pied__partenaire-desc {
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--gris-2);
-  }
-
   .pied__partenaire-fleche {
-    margin-left: auto;
+    margin-left: 6px;
+    font-size: 12px;
     color: var(--gris-3);
     transition: transform 0.2s;
   }
